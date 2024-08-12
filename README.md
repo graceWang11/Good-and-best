@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/a8309384-3b0c-43e3-a624-213b68ecfccb)![image](https://github.com/user-attachments/assets/da3b80c0-ee23-4f71-a1c7-5155f76b2952)# Good-and-best
+# Good-and-best
 #Youtube Instruction of set up
 #https://www.youtube.com/watch?v=bTY0fa8p8D0&t=337s
 #Convex setup: 
