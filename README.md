@@ -1,6 +1,11 @@
 # Good-and-best
 #Youtube Instruction of set up
 #https://www.youtube.com/watch?v=bTY0fa8p8D0&t=337s
+#TO run this project : 
+'npm run dev' to activate localhost : 3000
+'npx convex dev ' to activate convex 
+#WARNING !! DO NOT CLOSE THSE TWO TERMINAL WHILE PROJECT IS RUNNING 
+
 #Convex setup: 
 #login to the convex, create a new project called 021 each team memeber need to has this project in their own account
 
@@ -67,6 +72,11 @@
 ![image](https://github.com/user-attachments/assets/7018b28e-c7bb-4ee7-ad63-26a73f2444d6)
 #To connect with convex 
 //Open terminal and type 'npx convex dev' and wait till it's connect 
+
+#.env.local 
+Please remeber to configure your local version with convex first then change this to your local fondiguration :
+CONVEX_DEPLOYMENT=dev:savory-sockeye-388 # team: gracewang11, project: 021
+NEXT_PUBLIC_CONVEX_URL=https://savory-sockeye-388.convex.cloud
 
 
 #week 1 
