@@ -12,5 +12,5 @@ export default function ClientComponent() {
     storeUser({});
   });
 
-  return <div>Hello World!</div>;
+  return <div>good and best !</div>;
 }
