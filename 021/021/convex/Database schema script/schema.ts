@@ -56,10 +56,17 @@ export default defineSchema({
   })
   .index("by_category", ["productCategoryID"])  // Index for querying by product category
   .index("by_vendor", ["vendorID"]),  // Index for querying by vendor
-  
+
   // Define the product attributes table
   productAttributes: defineTable({
     attributeName: v.string(),  // Attribute name
     attributeValue: v.string(), // Attribute value
   }),
+
+  // Define the image storage table
+  imageStorage: defineTable({
+    storageID: v.string(),      // Unique identifier for the image storage
+    productID: v.id("products"), // Foreign key reference to products table
+  })
+  .index("by_product", ["productID"]),  // Index for querying by productID
 });
