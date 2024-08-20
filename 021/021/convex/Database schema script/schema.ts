@@ -34,34 +34,31 @@ export default defineSchema({
   })
   .index("by_order", ["orderID"]),  // Index for querying by orderID
 
-  // Define the order details table
-  orderDetails: defineTable({
-    orderID: v.id("orders"),    // Foreign key reference to orders table
-    productID: v.id("products"), // Foreign key reference to products table
-    sizeID: v.id("sizes"),       // Foreign key reference to sizes table
-    quantity: v.number(),
-    price: v.number(),
-  })
-  .index("by_order", ["orderID"])  // Index for querying by orderID
-  .index("by_product", ["productID"]),  // Index for querying by productID
-
-  // Define the product table
-  products: defineTable({
-    attributesID: v.id("attributes"),      // Foreign key reference to attributes table
-    productCategoryID: v.id("productCategories"),  // Foreign key reference to product categories table
-    vendorID: v.id("vendors"),             // Foreign key reference to vendors table
-    brand: v.string(),
-    productName: v.string(),
-    price: v.number(),
-  })
-  .index("by_category", ["productCategoryID"])  // Index for querying by product category
-  .index("by_vendor", ["vendorID"]),  // Index for querying by vendor
-
   // Define the product attributes table
   productAttributes: defineTable({
     attributeName: v.string(),  // Attribute name
     attributeValue: v.string(), // Attribute value
   }),
+  // Define the product table
+  products: defineTable({
+    attributesID: v.id("productAttributes"),      // Foreign key reference to productAttributes table
+    productCategoryID: v.id("productCategories"),  // Foreign key reference to product categories table
+    brand: v.string(),
+    productName: v.string(),
+    price: v.number(),
+  })
+  .index("by_category", ["productCategoryID"])  // Index for querying by product category
+  .index("by_attributes",["attributesID"]),
+
+  // Define the order details table
+  orderDetails: defineTable({
+    orderID: v.id("orders"),    // Foreign key reference to orders table
+    productID: v.id("products"), // Foreign key reference to products table
+    quantity: v.number(),
+    price: v.number(),
+  })
+  .index("by_order", ["orderID"])  // Index for querying by orderID
+  .index("by_product", ["productID"]),  // Index for querying by productID
 
   // Define the image storage table
   imageStorage: defineTable({
@@ -69,4 +66,17 @@ export default defineSchema({
     productID: v.id("products"), // Foreign key reference to products table
   })
   .index("by_product", ["productID"]),  // Index for querying by productID
+
+  //Define the ProductCategory Table 
+  ProductCategory:defineTable({
+    categoryName:v.string(), // Category name for the product
+  }),
+
+  // Define the stock table
+  stock: defineTable({
+    productID: v.id("products"),  // Foreign key reference to products table
+    stockQuantity: v.number(),    // Quantity of stock available
+  })
+  .index("by_product", ["productID"]),  // Index for querying by productID
+
 });
