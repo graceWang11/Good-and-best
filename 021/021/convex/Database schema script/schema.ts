@@ -44,7 +44,7 @@ export default defineSchema({
   })
   .index("by_order", ["orderID"])  // Index for querying by orderID
   .index("by_product", ["productID"]),  // Index for querying by productID
-  
+
   // Define the product table
   products: defineTable({
     attributesID: v.id("attributes"),      // Foreign key reference to attributes table
@@ -56,5 +56,10 @@ export default defineSchema({
   })
   .index("by_category", ["productCategoryID"])  // Index for querying by product category
   .index("by_vendor", ["vendorID"]),  // Index for querying by vendor
-
+  
+  // Define the product attributes table
+  productAttributes: defineTable({
+    attributeName: v.string(),  // Attribute name
+    attributeValue: v.string(), // Attribute value
+  }),
 });
