@@ -33,4 +33,17 @@ export default defineSchema({
     eventsDate: v.string(),    // Store date as a string in ISO format
   })
   .index("by_order", ["orderID"]),  // Index for querying by orderID
+
+  // Define the order details table
+  orderDetails: defineTable({
+    orderID: v.id("orders"),    // Foreign key reference to orders table
+    productID: v.id("products"), // Foreign key reference to products table
+    sizeID: v.id("sizes"),       // Foreign key reference to sizes table
+    quantity: v.number(),
+    price: v.number(),
+  })
+  .index("by_order", ["orderID"])  // Index for querying by orderID
+  .index("by_product", ["productID"]),  // Index for querying by productID
+
+  
 });
