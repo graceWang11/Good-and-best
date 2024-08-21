@@ -22,7 +22,7 @@ export const store = mutation({
         }
 
 
-        // Query the database to check if the user is already stored
+        //Query the database to check if the user is already stored
         const user = await ctx.db
             .query("users") // Specify the 'users' table/collection
             .withIndex("by_token", (q) =>
@@ -30,6 +30,7 @@ export const store = mutation({
                 q.eq("tokenIdentifier", identity.tokenIdentifier)
             )
             .unique(); // Expect a unique result
+    
 
         // If the user is found (not null), return their user ID
         if (user !== null) {

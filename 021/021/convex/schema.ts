@@ -1,4 +1,4 @@
-import { defineSchema , defineTable } from "convex/server";
+import { defineSchema, defineTable} from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
@@ -8,15 +8,16 @@ export default defineSchema({
   }),
   
   //Define User Table 
-  users: defineTable({
-    tokenIdentifier: v.string(),
-    email: v.string(),
-    userTypeID: v.id("userTypes"),  // Reference to the userType table
-    userName: v.string(),
-    address: v.string(),
-    phoneNumber: v.string(),
-  })
-  .index("by_token", ["tokenIdentifier"]),
+    users: defineTable({
+      tokenIdentifier: v.string(),
+      email: v.string(),
+      userTypeID: v.id("userTypes"),
+      userName: v.string(),
+      address: v.string(),
+      phoneNumber: v.string(),
+  }).index("by_token", ["tokenIdentifier"]),
+
+  
 
   // Define the orders table
   orders: defineTable({
