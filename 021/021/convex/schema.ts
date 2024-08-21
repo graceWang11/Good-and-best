@@ -5,13 +5,13 @@ export default defineSchema({
   //Define UserType table 
   userTypes: defineTable({
     UserType: v.string(), 
+    tokenIdentifier:v.string(),
   }),
   
   //Define User Table 
     users: defineTable({
       tokenIdentifier: v.string(),
       email: v.string(),
-      userTypeID: v.id("userTypes"),
       userName: v.string(),
       address: v.string(),
       phoneNumber: v.string(),

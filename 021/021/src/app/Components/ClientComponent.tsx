@@ -9,7 +9,7 @@ import { useQuery } from "convex/react";
 
 export default function ClientComponent() {
   const storeUser = useMutation(api.user.store);
-  const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg21130dyzb8e9sh31t51ptynh6z9xz2" });
+  const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg20gd15hk3tv13mxn3edesmhh6z9kj8" });
 
   useEffect(() => {
     storeUser({

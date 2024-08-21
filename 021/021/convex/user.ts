@@ -38,36 +38,10 @@ export const store = mutation({
       return user._id;
     }
 
-    // Define UserTypeID
-    let userTypeID: Id<"userTypes">;
-
-    // Assign admin account
-    if (identity.email === "goodandbest@gmail.com") {
-      const adminType = await ctx.db
-        .query("userTypes")
-        .filter((q) => q.eq("UserType", "Admin"))
-        .unique();
-      if (!adminType) {
-        throw new Error("Admin user type not found");
-      }
-      userTypeID = adminType._id;
-    } else {
-      // Handling customer account
-      const customerType = await ctx.db
-        .query("userTypes")
-        .filter((q) => q.eq("UserType", "Customer"))
-        .unique();
-      if (!customerType) {
-        throw new Error("Customer user type not found");
-      }
-      userTypeID = customerType._id;
-    }
-
     // If the user is not found, insert a new user record into the 'users' table
     const userID = await ctx.db.insert("users", {
       tokenIdentifier: identity.tokenIdentifier, // Store the user's token identifier
       email: identity.email!, // Store the user's email (using non-null assertion)
-      userTypeID, // Store the UserTypeID as an FK
       userName, // Store the UserName
       address, // Store the Address
       phoneNumber, // Store the PhoneNumber
