@@ -1,6 +1,6 @@
-import { mutation } from ".././_generated/server";
+import { mutation } from "./_generated/server";
 
-export const populateUserTypes = mutation(async (ctx) => {
+export const populateUserTypes = mutation(async (ctx:any) => {
   const existingTypes = await ctx.db.query("userTypes").collect();
 
   if (existingTypes.length === 0) {

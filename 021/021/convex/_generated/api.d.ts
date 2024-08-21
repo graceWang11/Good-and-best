@@ -14,6 +14,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as imageStorage from "../imageStorage.js";
 import type * as tasks from "../tasks.js";
 import type * as user from "../user.js";
 import type * as UserType from "../UserType.js";
@@ -27,6 +28,7 @@ import type * as UserType from "../UserType.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  imageStorage: typeof imageStorage;
   tasks: typeof tasks;
   user: typeof user;
   UserType: typeof UserType;
