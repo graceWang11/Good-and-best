@@ -10,7 +10,11 @@ export default function ClientComponent() {
   const storeUser = useMutation(api.user.store);
 
   useEffect(() => {
-    storeUser({});
+    storeUser({
+      userName: "",
+      address: "",
+      phoneNumber: ""
+    });
   });
 
   return <div>good and best !</div>;
