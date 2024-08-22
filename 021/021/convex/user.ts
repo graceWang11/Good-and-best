@@ -2,52 +2,64 @@ import { v } from "convex/values";
 import { mutation } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 
-// Define a mutation called 'store' which allows you to store user information in the database
 export const store = mutation({
-  // Specify that the mutation takes arguments for UserName, Address, and PhoneNumber
   args: {
     userName: v.string(),
     address: v.string(),
     phoneNumber: v.string(),
   },
 
-  // The handler function is where the logic for the mutation is defined
   handler: async (
     ctx,
     { userName, address, phoneNumber }: { userName: string; address: string; phoneNumber: string }
   ) => {
-    // Get the identity of the currently authenticated user
     const identity = await ctx.auth.getUserIdentity();
 
-    // If there is no authenticated user, throw an error
     if (!identity) {
       throw new Error("Called store without authenticated user");
     }
 
-    // Query the database to check if the user is already stored
+    // Check if the user already exists
     const user = await ctx.db
-      .query("users") // Specify the 'users' table/collection
+      .query("users")
       .withIndex("by_token", (q) =>
-        // Use the 'by_token' index to find the user by their tokenIdentifier
         q.eq("tokenIdentifier", identity.tokenIdentifier)
       )
-      .unique(); // Expect a unique result
+      .unique();
 
-    // If the user is found (not null), return their user ID
     if (user !== null) {
       return user._id;
     }
 
-    // If the user is not found, insert a new user record into the 'users' table
+    // Determine the UserTypeID before inserting the user
+    let userTypeID: Id<"userTypes">;
+
+    if (identity.email === "goodandbest@gmail.com") {
+      // Assign Admin role
+      const adminType = await ctx.db.query("userTypes").filter((q) => q.eq("UserType", "Admin")).unique();
+      if (!adminType) {
+        throw new Error("Admin user type not found");
+      }
+      userTypeID = adminType._id;
+    } else {
+      // Assign Customer role as the default
+      const customerType = await ctx.db.query("userTypes").filter((q) => q.eq("UserType", "Customer")).unique();
+      if (!customerType) {
+        throw new Error("Customer user type not found");
+      }
+      userTypeID = customerType._id;
+    }
+
+    // Insert a new user record with userTypeID included
     const userID = await ctx.db.insert("users", {
-      tokenIdentifier: identity.tokenIdentifier, // Store the user's token identifier
-      email: identity.email!, // Store the user's email (using non-null assertion)
-      userName, // Store the UserName
-      address, // Store the Address
-      phoneNumber, // Store the PhoneNumber
+      tokenIdentifier: identity.tokenIdentifier,
+      email: identity.email!,
+      userName,
+      address,
+      phoneNumber,
+      userTypeID, // Include userTypeID in the insert operation
     });
 
-    // Return the new user ID after insertion
     return userID;
   },
 });
