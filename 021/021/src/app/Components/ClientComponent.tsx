@@ -1,34 +1,34 @@
-"Use client"
+"use client";
 import { useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
-import { useUser } from "@clerk/nextjs"; 
+import { useUser, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 export default function ClientComponent() {
-  const { isLoaded, isSignedIn, user } = useUser(); 
+  const { isLoaded, isSignedIn, user } = useUser();
+  const { openSignIn } = useClerk(); // Use Clerk's hook to open the sign-in modal
   const storeUser = useMutation(api.user.store);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const router = typeof window !== "undefined" ? useRouter() : null; // Ensure router is only used on the client-side
+  const router = useRouter();
 
   const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg20gd15hk3tv13mxn3edesmhh6z9kj8" });
   const bgUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg22n4dqc3z6e5xzqfx30zxmr96z9j0w" });
 
   useEffect(() => {
     if (isLoaded && isSignedIn && user) {
+      // Store the user information in Convex when the user is signed in
       storeUser({
         userName: user.fullName || "",
-        address: "", 
-        phoneNumber: "", 
+        address: "",
+        phoneNumber: "",
+        email: user.primaryEmailAddress?.emailAddress || "" // Populate email from user object
       });
     }
   }, [isLoaded, isSignedIn, user, storeUser]);
 
   const handleLogin = () => {
-    if (router) {
-      router.push("/login"); // Redirect to Clerk login page
-    }
+    openSignIn(); // Opens Clerk's sign-in modal
   };
 
   if (!imageUrl || !bgUrl) {
@@ -38,14 +38,14 @@ export default function ClientComponent() {
   return (
     <div>
       <div className="container text-center">
-        <div className="d-flex flex-warp align-items-center justify-content-center justify-content-lg-start">
+        <div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
           <div className="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
             <img src={imageUrl} alt="Logo" className="logo" style={{ height: '65px', width: 'auto', margin: '20px' }} />
           </div>
 
           <div className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="#" className="nav-link px-2 test-secondary">Home</a></li>
-            <li><a href="#" className="nav-link px-2 test-black">Products</a></li>
+            <li><a href="#" className="nav-link px-2 text-secondary">Home</a></li>
+            <li><a href="#" className="nav-link px-2 text-black">Products</a></li>
           </div>
           <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
             <input type="search" className="form-control" placeholder="Search ..." aria-label="Search"></input>

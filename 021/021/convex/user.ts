@@ -7,16 +7,17 @@ export const store = mutation({
     userName: v.string(),
     address: v.string(),
     phoneNumber: v.string(),
+    email:v.string()
   },
 
   handler: async (
     ctx,
-    { userName, address, phoneNumber }: { userName: string; address: string; phoneNumber: string }
+    { userName, address, phoneNumber,email}: { userName: string; address: string; phoneNumber: string ;email:string}
   ) => {
     const identity = await ctx.auth.getUserIdentity();
 
-    if (!identity) {
-      throw new Error("Called store without authenticated user");
+    if (!identity || !identity.email) {
+      throw new Error("Email mismatch or user not authenticated");
     }
 
     // Check if the user already exists
@@ -31,29 +32,34 @@ export const store = mutation({
       return user._id;
     }
 
+    // Retrieve user types
+    const userTypes = await ctx.db.query("userTypes").collect();
+    const userTypeMap = userTypes.reduce((map, userType) => {
+      map[userType.UserType] = userType._id;
+      return map;
+    }, {} as Record<string, Id<"userTypes">>);
+
     // Determine the UserTypeID before inserting the user
     let userTypeID: Id<"userTypes">;
 
-    if (identity.email === "goodandbest@gmail.com") {
+    if (identity.email === "goodandbestteam@gmail.com") {
       // Assign Admin role
-      const adminType = await ctx.db.query("userTypes").filter((q) => q.eq("UserType", "Admin")).unique();
-      if (!adminType) {
+      userTypeID = userTypeMap["Admin"];
+      if (!userTypeID) {
         throw new Error("Admin user type not found");
       }
-      userTypeID = adminType._id;
     } else {
       // Assign Customer role as the default
-      const customerType = await ctx.db.query("userTypes").filter((q) => q.eq("UserType", "Customer")).unique();
-      if (!customerType) {
+      userTypeID = userTypeMap["Customer"];
+      if (!userTypeID) {
         throw new Error("Customer user type not found");
       }
-      userTypeID = customerType._id;
     }
 
     // Insert a new user record with userTypeID included
     const userID = await ctx.db.insert("users", {
       tokenIdentifier: identity.tokenIdentifier,
-      email: identity.email!,
+      email,
       userName,
       address,
       phoneNumber,
