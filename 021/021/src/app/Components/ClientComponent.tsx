@@ -3,12 +3,12 @@ import { useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
-import { useUser, useClerk } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import LoginButton from "./LoginComponent";
 
 export default function ClientComponent() {
   const { isLoaded, isSignedIn, user } = useUser();
-  const { openSignIn } = useClerk(); // Use Clerk's hook to open the sign-in modal
   const storeUser = useMutation(api.user.store);
   const router = useRouter();
 
@@ -17,19 +17,23 @@ export default function ClientComponent() {
 
   useEffect(() => {
     if (isLoaded && isSignedIn && user) {
-      // Store the user information in Convex when the user is signed in
       storeUser({
         userName: user.fullName || "",
         address: "",
         phoneNumber: "",
-        email: user.primaryEmailAddress?.emailAddress || "" // Populate email from user object
+        email: user.primaryEmailAddress?.emailAddress || ""
+      }).then(userID => {
+        console.log("User ID:", userID);
+      }).catch(error => {
+        console.error("Error storing user:", error.message);
+        if (error.message === "User not found") {
+          console.log("User not found, staying on the page.");
+        }
       });
+    } else {
+      console.log("User not signed in. Skipping user store operation.");
     }
   }, [isLoaded, isSignedIn, user, storeUser]);
-
-  const handleLogin = () => {
-    openSignIn(); // Opens Clerk's sign-in modal
-  };
 
   if (!imageUrl || !bgUrl) {
     return <div>Loading...</div>;
@@ -52,13 +56,11 @@ export default function ClientComponent() {
           </form>
           <div>
             {!isSignedIn ? (
-              <button type="button" className="btn btn-light" onClick={handleLogin}>
-                Login
-              </button>
+              <LoginButton /> // Show login button if the user is not signed in
             ) : (
               <button type="button" className="btn btn-light">
-                Logged in as {user?.primaryEmailAddress?.emailAddress || "User"}
-              </button>
+                Account
+              </button> // Show account button if the user is signed in
             )}
           </div>
         </div>

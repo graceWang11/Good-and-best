@@ -17,7 +17,8 @@ export const store = mutation({
     const identity = await ctx.auth.getUserIdentity();
 
     if (!identity || !identity.email) {
-      throw new Error("Email mismatch or user not authenticated");
+      console.log("Email mismatch or user not authenticated");
+      return null; // Return null instead of throwing an error
     }
 
     // Check if the user already exists
@@ -31,6 +32,7 @@ export const store = mutation({
     if (user !== null) {
       return user._id;
     }
+ 
 
     // Retrieve user types
     const userTypes = await ctx.db.query("userTypes").collect();
