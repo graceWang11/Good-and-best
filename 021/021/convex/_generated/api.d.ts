@@ -16,6 +16,7 @@ import type {
 } from "convex/server";
 import type * as imageStorage from "../imageStorage.js";
 import type * as ProductAttributes from "../ProductAttributes.js";
+import type * as ProductCategory from "../ProductCategory.js";
 import type * as tasks from "../tasks.js";
 import type * as user from "../user.js";
 import type * as UserType from "../UserType.js";
@@ -31,6 +32,7 @@ import type * as UserType from "../UserType.js";
 declare const fullApi: ApiFromModules<{
   imageStorage: typeof imageStorage;
   ProductAttributes: typeof ProductAttributes;
+  ProductCategory: typeof ProductCategory;
   tasks: typeof tasks;
   user: typeof user;
   UserType: typeof UserType;
