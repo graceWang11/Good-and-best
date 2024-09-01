@@ -8,7 +8,7 @@ export default defineSchema({
   }),
   
   //Define User Table 
-    users: defineTable({
+  users: defineTable({
       tokenIdentifier: v.string(),
       email: v.string(),
       userTypeID: v.id("userTypes"),
@@ -19,16 +19,16 @@ export default defineSchema({
 
   //Define the size table
   size: defineTable({
-    productID : v.id("products"),
+    productID : v.id("products"),//Foreign key reference to product table
     SizeRegion: v.string(),
     SizeValue:v.string(),
   })
-  .index("by_product",["productID"]),
+  .index("by_product",["productID"]),// Index for querying by productID
 
   // Define the orders table
   orders: defineTable({
     userID: v.id("users"),   // Foreign key reference to users table
-    SizeID: v.id("size"),
+    sizeID: v.id("size"),
     orderDate: v.string(),   // Store date as a string in ISO format
     totalAmount: v.number(),
     status: v.string(),
@@ -53,7 +53,7 @@ export default defineSchema({
 
   // Define the product table
   products: defineTable({
-    productCategoryID: v.id("productCategories"),  // Foreign key reference to product categories table
+    productCategoryID: v.id("ProductCategory"),  // Foreign key reference to product categories table
     brand: v.string(),
     productName: v.string(),
     Series:v.string(),
