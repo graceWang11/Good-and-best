@@ -6,7 +6,6 @@ const productCategories = [
   { categoryName: "Shuttles" },
   { categoryName: "Accessories" },
   { categoryName: "Shoes" },
-  { categoryName: "Bags" },
 ];
 
 // Define the mutation to insert product categories
