@@ -81,7 +81,8 @@ export default defineSchema({
   //Define the ProductCategory Table 
   ProductCategory:defineTable({
     categoryName:v.string(), // Category name for the product
-  }),
+  })
+  .index("by_name", ["categoryName"]),
 
   // Define the stock table
   stock: defineTable({

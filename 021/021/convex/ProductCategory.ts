@@ -8,24 +8,21 @@ const productCategories = [
   { categoryName: "Shoes" },
 ];
 
-// Define the mutation to insert product categories
-export const insertProductCategories = mutation(async (ctx) => {
+// Mutation to clear and reinsert normalized categories
+export const reinsertProductCategories = mutation(async (ctx) => {
+  // Delete all existing categories
+  const existingCategories = await ctx.db.query("ProductCategory").collect();
+  for (const category of existingCategories) {
+    await ctx.db.delete(category._id);
+  }
+
+  // Insert normalized categories
   for (const category of productCategories) {
-    // Check if the category already exists using a query
-    const existingCategory = await ctx.db.query("ProductCategory")
-      .filter(q => q.eq("categoryName", category.categoryName))
-      .first();
+    const normalizedCategoryName = category.categoryName.trim().toLowerCase();
 
-    if (existingCategory) {
-      console.log(`Category "${category.categoryName}" already exists.`);
-      continue; // Skip to the next item if it exists
-    }
-
-    // Insert the new category if it doesn't exist
     const insertedID = await ctx.db.insert("ProductCategory", {
-      categoryName: category.categoryName,
+      categoryName: normalizedCategoryName,
     });
-
-    console.log(`Inserted category "${category.categoryName}" with ID: ${insertedID}`);
+    console.log(`Inserted normalized category "${category.categoryName}" with ID: ${insertedID}`);
   }
 });
