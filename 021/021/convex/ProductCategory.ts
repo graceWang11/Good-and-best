@@ -18,7 +18,7 @@ export const reinsertProductCategories = mutation(async (ctx) => {
 
   // Insert normalized categories
   for (const category of productCategories) {
-    const normalizedCategoryName = category.categoryName.trim().toLowerCase();
+    const normalizedCategoryName = category.categoryName.trim();
 
     const insertedID = await ctx.db.insert("ProductCategory", {
       categoryName: normalizedCategoryName,
