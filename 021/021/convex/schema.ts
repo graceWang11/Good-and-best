@@ -71,13 +71,11 @@ export default defineSchema({
   .index("by_order", ["orderID"])  // Index for querying by orderID
   .index("by_product", ["productID"]),  // Index for querying by productID
 
-  // Define the image storage table
   imageStorage: defineTable({
     storageID: v.string(),      // Unique identifier for the image storage
-    productID: v.id("products"), // Foreign key reference to products table
-  })
-  .index("by_product", ["productID"]),  // Index for querying by productID
-
+    productID: v.id("products"),  // Optional foreign key reference to products
+  }).index("by_product", ["productID"]),
+  
   //Define the ProductCategory Table 
   ProductCategory:defineTable({
     categoryName:v.string(), // Category name for the product

@@ -1,4 +1,3 @@
-import { v } from "convex/values";
 import { mutation } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 
@@ -49,7 +48,6 @@ export const insertProducts = mutation({
       map[category.categoryName] = category._id;
       return map;
     }, {} as Record<string, Id<"ProductCategory">>);
-
 
     for (const product of products) {
       // Determine the productCategoryID before inserting the product

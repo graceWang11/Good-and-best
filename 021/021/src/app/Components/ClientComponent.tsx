@@ -88,56 +88,59 @@ import { Id } from "../../../convex/_generated/dataModel";
 //     </div>
 //   );
 // }
-function SetStock() {
-  const [productId, setProductId] = useState("");
-  const [stockQuantity, setStockQuantity] = useState(0);
+//Stock Test
+// function SetStock() {
+//   const [productId, setProductId] = useState("");
+//   const [stockQuantity, setStockQuantity] = useState(0);
 
-  const setStockMutation = useMutation(api.stock.setStock);
+//   const setStockMutation = useMutation(api.stock.setStock);
 
-  const handleSubmit = async (e:any) => {
-    e.preventDefault();
-    if (productId && stockQuantity > 0) {
-      try {
-        // Type assertion to tell TypeScript that productId is an Id<"products">
-        const productIdConverted = productId as Id<"products">;
+//   const handleSubmit = async (e:any) => {
+//     e.preventDefault();
+//     if (productId && stockQuantity > 0) {
+//       try {
+//         // Type assertion to tell TypeScript that productId is an Id<"products">
+//         const productIdConverted = productId as Id<"products">;
 
-        await setStockMutation({ productId: productIdConverted, stockQuantity });
-        alert("Stock updated successfully!");
-      } catch (error) {
-        console.error("Error updating stock:", error);
-        alert("Failed to update stock. Check the console for more details.");
-      }
-    } else {
-      alert("Please enter a valid Product ID and stock quantity.");
-    }
-  };
+//         await setStockMutation({ productId: productIdConverted, stockQuantity });
+//         alert("Stock updated successfully!");
+//       } catch (error) {
+//         console.error("Error updating stock:", error);
+//         alert("Failed to update stock. Check the console for more details.");
+//       }
+//     } else {
+//       alert("Please enter a valid Product ID and stock quantity.");
+//     }
+//   };
 
-  return (
-    <div>
-      <h2>Set Product Stock</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Product ID:
-          <input
-            type="text"
-            value={productId}
-            onChange={(e) => setProductId(e.target.value)}
-          />
-        </label>
-        <br />
-        <label>
-          Stock Quantity:
-          <input
-            type="number"
-            value={stockQuantity}
-            onChange={(e) => setStockQuantity(Number(e.target.value))}
-          />
-        </label>
-        <br />
-        <button type="submit">Set Stock</button>
-      </form>
-    </div>
-  );
-}
+//   return (
+//     <div>
+//       <h2>Set Product Stock</h2>
+//       <form onSubmit={handleSubmit}>
+//         <label>
+//           Product ID:
+//           <input
+//             type="text"
+//             value={productId}
+//             onChange={(e) => setProductId(e.target.value)}
+//           />
+//         </label>
+//         <br />
+//         <label>
+//           Stock Quantity:
+//           <input
+//             type="number"
+//             value={stockQuantity}
+//             onChange={(e) => setStockQuantity(Number(e.target.value))}
+//           />
+//         </label>
+//         <br />
+//         <button type="submit">Set Stock</button>
+//       </form>
+//     </div>
+//   );
+// }
 
-export default SetStock;
+// export default SetStock;
+
+// Image upload test

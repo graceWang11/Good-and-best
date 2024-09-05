@@ -25,7 +25,6 @@ export const setStock = mutation({
       console.log(`Category "${categoryname}" not found. Skipping product "${productName}".`);
       return;
     }
-
     // Check if the product exists in the database based on productName, brand, and productCategoryID
     let product = await ctx.db.query("products")
       .filter(q => 

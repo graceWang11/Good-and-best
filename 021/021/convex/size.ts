@@ -12,7 +12,6 @@ export const insertSizes = mutation(async (ctx) => {
     return map;
   }, {} as Record<string, Id<"products">>);
 
-  // Example size data with matched product information
   const sizes = [
     // Sizes for ProductID 13 (Power Cushion 65Z 3)
     { brand: "Yonex", series: "-", productName: "Power Cushion 65Z 3", sizeRegion: "cm", sizeValue: "26.50" },
