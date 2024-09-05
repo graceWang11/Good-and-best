@@ -2,52 +2,72 @@ import { v } from "convex/values";
 import { mutation } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 
-// Define a mutation called 'store' which allows you to store user information in the database
 export const store = mutation({
-  // Specify that the mutation takes arguments for UserName, Address, and PhoneNumber
   args: {
     userName: v.string(),
     address: v.string(),
     phoneNumber: v.string(),
+    email:v.string()
   },
 
-  // The handler function is where the logic for the mutation is defined
   handler: async (
     ctx,
-    { userName, address, phoneNumber }: { userName: string; address: string; phoneNumber: string }
+    { userName, address, phoneNumber,email}: { userName: string; address: string; phoneNumber: string ;email:string}
   ) => {
-    // Get the identity of the currently authenticated user
     const identity = await ctx.auth.getUserIdentity();
 
-    // If there is no authenticated user, throw an error
-    if (!identity) {
-      throw new Error("Called store without authenticated user");
+    if (!identity || !identity.email) {
+      console.log("Email mismatch or user not authenticated");
+      return null; // Return null instead of throwing an error
     }
 
-    // Query the database to check if the user is already stored
+    // Check if the user already exists
     const user = await ctx.db
-      .query("users") // Specify the 'users' table/collection
+      .query("users")
       .withIndex("by_token", (q) =>
-        // Use the 'by_token' index to find the user by their tokenIdentifier
         q.eq("tokenIdentifier", identity.tokenIdentifier)
       )
-      .unique(); // Expect a unique result
+      .unique();
 
-    // If the user is found (not null), return their user ID
     if (user !== null) {
       return user._id;
     }
+ 
 
-    // If the user is not found, insert a new user record into the 'users' table
+    // Retrieve user types
+    const userTypes = await ctx.db.query("userTypes").collect();
+    const userTypeMap = userTypes.reduce((map, userType) => {
+      map[userType.UserType] = userType._id;
+      return map;
+    }, {} as Record<string, Id<"userTypes">>);
+
+    // Determine the UserTypeID before inserting the user
+    let userTypeID: Id<"userTypes">;
+
+    if (identity.email === "goodandbestteam@gmail.com") {
+      // Assign Admin role
+      userTypeID = userTypeMap["Admin"];
+      if (!userTypeID) {
+        throw new Error("Admin user type not found");
+      }
+    } else {
+      // Assign Customer role as the default
+      userTypeID = userTypeMap["Customer"];
+      if (!userTypeID) {
+        throw new Error("Customer user type not found");
+      }
+    }
+
+    // Insert a new user record with userTypeID included
     const userID = await ctx.db.insert("users", {
-      tokenIdentifier: identity.tokenIdentifier, // Store the user's token identifier
-      email: identity.email!, // Store the user's email (using non-null assertion)
-      userName, // Store the UserName
-      address, // Store the Address
-      phoneNumber, // Store the PhoneNumber
+      tokenIdentifier: identity.tokenIdentifier,
+      email,
+      userName,
+      address,
+      phoneNumber,
+      userTypeID, // Include userTypeID in the insert operation
     });
 
-    // Return the new user ID after insertion
     return userID;
   },
 });

@@ -15,8 +15,14 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as imageStorage from "../imageStorage.js";
+import type * as Product from "../Product.js";
+import type * as productAttributes from "../productAttributes.js";
+import type * as ProductCategory from "../ProductCategory.js";
+import type * as size from "../size.js";
+import type * as stock from "../stock.js";
 import type * as tasks from "../tasks.js";
 import type * as user from "../user.js";
+import type * as UserType from "../UserType.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -28,8 +34,14 @@ import type * as user from "../user.js";
  */
 declare const fullApi: ApiFromModules<{
   imageStorage: typeof imageStorage;
+  Product: typeof Product;
+  productAttributes: typeof productAttributes;
+  ProductCategory: typeof ProductCategory;
+  size: typeof size;
+  stock: typeof stock;
   tasks: typeof tasks;
   user: typeof user;
+  UserType: typeof UserType;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
