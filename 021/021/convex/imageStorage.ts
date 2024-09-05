@@ -92,3 +92,19 @@ export const insertImageWithDescription = mutation(async (ctx) => {
     }
   }
 });
+
+
+export const fetchAllImageUrls = query(async ({ storage, db }) => {
+  const images = await db.query("imageStorage").collect(); // Fetch all image records
+  
+  const urls = await Promise.all(
+    images.map(async (image) => {
+      const url = await storage.getUrl(image.storageID);
+      console.log(`Image URL for storageID ${image.storageID}: ${url}`);  // Log URLs
+      const product = await db.get(image.productID);  // Fetch product details
+      return { url, productID: image.productID, productName: product?.productName || 'Unknown Product' };
+    })
+  );
+  
+  return urls;
+});

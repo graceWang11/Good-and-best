@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import { useEffect, useState } from "react";
 import { useMutation } from "convex/react";
@@ -7,6 +8,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import LoginButton from "./LoginComponent";
 import { Id } from "../../../convex/_generated/dataModel"; 
+import { fetchAllImageUrls } from '../../../convex/imageStorage';
 
 // export default function ClientComponent() {
 //   const { isLoaded, isSignedIn, user } = useUser();
@@ -143,4 +145,33 @@ import { Id } from "../../../convex/_generated/dataModel";
 
 // export default SetStock;
 
-// Image upload test
+// Image display test
+// Component to display all product images
+export default function DisplayProductImages() {
+    const imageUrls = useQuery(api.imageStorage.fetchAllImageUrls);
+  
+    if (!imageUrls) {
+      return <div>Loading...</div>;
+    }
+  
+    console.log('Fetched image URLs:', imageUrls); // Log URLs to inspect them
+  
+    return (
+      <div className="container text-center">
+        <h2>Product Images</h2>
+        <div className="row">
+          {imageUrls.map((image, index) => (
+            <div key={index} className="col-md-4 mb-4">
+              <img
+                //src={image.url || '/path/to/placeholder-image.jpg'}  // Use a placeholder if URL is null
+                alt={`Product-${image.productID}`}
+                className="img-fluid"
+                style={{ maxHeight: "200px", marginBottom: "10px" }}
+              />
+              <p>Product Name: {image.productName}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
