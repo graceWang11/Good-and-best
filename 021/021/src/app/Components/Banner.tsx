@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
+import {Pagination} from 'swiper/modules'; 
 import 'swiper/css';
 import 'swiper/css/pagination';
 import Image from 'next/image';
 
 // Map brand names to their respective image IDs
-const brandImageIds: { [key: string]: string } = {
+const brandImages: { [key: string]: string } = {
   Victor: "kg2f8ejqxpqbw7q2q86yxr8btd70rk4e",
   Yonex: "kg26dy1qhfd2saj9qr60r6ydk570rtj0",
   "Li-Ning": "kg29b486jhyebew0r40jbkr7kh70sbz8",
@@ -19,15 +19,9 @@ const brandImageIds: { [key: string]: string } = {
 
 export default function BrandCarousel() {
   const [brands, setBrands] = useState<string[]>([]);
-  const imageUrls: { [key: string]: string | undefined } = {};
 
   // Fetch products from the API and filter out unique brands
   const products = useQuery(api.Product.getAll);
-
-  // Use useQuery to fetch image URLs for each brand
-  Object.keys(brandImageIds).forEach((brand) => {
-    imageUrls[brand] = useQuery(api.imageStorage.getImageUrl, { imageId: brandImageIds[brand] });
-  });
 
   useEffect(() => {
     if (products) {
@@ -57,12 +51,12 @@ export default function BrandCarousel() {
         {brands.map((brand) => (
           <SwiperSlide key={brand}>
             <div className="swiper-slide-inner flex justify-center">
-              {imageUrls[brand] && (
+              {brandImages[brand] && (
                 <Image
-                  src={imageUrls[brand]}  // Use the fetched image URL for the brand
+                  src={`/api/image/${brandImages[brand]}`}  // Use Image from next/image
                   alt={brand}
-                  width={150}
-                  height={100}
+                  width={150}  // Set the desired width
+                  height={100}  // Keep height auto for responsive
                   className="swiper-slide-image"
                 />
               )}

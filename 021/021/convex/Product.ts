@@ -1,4 +1,4 @@
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 
 export const insertProducts = mutation({
@@ -69,4 +69,9 @@ export const insertProducts = mutation({
       console.log(`Inserted product "${product.productName}" with ID: ${insertedID}`);
     }
   },
+});
+
+export const getAll = query(async ({ db }) => {
+  const products = await db.query("products").collect();
+  return products; // Return all products
 });

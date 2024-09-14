@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
-import { Input } from "@/components/ui/input"; // Import the Input from shadcn
-import { Button } from "@/components/ui/button"; // Import Button from shadcn
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useMutation } from "convex/react";
-import { api } from "../../../convex/_generated/api"; // Adjust the path to your API setup
+import { api } from "../../../convex/_generated/api"; 
 import { useQuery } from "convex/react";
 
 export default function TopNavBar() {

@@ -1,31 +1,57 @@
-// /* eslint-disable react/no-unescaped-entities */
-// "use client";
+/* eslint-disable react/no-unescaped-entities */
+"use client";
 
-// import { useEffect } from "react";
-// import { useMutation } from "convex/react";
-// import { api } from "../../../convex/_generated/api";
-// import { useQuery } from "convex/react";
+import { useQuery } from "convex/react"; // Assuming you're using convex for fetching images
+import { api } from "../../../convex/_generated/api"; // Adjust path as per your project
+import { Button } from "@/components/ui/button"; // Adjust the import path based on your Shadcn Button component's location
 
-// export default function BannerComponent() {
+const AboutUs = () => {
+  // Fetch the image from API
+  const bgUrl = useQuery(api.imageStorage.getImageUrl, {
+    imageId: "kg235f0rbve62bnbxfdpyvht39702r58",
+  });
 
-//     const bgUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg235f0rbve62bnbxfdpyvht39702r58" });
+  // Return loading state if image isn't available yet
+  if (!bgUrl) {
+    return <div>Loading...</div>;
+  }
 
-//     return (
-//         <div className="position-relative overflow-hidden bg-body tertiary" style={{
-//             backgroundImage: `url(${bgUrl})`,
-//             backgroundSize: 'cover',
-//             backgroundPosition: 'center',
-//             backgroundRepeat: 'no-repeat',
-//             display: 'flex',
-//             alignItems: 'center',
-//             justifyContent: 'flex-start'
-//             }}>
-//             <div className="col-md-6 p-lg-5" style={{ maxWidth: '50%' }}>
-//                 <p style={{ color: '#FF9874', textAlign: 'justify' }}>Welcome to Good And Best Badminton, your one-stop destination for all things badminton! Whether you're a seasoned player, an enthusiastic beginner, or a sports fan, we are here to equip you with the best gear and accessories to elevate your game.</p>
-//                 <p style={{ color: '#FF9874', textAlign: 'justify' }}>Founded in 2024, Good And Best Badminton was born out of a passion for badminton and a commitment to provide players of all levels with high-quality equipment. We understand that having the right gear can make a significant difference in performance, so we offer a carefully curated selection of rackets, shoes, shuttlecocks, and accessories from the most trusted brands in the industry.</p>
-//                 <p style={{ color: '#FF9874', textAlign: 'justify' }}>At Good And Best Badminton, we believe that every player deserves the best. That's why our team is dedicated to providing exceptional customer service, ensuring you find exactly what you need. Whether you’re looking for the latest technology in rackets or comfortable shoes for long hours on the court, our knowledgeable staff is here to help you make the right choice.</p>
-//                 <p style={{ color: '#FF9874', textAlign: 'justify' }}>Thank you for choosing Good And Best Badminton. Let's smash your goals together!</p>
-//             </div>
-//         </div>
-//     )
-// }
+  return (
+    <section
+      className="relative bg-cover bg-center bg-no-repeat py-12 px-4 text-white"
+      style={{
+        backgroundImage: `url(${bgUrl})`, // Apply the dynamic image as the background
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-3xl mx-auto text-center">
+        <h2 className="text-4xl font-bold mb-6">Welcome to Good And Best Badminton</h2>
+        <p className="text-lg mb-6">
+          Your one-stop destination for all things badminton! Whether you're a seasoned player, an enthusiastic beginner, or a sports fan, we are here to equip you with the best gear and accessories to elevate your game.
+        </p>
+        <p className="text-lg mb-6">
+          Founded in 2024, Good And Best Badminton was born out of a passion for badminton and a commitment to provide players of all levels with high-quality equipment. We offer a carefully curated selection of rackets, shoes, shuttlecocks, and accessories from trusted brands.
+        </p>
+        <p className="text-lg mb-6">
+          At Good And Best Badminton, we believe that every player deserves the best. Our team is dedicated to providing exceptional customer service, ensuring you find exactly what you need.
+        </p>
+        <p className="text-lg mb-6">
+          Thank you for choosing Good And Best Badminton. Let's smash your goals together!
+        </p>
+
+        {/* Shadcn Button */}
+        <Button variant="default" className="bg-blue-500 text-white mt-6">
+          Learn More
+        </Button>
+      </div>
+    </section>
+  );
+};
+
+export default AboutUs;
