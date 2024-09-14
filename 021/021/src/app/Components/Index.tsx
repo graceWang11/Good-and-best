@@ -21,7 +21,8 @@ export default function ClientComponent() {
     storeUser({
       userName: "",
       address: "",
-      phoneNumber: ""
+      phoneNumber: "",
+      email:""
     });
   });
 
