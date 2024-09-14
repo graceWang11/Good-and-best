@@ -7,9 +7,6 @@ import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
 import TopNavBar from "./TopNavBar";
-import BannerComponent from "./BannerComponent";
-import BestSeller from "./BestSeller";
-import AboutUS from "./AboutUS"
 import Footer from "./Footer";
 
 export default function ClientComponent() {
@@ -31,12 +28,12 @@ export default function ClientComponent() {
     
     <div>
       <TopNavBar />
-      <BannerComponent />
+      {/* <BannerComponent />
       <div style={{ padding: '20px' }}>
-        <BestSeller />
-        <AboutUS />
+        <BestSeller /> */}
+        {/* <AboutUS /> */}
         <Footer />
-      </div>
+      {/* </div> */}
     </div>
   );
 }
