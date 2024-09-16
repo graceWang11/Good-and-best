@@ -1,15 +1,15 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { useQuery } from "convex/react"; // Assuming you're using convex for fetching images
-import { api } from "../../../convex/_generated/api"; // Adjust path as per your project
-import { Button } from "@/components/ui/button"; // Adjust the import path based on your Shadcn Button component's location
-import Image from "next/image"; // If you want to use Image optimization from Next.js
+import { useQuery } from "convex/react"; 
+import { api } from "../../../convex/_generated/api"; 
+import { Button } from "@/components/ui/button"; 
+import Image from "next/image"; 
 
 const ShopBadmintonAccessories = () => {
   // Fetch the background image from API
   const bgUrl = useQuery(api.imageStorage.getImageUrl, {
-    imageId: "kg260m14ak58c8j68zx513dnn970wpaq", // Use the provided image ID
+    imageId: "kg260m14ak58c8j68zx513dnn970wpaq",
   });
 
   // Return loading state if image isn't available yet
@@ -39,7 +39,7 @@ const ShopBadmintonAccessories = () => {
 
         {/* Shadcn Button */}
         <div className="flex justify-center mt-6">
-          <Button variant="default" className="bg-blue-500 text-white">
+          <Button variant="default" className="bg-blue-500 text-white hover:scale-105 hover:shadow-lg transition-transform">
             Shop Accessories
           </Button>
         </div>

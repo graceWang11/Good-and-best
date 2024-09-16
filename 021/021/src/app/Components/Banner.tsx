@@ -1,4 +1,4 @@
-"use client";
+"use client";  // Ensure this is a client-side component
 
 import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
@@ -7,9 +7,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import Image from "next/image"; // Next.js Image component
+import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { useRouter } from 'next/navigation'; 
+import BrandImage from "./BrandImage";
 import styles from './Banner.module.css';
-import BrandImage from './BrandImage';  // Import the BrandImage component
+import { Button } from "@/components/ui/button";
 
 // Map brand names to their respective image IDs
 const brandImages: { [key: string]: string } = {
@@ -20,9 +23,9 @@ const brandImages: { [key: string]: string } = {
 };
 
 export default function BannerWithCarousel() {
-  // BrandCarousel logic
   const [brands, setBrands] = useState<string[]>([]);
   const products = useQuery(api.Product.getAll);
+  const router = useRouter();  // Initialize Next.js router
 
   useEffect(() => {
     if (products) {
@@ -32,6 +35,14 @@ export default function BannerWithCarousel() {
       setBrands(uniqueBrands);
     }
   }, [products]);
+
+  // Function to handle card click and navigate to the brand page
+  const handleCardClick = (brand: string) => {
+    if (typeof window !== "undefined") {
+      // Ensure this only runs on the client
+      router.push(`/brands/${brand}`);
+    }
+  };
 
   // Banner logic
   const backgroundImageUrl = useQuery(api.imageStorage.getImageUrl, {
@@ -52,13 +63,13 @@ export default function BannerWithCarousel() {
   }
 
   return (
-    <div>
-      {/* Banner Section */}
+      <div>
+      {/* Previous Banner Layout */}
       <div
-        className={styles.bannerContainer}
+        className={styles.bannerContainer}  // Applying previous CSS styles
         style={{
           backgroundImage: `url(${backgroundImageUrl})`,
-          backgroundSize: "cover",
+          backgroundSize: "cover",  // Keep the background covering
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
@@ -89,9 +100,11 @@ export default function BannerWithCarousel() {
                 : "Price Unavailable"}
             </p>
             <div className={styles.buttonWrapper}>
-              <a className={styles.shopButton} href="#">
+              <Button
+                className="bg-blue-500 text-white hover:scale-105 hover:shadow-lg transition-transform"
+              >
                 Shop now
-              </a>
+              </Button>
             </div>
           </div>
         </div>
@@ -115,8 +128,20 @@ export default function BannerWithCarousel() {
             // Only render a SwiperSlide if the brand has an associated imageId
             return imageId ? (
               <SwiperSlide key={brand}>
-                <div className="swiper-slide-inner flex justify-center">
-                  <BrandImage brand={brand} imageId={imageId} />
+                {/* Make each card clickable */}
+                <div
+                  onClick={() => handleCardClick(brand)}  // Handle the click to navigate
+                  className="block w-full h-full cursor-pointer"
+                >
+                  {/* Set consistent card size and hover effect */}
+                  <Card className="w-64 h-64 flex justify-center items-center hover:scale-105 hover:shadow-lg transition-transform">
+                    <CardContent className="flex justify-center items-center">
+                      {/* Wrap the BrandImage in a div that accepts className */}
+                      <div className="flex justify-center items-center w-full h-full">
+                        <BrandImage brand={brand} imageId={imageId} />
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
               </SwiperSlide>
             ) : null; // If no imageId, skip rendering the slide
