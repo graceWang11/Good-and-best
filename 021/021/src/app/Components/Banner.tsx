@@ -34,9 +34,9 @@ export default function Banner() {
   if(!leftImageUrl){
     return<div>123</div>
   }
-//   if(!productDetails){
-//     return<div>456</div>
-//   }
+  if(!productDetails){
+    return<div>456</div>
+  }
 
 return (
     <div
