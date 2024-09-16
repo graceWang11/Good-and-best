@@ -9,7 +9,8 @@ import { useQuery } from "convex/react";
 import TopNavBar from "./TopNavBar";
 import Footer from "./Footer";
 import AboutUs from "./AboutUS";
-import Banner from "./Banner"
+import BannerCarousel from "./BrandCarousel"
+import Banner from "./Banner";
 
 export default function ClientComponent() {
   const storeUser = useMutation(api.user.store);
@@ -31,6 +32,7 @@ export default function ClientComponent() {
     <div>
       <TopNavBar />
       <Banner />
+      <BannerCarousel />
       <div style={{ padding: '20px' }}>
         {/* <BestSeller /> */}
         <AboutUs />

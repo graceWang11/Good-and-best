@@ -1,0 +1,91 @@
+/* Wrapper for the entire banner */
+.bannerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    min-height: 500px;
+    width: 100%;
+    position: relative; /* For proper background handling */
+    box-sizing: border-box;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  /* Content Wrapper for flexbox layout */
+  .contentWrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    max-width: 1200px;
+    position: relative;
+    z-index: 2; /* Ensure content is above the background */
+  }
+  
+  /* Product image styling */
+  .productImageWrapper {
+    flex: 0 0 200px; /* Adjust flex shrink and grow */
+    display: flex;
+    justify-content: center;
+    z-index: 2; /* Ensure it doesn't overlap with background */
+  }
+  
+  .productImage {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  /* Styling for product details */
+  .productDetails {
+    flex: 1;
+    padding-left: 40px;
+    color: #333;
+    text-align: left;
+    z-index: 2; /* Ensure content is above background */
+  }
+  
+  .productTitle {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .productBrand {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #888;
+  }
+  
+  .productPrice {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .buttonWrapper {
+    margin-top: 20px;
+  }
+  
+  .shopButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 5px;
+  }
+  
+  /* Ensure that the background is not blocking content */
+  .bannerContainer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.7); /* Transparent overlay to make text more readable */
+    z-index: 1; /* Background layer */
+  }
+  

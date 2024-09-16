@@ -1,77 +1,78 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import Image from 'next/image';
+import { Button } from "../../components/ui/button";
+import { Input } from "../../components/ui/input";
+import { FaFacebook, FaTwitter, FaYoutube } from "react-icons/fa";
+import Link from "next/link";
 
-// Map brand names to their respective image IDs
-const brandImageIds: { [key: string]: string } = {
-  Victor: "kg2f8ejqxpqbw7q2q86yxr8btd70rk4e",
-  Yonex: "kg26dy1qhfd2saj9qr60r6ydk570rtj0",
-  "Li-Ning": "kg29b486jhyebew0r40jbkr7kh70sbz8",
-  Kawasaki: "kg24jtgpb1h03bytra51y14zw570sxhw",
-};
+export default function Footer() {
+    const storeUser = useMutation(api.user.store);
+    const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg20gd15hk3tv13mxn3edesmhh6z9kj8" });
+    const currentYear = new Date().getFullYear();
 
-export default function BrandCarousel() {
-  const [brands, setBrands] = useState<string[]>([]);
-  const imageUrls: { [key: string]: string | undefined } = {};
+    return (
+        <footer className="bg-[#F0F4F8] py-10 font-sans">
+            <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
+                {/* Section 1: Logo and description */}
+                <div className="space-y-4 text-center md:text-left">
+                    <img 
+                        src={imageUrl || "/fallback-logo.png"} 
+                        alt="Logo" 
+                        className="h-20 w-auto mx-auto md:mx-0" 
+                    />
+                    <p>Smash Limits, Serve Excellence</p>
+                    <p>Good and Best</p>
+                </div>
 
-  // Fetch products from the API and filter out unique brands
-  const products = useQuery(api.Product.getAll);
+                {/* Section 2: Useful Links */}
+                <div className="space-y-4">
+                    <h5 className="text-lg font-semibold">Useful Links</h5>
+                    <ul className="space-y-2">
+                        <li><a href="https://websitedemos.net/electric-scooter-04/shop/?customize=template" className="text-blue-600 hover:underline">Shop All</a></li>
+                        <li><a href="https://websitedemos.net/electric-scooter-04/product-category/electric-scooters/?customize=template" className="text-blue-600 hover:underline">Electric Scooters</a></li>
+                        <li><a href="https://websitedemos.net/electric-scooter-04/product-category/accessories/?customize=template" className="text-blue-600 hover:underline">Accessories</a></li>
+                        <li><Link href={"/AboutUs"} className="text-blue-600 hover:underline">About</Link></li>
+                        <li><a href="https://websitedemos.net/electric-scooter-04/contact/?customize=template" className="text-blue-600 hover:underline">Contact</a></li>
+                    </ul>
+                </div>
 
-  // Use useQuery to fetch image URLs for each brand
-  Object.keys(brandImageIds).forEach((brand) => {
-    imageUrls[brand] = useQuery(api.imageStorage.getImageUrl, { imageId: brandImageIds[brand] });
-  });
+                {/* Section 3: Contact Us */}
+                <div className="space-y-4 text-center">
+                    <h5 className="text-lg font-semibold">Contact Us</h5>
+                    <p>
+                        <b>E:</b> <a href="mailto:info@example.com">goodandbest@gmail.com</a><br />
+                        <b>P:</b> 03 1100 1100<br />
+                        <b>A:</b> Mawson Lakes Blvd, Mawson Lakes SA 5095
+                    </p>
+                </div>
 
-  useEffect(() => {
-    if (products) {
-      const uniqueBrands = Array.from(
-        new Set(products.map((product: any) => product.brand))
-      );
-      setBrands(uniqueBrands);
-    }
-  }, [products]);
-
-  if (!products) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <div className="container mx-auto py-8">
-      <h2 className="text-2xl font-bold text-center mb-8">Our Brands</h2>
-
-      <Swiper
-        modules={[Pagination]}
-        pagination={{ clickable: true }}
-        spaceBetween={20}
-        slidesPerView={3}
-        loop={true}
-        className="elementor-image-carousel-wrapper"
-      >
-        {brands.map((brand) => (
-          <SwiperSlide key={brand}>
-            <div className="swiper-slide-inner flex justify-center">
-              {imageUrls[brand] && (
-                <Image
-                  src={imageUrls[brand]}  // Use the fetched image URL for the brand
-                  alt={brand}
-                  width={150}
-                  height={100}
-                  className="swiper-slide-image"
-                />
-              )}
+                {/* Section 4: Newsletter Signup */}
+                <div className="space-y-4 text-center md:text-right">
+                    <h5 className="text-lg font-semibold">Sign up for special offers</h5>
+                    <form className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-end space-y-4 md:space-y-0 md:space-x-4">
+                        <Input 
+                            type="email" 
+                            placeholder="Email address" 
+                            required 
+                            className="w-full md:w-auto"
+                        />
+                        <Button type="submit" variant="default" className="w-full md:w-auto">
+                            Subscribe
+                        </Button>
+                    </form>
+                </div>
             </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
 
-      <div className="swiper-pagination"></div>
-    </div>
-  );
+            {/* Bottom footer with centered copyright */}
+            <div className="border-t border-gray-300 mt-10 py-4">
+                <div className="container mx-auto text-center">
+                    <p className="mb-0">&copy; {currentYear} Good and Best Badminton | Powered by Good and Best</p>
+                </div>
+            </div>
+        </footer>
+    );
 }

@@ -75,3 +75,90 @@ export const getAll = query(async ({ db }) => {
   const products = await db.query("products").collect();
   return products; // Return all products
 });
+
+// Define the type for the returned product ID
+type GetProductByImageIdResult = string | null;
+
+export const getProductByImageId = query(async ({ db }, { imageId }: { imageId: string }): Promise<GetProductByImageIdResult> => {
+  // Query the imageStorage table to get the productID associated with the imageId
+  const imageRecord = await db.query("imageStorage").filter(q => q.eq("storageID", imageId)).first();
+
+  if (!imageRecord) return null; // Handle case where image doesn't exist
+  return imageRecord.productID;  // Return the productID from the imageStorage table
+});
+
+
+
+// // Define the type for the returned product details
+// type ProductDetails = {
+//   productName: string;
+//   brand: string;
+//   price: number;
+//   series: string;
+// } | null;
+
+// export const getProductDetailsByImageId = query(async ({ db }, { imageId }: { imageId: string }) => {
+//   // Query the imageStorage table to get the productID associated with the imageId
+//   const imageRecord = await db.query("imageStorage").filter(q => q.eq("storageID", imageId)).first();
+
+//   if (!imageRecord) return null; // Handle case where the image doesn't exist
+
+//   // // Convert productId to string
+//   // const productId: string = imageRecord.productID.toString(); 
+
+//   // // Now query the products table using the productId
+//   // const product = await db.query("products").filter(q => q.eq("_id", productId)).first();
+//   // if (!product) return null; // Handle case where no product is found
+
+//   // // Return the product details
+//   // return {
+//   //   productName: product.productName,
+//   //   brand: product.brand,
+//   //   series: product.Series,
+//   //   price: product.price,
+//   // };
+// });Promise<ProductDetails>
+
+// Define the query function to fetch the productID from imageStorage
+// Define the query function to fetch the productID from imageStorage
+// Define the query function to fetch the productID from imageStorage
+// Define the query function to fetch the productID from imageStorage
+// Define the type for the returned product details
+type ProductDetails = {
+  productName: string;
+  brand: string;
+  price: number;
+  series: string;
+} | null;
+
+export const getProductDetailsByImageId = query(async ({ db }, { imageId }: { imageId: string }): Promise<ProductDetails> =>{
+  // Ensure imageId is defined
+  if (!imageId) {
+    console.log("Error: imageId is undefined or missing.");
+    return null;
+  }
+
+  // Trim the imageId to avoid any issues with extra spaces or hidden characters
+  const trimmedImageId = imageId.trim();
+
+  // Get all records from imageStorage
+  const allImageRecords = await db.query("imageStorage").collect();
+
+  const imageRecord = allImageRecords.find(record => record.storageID === trimmedImageId);
+
+  if (!imageRecord) {
+    console.log(`No image found for imageId: ${trimmedImageId}`);
+    return null;
+  }
+
+  const productID: Id<"products"> = imageRecord.productID
+  // Log all records from the products table
+  const allProductRecords = await db.query("products").collect();
+  const productRecord = allProductRecords.find(record => record._id === productID)
+  return {
+    productName: productRecord?.productName || "Unknown Product",
+    brand: productRecord?.brand || "Unknown Brand",
+    series: productRecord?.Series || "Unknown Series",
+    price: productRecord?.price ?? 0, // Use 0 as the default price
+  };
+});
