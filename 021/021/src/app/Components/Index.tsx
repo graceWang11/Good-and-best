@@ -11,6 +11,7 @@ import Footer from "./Footer";
 import AboutUs from "./AboutUS";
 import BannerCarousel from "./BrandCarousel"
 import Banner from "./Banner";
+import WhyChooseUs from "./Choose";
 
 export default function ClientComponent() {
   const storeUser = useMutation(api.user.store);
@@ -35,6 +36,7 @@ export default function ClientComponent() {
       <BannerCarousel />
       <div style={{ padding: '20px' }}>
         {/* <BestSeller /> */}
+        <WhyChooseUs />
         <AboutUs />
         <Footer />
       </div>
