@@ -33,7 +33,6 @@ export default function ClientComponent() {
     <div>
       <TopNavBar />
       <Banner />
-      <BannerCarousel />
       <div style={{ padding: '20px' }}>
         {/* <BestSeller /> */}
         <WhyChooseUs />
