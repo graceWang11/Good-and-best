@@ -13,6 +13,7 @@ import Banner from "./Banner";
 import WhyChooseUs from "./Choose";
 import ShopBadmintonAccessories from "./Accesoniries";
 
+
 export default function ClientComponent() {
   const storeUser = useMutation(api.user.store);
 

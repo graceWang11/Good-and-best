@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState } from "react";
@@ -8,6 +9,8 @@ import Link from "next/link";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api"; 
 import { useQuery } from "convex/react";
+import LoginButton from "./Login";
+
 
 export default function TopNavBar() {
     const storeUser = useMutation(api.user.store);
@@ -60,12 +63,8 @@ export default function TopNavBar() {
                     </div>
                 </Link>
 
-                {/* Login/User Icon */}
-                <Link href="/login">
-                    <Button variant="ghost">
-                        <FaUser className="text-gray-700" size={24} />
-                    </Button>
-                </Link>
+                {/* Use Clerk's LoginButton instead of a Link to /login */}
+                <LoginButton />
 
                 {/* Mobile Menu Button */}
                 <Button
@@ -100,7 +99,7 @@ export default function TopNavBar() {
 
             {/* Mobile Menu */}
             {isMenuOpen && (
-                <nav className="md:hidden bg-gray-100 p-4 space-y-2"> {/* Mobile navigation */}
+                <nav className="md:hidden bg-gray-100 p-4 space-y-2"> 
                     <Link href="/shop" className="block text-gray-700 hover:bg-gray-200 py-2 px-4 rounded-md">
                         Shop All
                     </Link>
