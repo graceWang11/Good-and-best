@@ -11,8 +11,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from 'next/navigation'; 
 import BrandImage from "./BrandImage";
-import styles from './Banner.module.css';
-import { Button } from "@/components/ui/button";
+
 
 // Map brand names to their respective image IDs
 const brandImages: { [key: string]: string } = {
@@ -25,7 +24,7 @@ const brandImages: { [key: string]: string } = {
 export default function BannerWithCarousel() {
   const [brands, setBrands] = useState<string[]>([]);
   const products = useQuery(api.Product.getAll);
-  const router = useRouter();  // Initialize Next.js router
+  const router = useRouter() ;
 
   useEffect(() => {
     if (products) {
@@ -38,10 +37,7 @@ export default function BannerWithCarousel() {
 
   // Function to handle card click and navigate to the brand page
   const handleCardClick = (brand: string) => {
-    if (typeof window !== "undefined") {
-      // Ensure this only runs on the client
-      router.push(`/brands/${brand}`);
-    }
+    router.push(`/Brands?brand=${encodeURIComponent(brand)}`); // Navigate to the brand-specific page
   };
 
   // Banner logic
@@ -63,48 +59,46 @@ export default function BannerWithCarousel() {
   }
 
   return (
-      <div>
-      {/* Previous Banner Layout */}
+    <div>
+      {/* Banner Section */}
       <div
-        className={styles.bannerContainer}  // Applying previous CSS styles
         style={{
           backgroundImage: `url(${backgroundImageUrl})`,
-          backgroundSize: "cover",  // Keep the background covering
+          backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className={styles.contentWrapper}>
-          <div className={styles.productImageWrapper}>
+        <div>
+          <div>
             {/* Left Image */}
             <Image
               src={leftImageUrl}
               alt={productDetails?.productName || "Product Image"}
               width={200}
               height={200}
-              className={styles.productImage}
             />
           </div>
 
           {/* Product Details */}
-          <div className={styles.productDetails}>
-            <h2 className={styles.productTitle}>
+          <div>
+            <h2>
               {productDetails?.productName || "Unknown Product"}
             </h2>
-            <p className={styles.productBrand}>
+            <p>
               {productDetails?.brand || "Unknown Brand"}
             </p>
-            <p className={styles.productPrice}>
+            <p>
               {productDetails?.price
                 ? `$${productDetails.price}`
                 : "Price Unavailable"}
             </p>
-            <div className={styles.buttonWrapper}>
-              <Button
+            <div>
+              <button
                 className="bg-blue-500 text-white hover:scale-105 hover:shadow-lg transition-transform"
               >
                 Shop now
-              </Button>
+              </button>
             </div>
           </div>
         </div>

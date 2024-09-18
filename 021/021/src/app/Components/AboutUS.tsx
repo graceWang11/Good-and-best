@@ -1,10 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { useQuery } from "convex/react"; // Assuming you're using convex for fetching images
-import { api } from "../../../convex/_generated/api"; // Adjust path as per your project
-import { Button } from "@/components/ui/button"; // Adjust the import path based on your Shadcn Button component's location
-
+import { useQuery } from "convex/react"; 
+import { api } from "../../../convex/_generated/api"; 
+import { Button } from "@/components/ui/button";
 const AboutUs = () => {
   // Fetch the image from API
   const bgUrl = useQuery(api.imageStorage.getImageUrl, {
@@ -20,7 +19,7 @@ const AboutUs = () => {
     <section
       className="relative bg-cover bg-center bg-no-repeat py-12 px-4 text-white"
       style={{
-        backgroundImage: `url(${bgUrl})`, // Apply the dynamic image as the background
+        backgroundImage: `url(${bgUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

@@ -7,7 +7,7 @@ import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import LoginButton from "./LoginComponent";
+import LoginButton from "./Login";
 import { Id } from "../../../convex/_generated/dataModel"; 
 import { fetchAllImageUrls } from '../../../convex/imageStorage';
 

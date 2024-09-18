@@ -12,12 +12,11 @@ import AboutUs from "./AboutUS";
 import Banner from "./Banner";
 import WhyChooseUs from "./Choose";
 import ShopBadmintonAccessories from "./Accesoniries";
+import Victor from "./BrandCatgories/BrandProductsList"
 
 
 export default function ClientComponent() {
   const storeUser = useMutation(api.user.store);
-
-  const testUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg26whsnx2wc31779p2m5e7r1x6z8tqf" });
 
   useEffect(() => {
     storeUser({

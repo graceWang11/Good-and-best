@@ -5,7 +5,6 @@ export const insertProducts = mutation({
   args: {}, // No arguments needed as data is hardcoded
 
   handler: async (ctx) => {
-    // Example product data with `categoryname`
     const products = [
         { categoryname: "Rackets", brand: "Yonex", series: "ASTROX", productName: "ASTROX 88 S PRO", price: 269 },
         { categoryname: "Rackets", brand: "Yonex", series: "ASTROX", productName: "ASTROX 88 D TOUR", price: 249 },
@@ -88,42 +87,6 @@ export const getProductByImageId = query(async ({ db }, { imageId }: { imageId: 
 });
 
 
-
-// // Define the type for the returned product details
-// type ProductDetails = {
-//   productName: string;
-//   brand: string;
-//   price: number;
-//   series: string;
-// } | null;
-
-// export const getProductDetailsByImageId = query(async ({ db }, { imageId }: { imageId: string }) => {
-//   // Query the imageStorage table to get the productID associated with the imageId
-//   const imageRecord = await db.query("imageStorage").filter(q => q.eq("storageID", imageId)).first();
-
-//   if (!imageRecord) return null; // Handle case where the image doesn't exist
-
-//   // // Convert productId to string
-//   // const productId: string = imageRecord.productID.toString(); 
-
-//   // // Now query the products table using the productId
-//   // const product = await db.query("products").filter(q => q.eq("_id", productId)).first();
-//   // if (!product) return null; // Handle case where no product is found
-
-//   // // Return the product details
-//   // return {
-//   //   productName: product.productName,
-//   //   brand: product.brand,
-//   //   series: product.Series,
-//   //   price: product.price,
-//   // };
-// });Promise<ProductDetails>
-
-// Define the query function to fetch the productID from imageStorage
-// Define the query function to fetch the productID from imageStorage
-// Define the query function to fetch the productID from imageStorage
-// Define the query function to fetch the productID from imageStorage
-// Define the type for the returned product details
 type ProductDetails = {
   productName: string;
   brand: string;
@@ -162,3 +125,49 @@ export const getProductDetailsByImageId = query(async ({ db }, { imageId }: { im
     price: productRecord?.price ?? 0, // Use 0 as the default price
   };
 });
+
+//Function to query the Victor products 
+export const getVictorProducts = query(async ({ db },{brandName}:{brandName :string | undefined}) => {
+  // Fetch all products
+  const allProducts = await db.query("products").collect();
+
+  // Filter products with brand "Victor" (case-insensitive)
+  const brandProducts = allProducts.filter(product =>
+    product.brand.trim().toLowerCase() === brandName?.trim().toLowerCase()
+  );
+
+  if (!brandProducts || brandProducts.length === 0) {
+    console.log(`No products found for brand: ${brandName}`);
+    return [];
+  }
+
+  const productIds = await db.query("imageStorage").collect();
+
+  const brandProductsWithImages = brandProducts.map(product => {
+    const imageRecord = productIds.find(record => record.productID === product._id);
+    return {
+      productId: imageRecord ? imageRecord.productID : null,
+      storageID: imageRecord ? imageRecord.storageID : null,
+    };
+  });
+  // Join with productCategory table and log the results
+  const brandProductsWithCategory = await Promise.all(
+    brandProducts.map(async (product) => {
+      const category = await db.get(product.productCategoryID);
+      return {
+        product:product._id,
+        productName: product.productName,
+        brand: product.brand,
+        series: product.Series,
+        price: product.price,
+        categoryName: category?.categoryName || "Unknown Category", // Use a fallback if category is missing
+      };
+    })
+  );
+
+  return {
+    brandProductsWithCategory,
+    brandProductsWithImages
+  };
+});
+

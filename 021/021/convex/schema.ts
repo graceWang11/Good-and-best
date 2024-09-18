@@ -61,6 +61,7 @@ export default defineSchema({
   })
   .index("by_category", ["productCategoryID"]),  // Index for querying by product category
 
+
   // Define the order details table
   orderDetails: defineTable({
     orderID: v.id("orders"),    // Foreign key reference to orders table

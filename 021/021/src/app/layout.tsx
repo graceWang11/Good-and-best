@@ -20,6 +20,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>       
           <ConvexClientProvider>
+            <nav>
+              <a href="/"></a>
+              <a href="/Brands"></a>
+              
+            </nav>
             {children}
           </ConvexClientProvider>
       </body>
