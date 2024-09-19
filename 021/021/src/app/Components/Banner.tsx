@@ -37,7 +37,7 @@ export default function BannerWithCarousel() {
 
   // Function to handle card click and navigate to the brand page
   const handleCardClick = (brand: string) => {
-    router.push(`/Brands?brand=${encodeURIComponent(brand)}`);
+    router.push(`/Brands/${encodeURIComponent(brand)}`);
   };
 
   // Banner logic
