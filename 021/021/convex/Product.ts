@@ -127,7 +127,7 @@ export const getProductDetailsByImageId = query(async ({ db }, { imageId }: { im
 });
 
 //Function to query the Victor products 
-export const getVictorProducts = query(async ({ db },{brandName}:{brandName :string | undefined}) => {
+export const getBrandProducts = query(async ({ db },{brandName}:{brandName :string | undefined}) => {
   // Fetch all products
   const allProducts = await db.query("products").collect();
 

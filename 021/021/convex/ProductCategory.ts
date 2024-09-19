@@ -1,4 +1,4 @@
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 // Example product categories
 const productCategories = [
@@ -25,4 +25,9 @@ export const reinsertProductCategories = mutation(async (ctx) => {
     });
     console.log(`Inserted normalized category "${category.categoryName}" with ID: ${insertedID}`);
   }
+});
+//Get all the categry function 
+export const getAllCategories = query(async (ctx) => {
+  const categories = await ctx.db.query("ProductCategory").collect();
+  return categories.map(category => category.categoryName);
 });

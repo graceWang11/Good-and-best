@@ -9,7 +9,6 @@ export default function BrandPage() {
 
   return (
     <div>
-      <h1>Welcome to the {brand} brand page!</h1>
       <BrandProductsList brand={brand} />
     </div>
   );
