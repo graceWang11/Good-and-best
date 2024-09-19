@@ -37,7 +37,7 @@ export default function BannerWithCarousel() {
 
   // Function to handle card click and navigate to the brand page
   const handleCardClick = (brand: string) => {
-    router.push(`/Brands?brand=${encodeURIComponent(brand)}`); // Navigate to the brand-specific page
+    router.push(`/Brands?brand=${encodeURIComponent(brand)}`);
   };
 
   // Banner logic
@@ -59,47 +59,42 @@ export default function BannerWithCarousel() {
   }
 
   return (
-    <div>
+    <div className="relative min-h-screen bg-gray-100">
       {/* Banner Section */}
       <div
+        className="relative w-full min-h-screen bg-fixed bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${backgroundImageUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
         }}
       >
-        <div>
-          <div>
-            {/* Left Image */}
+        {/* Product Details Overlay moved to the left */}
+        <div className="absolute inset-y-0 left-0 flex flex-col justify-center items-start text-white p-8 ">
+          {/* Product Image */}
+          <div className="mb-4">
             <Image
               src={leftImageUrl}
               alt={productDetails?.productName || "Product Image"}
               width={200}
               height={200}
+              className="rounded-lg shadow-lg"
             />
           </div>
-
           {/* Product Details */}
           <div>
-            <h2>
+            <h2 className="text-3xl font-bold">
               {productDetails?.productName || "Unknown Product"}
             </h2>
-            <p>
+            <p className="mt-2 text-xl">
               {productDetails?.brand || "Unknown Brand"}
             </p>
-            <p>
+            <p className="mt-2 text-lg">
               {productDetails?.price
                 ? `$${productDetails.price}`
                 : "Price Unavailable"}
             </p>
-            <div>
-              <button
-                className="bg-blue-500 text-white hover:scale-105 hover:shadow-lg transition-transform"
-              >
-                Shop now
-              </button>
-            </div>
+            <button className="mt-4 bg-blue-500 px-4 py-2 text-white rounded-lg hover:scale-105 transition-transform">
+              Shop now
+            </button>
           </div>
         </div>
       </div>
