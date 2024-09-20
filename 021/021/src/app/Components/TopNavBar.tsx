@@ -34,10 +34,10 @@ export default function TopNavBar() {
                 <Link href="/category/accessories" className="text-gray-600 hover:text-gray-900">
                     Accessories
                 </Link>
-                <Link href="/about" className="text-gray-600 hover:text-gray-900">
+                <Link href="/AboutUs" className="text-gray-600 hover:text-gray-900">
                     About
                 </Link>
-                <Link href="/contact" className="text-gray-600 hover:text-gray-900">
+                <Link href="/ContactUs" className="text-gray-600 hover:text-gray-900">
                     Contact
                 </Link>
             </nav>

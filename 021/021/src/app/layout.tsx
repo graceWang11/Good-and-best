@@ -23,6 +23,8 @@ export default function RootLayout({
             <nav>
               <a href="/"></a>
               <a href="/Brands"></a>
+              <a href="/ContactUs"></a>
+              <a href="/AboutUs"></a>
             </nav>
             {children}
           </ConvexClientProvider>

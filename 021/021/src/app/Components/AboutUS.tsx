@@ -4,7 +4,10 @@
 import { useQuery } from "convex/react"; 
 import { api } from "../../../convex/_generated/api"; 
 import { Button } from "@/components/ui/button";
+import Link from 'next/link';
+import { useRouter } from "next/navigation";
 const AboutUs = () => {
+  const router = useRouter();
   // Fetch the image from API
   const bgUrl = useQuery(api.imageStorage.getImageUrl, {
     imageId: "kg235f0rbve62bnbxfdpyvht39702r58",
@@ -44,10 +47,13 @@ const AboutUs = () => {
           Thank you for choosing Good And Best Badminton. Let's smash your goals together!
         </p>
 
-        {/* Shadcn Button */}
-        <Button variant="default" className="bg-blue-500 text-white mt-6">
-          Learn More
-        </Button>
+        <Button
+        variant="default"
+        className="bg-blue-500 text-white mt-6"
+        onClick={() => router.push('/ContactUs')}
+      >
+        Learn More
+      </Button>
       </div>
     </section>
   );
