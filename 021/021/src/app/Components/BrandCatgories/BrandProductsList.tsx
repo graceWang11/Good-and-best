@@ -155,7 +155,7 @@ const BrandProductsList = ({ brand }: { brand: string }) => {
                 const imageId = imageRecord ? imageRecord.storageID : null
 
                 return (
-                  <Link key={product.product} href={`/productDetail=${product.product}`}>
+                  <Link key={product.product} href={`/Brands/${brand}/${product.product}`}>
                     <div
                       className="border rounded-lg overflow-hidden shadow-sm hover:shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
                     >

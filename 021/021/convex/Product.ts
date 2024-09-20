@@ -127,47 +127,85 @@ export const getProductDetailsByImageId = query(async ({ db }, { imageId }: { im
 });
 
 //Function to query the Victor products 
-export const getBrandProducts = query(async ({ db },{brandName}:{brandName :string | undefined}) => {
-  // Fetch all products
-  const allProducts = await db.query("products").collect();
-
-  // Filter products with brand "Victor" (case-insensitive)
-  const brandProducts = allProducts.filter(product =>
-    product.brand.trim().toLowerCase() === brandName?.trim().toLowerCase()
-  );
-
-  if (!brandProducts || brandProducts.length === 0) {
-    console.log(`No products found for brand: ${brandName}`);
+export const getBrandProducts = query(async ({ db }, { brandName }: { brandName: string | undefined }) => {
+  // Ensure brandName is a valid string
+  if (!brandName || typeof brandName !== 'string') {
+    console.log('Brand name is missing or invalid');
     return [];
   }
 
+  // Fetch all products
+  const allProducts = await db.query("products").collect();
+
+  // Filter products by brand name
+  const brandProducts = allProducts.filter(product =>
+    product.brand?.trim().toLowerCase() === brandName.trim().toLowerCase()
+  );
+
+  if (brandProducts.length === 0) {
+    return [];
+  }
+
+  // Fetch associated images
   const productIds = await db.query("imageStorage").collect();
 
   const brandProductsWithImages = brandProducts.map(product => {
     const imageRecord = productIds.find(record => record.productID === product._id);
     return {
-      productId: imageRecord ? imageRecord.productID : null,
-      storageID: imageRecord ? imageRecord.storageID : null,
+      productId: imageRecord?.productID || null,
+      storageID: imageRecord?.storageID || null,
     };
   });
-  // Join with productCategory table and log the results
+
+  // Fetch product categories and map with products
   const brandProductsWithCategory = await Promise.all(
     brandProducts.map(async (product) => {
       const category = await db.get(product.productCategoryID);
       return {
-        product:product._id,
+        product: product._id,
         productName: product.productName,
         brand: product.brand,
         series: product.Series,
         price: product.price,
-        categoryName: category?.categoryName || "Unknown Category", // Use a fallback if category is missing
+        categoryName: category?.categoryName || "Unknown Category",
       };
     })
   );
 
   return {
     brandProductsWithCategory,
-    brandProductsWithImages
+    brandProductsWithImages,
   };
 });
+
+
+
+
+export const getProductById = query(async ({ db }, { productId }: { productId: string }) => {
+  // Fetch all products
+  const product = await db.query("products").filter(q => q.eq(q.field("_id"), productId)).first();
+
+  if (!product) {
+    console.log(`No product found for ID: ${productId}`);
+    return null;
+  }
+
+  // Fetch associated images
+  const imageRecords = await db.query("imageStorage").filter(q => q.eq(q.field("productID"), productId)).collect();
+
+  const productWithImages = {
+    productId: product._id,
+    productName: product.productName,
+    brand: product.brand,
+    series: product.Series,
+    price: product.price,
+    images: imageRecords.map(image => ({
+      storageID: image.storageID,
+    })),
+    categoryName: product.productCategoryID ? (await db.get(product.productCategoryID))?.categoryName : "Unknown Category",
+  };
+
+  return productWithImages;
+});
+
 
