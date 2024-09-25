@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "../../../../convex/_generated/api";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
@@ -10,7 +10,7 @@ import "swiper/css/pagination";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from 'next/navigation'; 
-import BrandImage from "./BrandImage";
+import BrandImage from "../Index/BrandImage";
 
 
 // Map brand names to their respective image IDs

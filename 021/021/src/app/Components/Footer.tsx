@@ -5,8 +5,8 @@ import { useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { FaFacebook, FaTwitter, FaYoutube } from "react-icons/fa";
 import Link from "next/link";
 
@@ -33,11 +33,9 @@ export default function Footer() {
                 <div className="space-y-4">
                     <h5 className="text-lg font-semibold">Useful Links</h5>
                     <ul className="space-y-2">
-                        <li><a href="https://websitedemos.net/electric-scooter-04/shop/?customize=template" className="text-blue-600 hover:underline">Shop All</a></li>
-                        <li><a href="https://websitedemos.net/electric-scooter-04/product-category/electric-scooters/?customize=template" className="text-blue-600 hover:underline">Electric Scooters</a></li>
-                        <li><a href="https://websitedemos.net/electric-scooter-04/product-category/accessories/?customize=template" className="text-blue-600 hover:underline">Accessories</a></li>
-                        <li><Link href={"/AboutUs"} className="text-blue-600 hover:underline">About</Link></li>
-                        <li><a href="https://websitedemos.net/electric-scooter-04/contact/?customize=template" className="text-blue-600 hover:underline">Contact</a></li>
+                        <li><a href="/Accessories" className="text-blue-600 hover:underline">Accessories</a></li>
+                        <li><Link href="/AboutUs" className="text-blue-600 hover:underline">About</Link></li>
+                        <li><a href="/ContactUs" className="text-blue-600 hover:underline">Contact</a></li>
                     </ul>
                 </div>
 

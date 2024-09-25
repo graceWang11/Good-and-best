@@ -18,7 +18,7 @@ export default function ProductPage({ productId, brand }: { productId: string, b
   const [quantity, setQuantity] = useState(1)
   const [rating, setRating] = useState(0)
   const [hoverRating, setHoverRating] = useState(0)
-
+  const [isReviewSubmitted, setIsReviewSubmitted] = useState(false)
   const productData = useQuery(api.Product.getProductById, { productId })
   const imageUrl = useQuery(api.imageStorage.getImageUrl, {
     imageId: productData?.images?.[0]?.storageID ?? ""

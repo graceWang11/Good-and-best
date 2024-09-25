@@ -16,6 +16,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import Link from "next/link"
+import PageNotFound from "../PageNotFound"
 
 const useProductCategories = () => {
   return useQuery(api.ProductCategory.getAllCategories)
@@ -39,6 +40,10 @@ const BrandProductsList = ({ brand }: { brand: string }) => {
       (selectedCategory === "All Products" || product.categoryName === selectedCategory) &&
       product.productName.toLowerCase().includes(searchQuery.toLowerCase())
     )
+
+  if (filteredProducts.length === 0) {
+    return <PageNotFound />
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -140,53 +145,44 @@ const BrandProductsList = ({ brand }: { brand: string }) => {
         </nav>
 
         <div className="w-full md:w-3/4">
-          <h2 className="text-xl font-semibold mb-4">{selectedCategory}</h2>
+              <>
+                <h2 className="text-xl font-semibold mb-4">{selectedCategory}</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredProducts.map((product) => {
+                    const imageRecord = brandProductsWithImages.find(
+                      (image) => image.productId === product.product
+                    );
+                    const imageId = imageRecord ? imageRecord.storageID : null;
 
-          {filteredProducts.length === 0 ? (
-            <div className="bg-yellow-100 text-yellow-800 p-4 rounded-lg">
-              No products found in {selectedCategory} for this brand.
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => {
-                const imageRecord = brandProductsWithImages.find(
-                  (image) => image.productId === product.product
-                )
-                const imageId = imageRecord ? imageRecord.storageID : null
-
-                return (
-                  <Link key={product.product} href={`/Brands/${brand}/${product.product}`}>
-                    <div
-                      className="border rounded-lg overflow-hidden shadow-sm hover:shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
-                    >
-                      <div className="w-full h-48 bg-gray-100">
-                        {imageId ? (
-                          <ImageFetcher imageId={imageId} productName={product.productName} />
-                        ) : (
-                          <div className="h-full flex items-center justify-center">
-                            No image available
+                    return (
+                      <Link key={product.product} href={`/Brands/${brand}/${product.product}`} passHref>
+                        <div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer">
+                          <div className="w-full h-48 bg-gray-100">
+                            {imageId ? (
+                              <ImageFetcher imageId={imageId} productName={product.productName} />
+                            ) : (
+                              <div className="h-full flex items-center justify-center">No image available</div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-semibold text-lg mb-2">{product.productName}</h3>
-                        <p className="text-gray-600 mb-2">{product.categoryName}</p>
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold">¥{product.price}</span>
-                          <Button size="sm">
-                            <ShoppingCart className="h-4 w-4 mr-2" />
-                            Add to Cart
-                          </Button>
+                          <div className="p-4">
+                            <h3 className="font-semibold text-lg mb-2">{product.productName}</h3>
+                            <p className="text-gray-600 mb-2">{product.categoryName}</p>
+                            <div className="flex justify-between items-center">
+                              <span className="font-bold">¥{product.price}</span>
+                              <Button size="sm">
+                                <ShoppingCart className="h-4 w-4 mr-2" />
+                                Add to Cart
+                              </Button>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </Link>
-                )
-              })}
-            </div>
-          )}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </>
+          </div>
         </div>
-      </div>
     </div>
   )
 }

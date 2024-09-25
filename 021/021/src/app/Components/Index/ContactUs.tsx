@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import TopNavBar from './TopNavBar'; 
-import Footer from './Footer'; 
+import TopNavBar from '../TopNavBar'; 
+import Footer from '../Footer'; 
 
 export default function ContactUs() {
   const [name, setName] = useState('');

@@ -6,13 +6,12 @@ import { useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
-import TopNavBar from "./TopNavBar";
-import Footer from "./Footer";
-import AboutUs from "./AboutUS";
-import Banner from "./Banner";
-import WhyChooseUs from "./Choose";
-import ShopBadmintonAccessories from "./Accesoniries";
-import Victor from "./BrandCatgories/BrandProductsList"
+import TopNavBar from "../Components/TopNavBar";
+import Footer from "../Components/Footer";
+import AboutUs from "../Components/Index/AboutUS";
+import Banner from "../Components/Index/Banner";
+import WhyChooseUs from "../Components/Index/Choose";
+import ShopBadmintonAccessories from "../Components/Index/Accesoniries";
 
 
 export default function ClientComponent() {

@@ -126,7 +126,7 @@ export const getProductDetailsByImageId = query(async ({ db }, { imageId }: { im
   };
 });
 
-//Function to query the Victor products 
+//Function to query all the products by brand name
 export const getBrandProducts = query(async ({ db }, { brandName }: { brandName: string | undefined }) => {
   // Ensure brandName is a valid string
   if (!brandName || typeof brandName !== 'string') {
@@ -178,6 +178,27 @@ export const getBrandProducts = query(async ({ db }, { brandName }: { brandName:
   };
 });
 
+export const getAccessories = query(async ({ db }) => {
+  const allProducts = await db.query("products").collect();
+  const productCategories = await db.query("ProductCategory").collect();
+  
+  const accessories = allProducts.filter(product => 
+    product.productCategoryID === productCategories.find(category => category.categoryName === "Accessories")?._id
+  );
+
+  // Fetch associated images for each accessory
+  const accessoriesWithImages = await Promise.all(
+    accessories.map(async (accessory) => {
+      const imageRecords = await db.query("imageStorage").filter(q => q.eq(q.field("productID"), accessory._id)).collect();
+      return {
+        ...accessory,
+        images: imageRecords
+      };
+    })
+  );
+
+  return accessoriesWithImages;
+});
 
 
 
@@ -206,6 +227,27 @@ export const getProductById = query(async ({ db }, { productId }: { productId: s
   };
 
   return productWithImages;
+});
+
+
+export const getAllWithImages = query(async ({ db, storage }) => {
+  const products = await db.query("products").collect();
+  const productsWithImages = await Promise.all(products.map(async (product) => {
+    const imageRecords = await db.query("imageStorage")
+      .withIndex("by_product", (q) => q.eq("productID", product._id))
+      .collect();
+
+    const imageUrls = await Promise.all(imageRecords.map(async (record) => {
+      return await storage.getUrl(record.storageID);
+    }));
+
+    return {
+      ...product,
+      imageUrls,
+    };
+  }));
+
+  return productsWithImages;
 });
 
 

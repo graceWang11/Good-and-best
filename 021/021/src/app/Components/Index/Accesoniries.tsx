@@ -2,9 +2,10 @@
 "use client";
 
 import { useQuery } from "convex/react"; 
-import { api } from "../../../convex/_generated/api"; 
+import { api } from "../../../../convex/_generated/api"; 
 import { Button } from "@/components/ui/button"; 
 import Image from "next/image"; 
+import Link from "next/link";
 
 const ShopBadmintonAccessories = () => {
   // Fetch the background image from API
@@ -37,12 +38,13 @@ const ShopBadmintonAccessories = () => {
         At Good and Best, choose freely any accessory you desire
         </p>
 
-        {/* Shadcn Button */}
         <div className="flex justify-center mt-6">
-          <Button variant="default" className="bg-blue-500 text-white hover:scale-105 hover:shadow-lg transition-transform">
-            Shop Accessories
-          </Button>
-        </div>
+           <Link href="/Accessories">
+            <Button variant="default" className="bg-blue-500 text-white hover:scale-105 hover:shadow-lg transition-transform">
+              Shop Accessories
+            </Button>
+          </Link>
+        </div>`
       </div>
 
       {/* Scooter Accessory Image */}

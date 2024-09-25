@@ -1,6 +1,6 @@
 import { useQuery } from "convex/react";
 import Image from "next/image";
-import { api } from "../../../convex/_generated/api";
+import { api } from "../../../../convex/_generated/api";
 
 // BrandImage component fetches the URL and renders the image for each brand
 function BrandImage({ brand, imageId }: { brand: string; imageId: string }) {
