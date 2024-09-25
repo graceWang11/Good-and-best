@@ -17,19 +17,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>       
-          <ConvexClientProvider>
-            <nav>
-              <a href="/"></a>
-              <a href="/Brands"></a>
-              <a href="/ContactUs"></a>
-              <a href="/AboutUs"></a>
-              <a href="/Accessories"></a>
-              <a href="/AccessoriesDetail"></a>
-            </nav>
-            {children}
-          </ConvexClientProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <ConvexClientProvider>
+          <nav>
+            <a href="/"></a>
+            <a href="/Brands"></a>
+            <a href="/ContactUs"></a>
+            <a href="/AboutUs"></a>
+            <a href="/Accessories"></a>
+            <a href="/AccessoriesDetail"></a>
+          </nav>
+          {children}
+        </ConvexClientProvider>
       </body>
     </html>
   );

@@ -1,5 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
+import { v } from "convex/values";
+
 
 export const insertProducts = mutation({
   args: {}, // No arguments needed as data is hardcoded
@@ -251,5 +253,42 @@ export const getAllWithImages = query(async ({ db, storage }) => {
 
   return productsWithImages;
 });
+export const getProductWithSizesById = query({
+  args: { productId: v.string() },
+  handler: async (ctx, { productId }) => {
+    const { db } = ctx;
+        // Start of Selection
 
+        // Fetch the product by ID
+        const product = await db.query("products").filter(q => q.eq(q.field("_id"), productId)).first();
+
+        if (!product) {
+          throw new Error("Product not found");
+        }
+
+    // Fetch the product category
+    const category = await db.query("ProductCategory").filter(q => q.eq(q.field("categoryName"), "Shoes")).first();
+
+    // Check if the category name is "shoes"
+    if (category?.categoryName.toLowerCase() === "shoes") {
+      // Fetch available sizes for this product from the size table
+      const sizes = await db
+        .query("size")
+        .withIndex("by_product", q => q.eq("productID", product._id))
+        .collect();
+
+      // Return product with sizes
+      return {
+        ...product,
+        sizes,
+      };
+    } else {
+      // Return product without sizes
+      return {
+        ...product,
+        sizes: [],
+      };
+    }
+  },
+});
 
