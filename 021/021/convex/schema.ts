@@ -90,4 +90,13 @@ export default defineSchema({
   })
   .index("by_product", ["productID"]),  // Index for querying by productID
 
+  //Define the Review table
+  review: defineTable({
+    productID: v.id("products"),  // Foreign key reference to products table
+    userID: v.id("users"),  // Foreign key reference to users table
+    rating: v.number(),    // Rating of the product
+    reviewDescription: v.string(),  // Review text
+  })
+  .index("by_product", ["productID"])  // Index for querying by productID
+  .index("by_user", ["userID"]),  // Index for querying by userID
 });

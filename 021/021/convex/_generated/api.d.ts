@@ -18,6 +18,7 @@ import type * as imageStorage from "../imageStorage.js";
 import type * as Product from "../Product.js";
 import type * as productAttributes from "../productAttributes.js";
 import type * as ProductCategory from "../ProductCategory.js";
+import type * as Review from "../Review.js";
 import type * as size from "../size.js";
 import type * as stock from "../stock.js";
 import type * as tasks from "../tasks.js";
@@ -37,6 +38,7 @@ declare const fullApi: ApiFromModules<{
   Product: typeof Product;
   productAttributes: typeof productAttributes;
   ProductCategory: typeof ProductCategory;
+  Review: typeof Review;
   size: typeof size;
   stock: typeof stock;
   tasks: typeof tasks;

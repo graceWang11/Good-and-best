@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.3.0",
+    "@clerk/nextjs": "^5.6.1",
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@popperjs/core": "^2.11.8",
     "@radix-ui/react-checkbox": "^1.1.1",
@@ -22,7 +22,7 @@
     "bootstrap": "^5.3.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "convex": "^1.14.1",
+    "convex": "^1.16.2",
     "dotenv": "^16.4.5",
     "lucide-react": "^0.427.0",
     "next": "^14.2.12",
