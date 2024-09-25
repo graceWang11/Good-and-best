@@ -92,6 +92,7 @@ type ProductDetails = {
   brand: string;
   price: number;
   series: string;
+  _id: string;
 } | null;
 
 export const getProductDetailsByImageId = query(async ({ db }, { imageId }: { imageId: string }): Promise<ProductDetails> =>{
@@ -122,7 +123,8 @@ export const getProductDetailsByImageId = query(async ({ db }, { imageId }: { im
     productName: productRecord?.productName || "Unknown Product",
     brand: productRecord?.brand || "Unknown Brand",
     series: productRecord?.Series || "Unknown Series",
-    price: productRecord?.price ?? 0, // Use 0 as the default price
+    price: productRecord?.price ?? 0, 
+    _id: productRecord?._id || "Unknown ID",
   };
 });
 

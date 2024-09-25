@@ -11,6 +11,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from 'next/navigation'; 
 import BrandImage from "../Index/BrandImage";
+import Link from "next/link";
 
 
 // Map brand names to their respective image IDs
@@ -92,9 +93,11 @@ export default function BannerWithCarousel() {
                 ? `$${productDetails.price}`
                 : "Price Unavailable"}
             </p>
+            <Link href={`/Brands/${productDetails.brand}/${productDetails._id}`}>
             <button className="mt-4 bg-blue-500 px-4 py-2 text-white rounded-lg hover:scale-105 transition-transform">
               Shop now
             </button>
+            </Link>
           </div>
         </div>
       </div>
