@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "../../Providers/convex-client-provider";
+import { CartProvider } from "./Components/CartContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <CartProvider>
         <ConvexClientProvider>
           <nav>
             <a href="/"></a>
@@ -30,6 +32,7 @@ export default function RootLayout({
           </nav>
           {children}
         </ConvexClientProvider>
+        </CartProvider>
       </body>
     </html>
   );

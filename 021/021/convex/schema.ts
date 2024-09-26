@@ -28,13 +28,12 @@ export default defineSchema({
   // Define the orders table
   orders: defineTable({
     userID: v.id("users"),   // Foreign key reference to users table
-    sizeID: v.id("size"),
+    orderDetailsID:  v.array(v.id("orderDetails")),
     orderDate: v.string(),   // Store date as a string in ISO format
     totalAmount: v.number(),
     status: v.string(),
   })
-  .index("by_user", ["userID"])  // Index for querying by userID
-  .index("by_size",["sizeID"]), // Index for querying by SizeID
+  .index("by_user", ["userID"]) , // Index for querying by userID
 
   // Define the order history table
   orderHistory: defineTable({
@@ -64,14 +63,14 @@ export default defineSchema({
 
   // Define the order details table
   orderDetails: defineTable({
-    orderID: v.id("orders"),    // Foreign key reference to orders table
     productID: v.id("products"), // Foreign key reference to products table
     quantity: v.number(),
     price: v.number(),
+    sizeID: v.id("size"), // Optional size reference
   })
-  .index("by_order", ["orderID"])  // Index for querying by orderID
-  .index("by_product", ["productID"]),  // Index for querying by productID
+  .index("by_product", ["productID"]),
 
+  // Define the image storage table
   imageStorage: defineTable({
     storageID: v.string(),      // Unique identifier for the image storage
     productID: v.id("products"),  // Optional foreign key reference to products
