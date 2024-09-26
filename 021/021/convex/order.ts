@@ -9,19 +9,19 @@ interface CartItem {
     price: number;
     sizeId?: string;
   }
-
-
-
-  
+  interface OrderDetailItem {
+    productID: Id<"products">;
+    quantity: number;
+    price: number;
+    sizeID?: Id<"size">;
+  }
   export const placeOrder = mutation(
     async ({ db, auth }, { cartItems }: { cartItems: CartItem[] }) => {
-      // Get the authenticated user's identity
       const identity = await auth.getUserIdentity();
       if (!identity) {
         throw new Error("User is not authenticated");
       }
   
-      // Fetch the user from the 'users' table based on tokenIdentifier
       const userRecord = await db
         .query("users")
         .filter((q) =>
@@ -33,35 +33,41 @@ interface CartItem {
         throw new Error("User not found");
       }
   
-      // Calculate total amount
       const totalAmount = cartItems.reduce(
         (sum, item) => sum + item.price * item.quantity,
         0
       );
+          // Prepare the order details array
+    const orderDetails = cartItems.map((item) => ({
+        productID: item.productId,
+        quantity: item.quantity,
+        price: item.price,
+        sizeID: item.sizeId || undefined,
+      }));
   
-      // Insert order details for each cart item
-      const orderDetailIds: Id<"orderDetails">[] = [];
+    // Insert the order into the 'orders' table
+    const orderId = await db.insert("orders", {
+        userID: userRecord._id,
+        orderDate: new Date().toISOString(),
+        totalAmount,
+        status: "Pending",
+        orderDetails: orderDetails.map(detail => ({
+          ...detail,
+          productID: detail.productID as Id<"products">,
+          sizeID: detail.sizeID ? detail.sizeID as Id<"size"> : undefined,
+        })),
+    });
   
+      // Insert each order detail into the 'orderDetails' table
       for (const item of cartItems) {
-        // Insert into orderDetails
-        const orderDetailId = await db.insert("orderDetails", {
+        await db.insert("orderDetails", {
+          orderID: orderId,
           productID: item.productId as Id<"products">,
           quantity: item.quantity,
           price: item.price,
           sizeID: item.sizeId as Id<"size">,
         });
-        orderDetailIds.push(orderDetailId);
       }
-  
-      // Create a new order with the array of orderDetailIds
-          // Start of Selection
-          const orderId = await db.insert("orders", {
-            userID: userRecord._id,
-            orderDetailsID: orderDetailIds, // Store the array of IDs
-            orderDate: new Date().toISOString(),
-            totalAmount,
-            status: "Pending",
-          });
   
       return { orderId };
     }
@@ -86,9 +92,10 @@ interface CartItem {
       if (!userRecord) {
         throw new Error("User not found");
       }
-      // Fetch the order
-      const order = await db.query("orders").filter(q => q.eq(q.field("_id"), orderId)).first();
-
+  
+      // Fetch the order using the provided orderId
+      const order = await db.query("orders").filter((q) => q.eq(q.field("userID"), userRecord._id)).first();
+  
       if (!order) {
         throw new Error("Order not found");
       }
@@ -98,43 +105,49 @@ interface CartItem {
         throw new Error("Unauthorized access to order");
       }
   
-      // Prepare an array to hold the order details with product and image information
-      const orderDetails = [];
+      // Fetch orderDetails associated with this order using 'orderID'
+      const orderDetails = await db
+        .query("orderDetails")
+        .filter((q) => q.eq(q.field("orderID"), order._id))
+        .collect();
   
-      // Loop through each orderDetailId in the order
-      for (const orderDetailId of order.orderDetailsID) {
-        const orderDetail = await db.get(orderDetailId);
-        if (!orderDetail) {
-          continue; // Skip if orderDetail not found
-        }
-  
-        // Fetch the product associated with this orderDetail
-        const product = await db.get(orderDetail.productID);
-  
-        // Fetch image records associated with this product
-        const imageRecords = await db
-          .query("imageStorage")
-          .filter((q) => q.eq(q.field("productID"), orderDetail.productID))
-          .collect();
-  
-        // Fetch image URLs using storage.getUrl
-        const imageUrls = await Promise.all(
-          imageRecords.map(async (record) => {
-            return await storage.getUrl(record.storageID);
-          })
-        );
-  
-        // Add the combined information to the orderDetails array
-        orderDetails.push({
-          ...orderDetail,
-          productName: product?.productName,
-          imageUrls,
-        });
-      }
-  
-      return {
-        order,
-        orderDetails,
-      };
-    }
-  );
+     // Fetch orderDetails from 'orderDetails' table
+     const orderDetailsFromTable = await db
+     .query("orderDetails")
+     .filter((q) => q.eq(q.field("orderID"), order._id))
+     .collect();
+
+   // Prepare detailed order details
+   const detailedOrderDetails = [];
+
+   for (const orderDetail of orderDetailsFromTable) {
+     // Fetch the product
+     const product = await db.get(orderDetail.productID);
+
+     // Fetch image records
+     const imageRecords = await db
+       .query("imageStorage")
+       .filter((q) => q.eq(q.field("productID"), orderDetail.productID))
+       .collect();
+
+     // Get image URLs
+     const imageUrls = await Promise.all(
+       imageRecords.map(async (record) => {
+         return await storage.getUrl(record.storageID);
+       })
+     );
+
+     // Combine information
+     detailedOrderDetails.push({
+       ...orderDetail,
+       productName: product?.productName,
+       imageUrls,
+     });
+   }
+
+   return {
+     order,
+     orderDetails: detailedOrderDetails,
+   };
+ }
+);

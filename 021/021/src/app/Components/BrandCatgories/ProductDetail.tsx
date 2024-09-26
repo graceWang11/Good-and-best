@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/jsx-no-comment-textnodes */
 /* eslint-disable @next/next/no-img-element */
 "use client";
@@ -57,20 +58,28 @@ export default function ProductDetail({ productId, brand }: { productId: string;
   }
 
   const handleAddToCart = () => {
-    if (!selectedSize) {
+    // Check if the product is a shoe and if a size has been selected
+    if (productData.categoryName === "Shoes" && !selectedSize) {
       alert("Please select a size.");
       return;
     }
-
-    addToCart({
+  
+    // Prepare the cart item
+    const cartItem = {
       productId,
       productName,
       price,
       imageUrl: imageUrl || "",
       quantity,
-      size: selectedSize,
-    });
-
+    };
+  
+    // Include size only if the product is a shoe
+    if (productData.categoryName === "Shoes") {
+      addToCart({ ...cartItem, size: selectedSize });
+    } else {
+      addToCart(cartItem);
+    }
+    
     setIsCartOpen(true);
   };
 
@@ -100,29 +109,8 @@ export default function ProductDetail({ productId, brand }: { productId: string;
 
         <div>
           <h1 className="text-3xl font-bold mb-2">{productName}</h1>
-          <p className="text-gray-600 mb-4">Brand: {brand}</p>
-
-          {averageRating !== null && (
-            <div className="flex items-center mb-4">
-              {[...Array(5)].map((_, index) => (
-                <Star
-                  key={index}
-                  className={`h-5 w-5 ${
-                    averageRating >= index + 1
-                      ? 'text-yellow-400 fill-yellow-400'
-                      : 'text-gray-300'
-                  }`}
-                />
-              ))}
-              <span className="text-gray-600 ml-2">
-                {averageRating.toFixed(2)} ({totalReviews} {totalReviews === 1 ? 'review' : 'reviews'})
-              </span>
-            </div>
-          )}
-
-          <p className="text-3xl font-semibold">¥{price}</p>
-
-          <div className="my-4">
+          {productData.categoryName == "Shoes" && (
+            <div className="my-4">
             <h2 className="text-lg font-semibold mb-2">Select Size</h2>
             <Tabs defaultValue={Object.keys(sizesByRegion)[0]}>
               <TabsList>
@@ -161,6 +149,30 @@ export default function ProductDetail({ productId, brand }: { productId: string;
               ))}
             </Tabs>
           </div>
+          )}{
+            <p className="text-gray-600 mb-4">{productData.categoryName || "Not specified"}</p>
+          }
+          {averageRating !== null && (
+            <div className="flex items-center mb-4">
+              {[...Array(5)].map((_, index) => (
+                <Star
+                  key={index}
+                  className={`h-5 w-5 ${
+                    averageRating >= index + 1
+                      ? 'text-yellow-400 fill-yellow-400'
+                      : 'text-gray-300'
+                  }`}
+                />
+              ))}
+              <span className="text-gray-600 ml-2">
+                {averageRating.toFixed(2)} ({totalReviews} {totalReviews === 1 ? 'review' : 'reviews'})
+              </span>
+            </div>
+          )}
+
+          <p className="text-3xl font-semibold">¥{price}</p>
+
+          
 
           <div className="flex items-center space-x-4">
             <Input
