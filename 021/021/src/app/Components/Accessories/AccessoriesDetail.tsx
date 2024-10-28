@@ -50,8 +50,8 @@ export default function AccessoriesDetail({ productId }: { productId: string }) 
       productId,
       productName,
       price,
-      imageUrl: imageUrl || "",
       quantity,
+      imageId: productData.images?.[0]?.storageID ?? "",
     });
 
     setIsCartOpen(true);
@@ -111,7 +111,7 @@ export default function AccessoriesDetail({ productId }: { productId: string }) 
               )}
             </div>
           </div>
-          <p className="text-3xl font-semibold">¥{price}</p>
+          <p className="text-3xl font-semibold">${price}</p>
           <div className="flex items-center space-x-4">
             <Input
               type="number"

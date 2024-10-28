@@ -80,7 +80,7 @@ export default function ShopAccessories() {
         productId: item._id,
         productName: item.productName,
         price: item.price,
-        imageUrl: item.imageId || "", // Assuming imageId can be used as imageUrl, adjust if needed
+        imageId: item.imageId || "", // Assuming imageId can be used as imageUrl, adjust if needed
         quantity: 1, // Default quantity
         // size: null, // Accessories might not have sizes, adjust if necessary
       });
@@ -158,48 +158,58 @@ export default function ShopAccessories() {
               </div>
   
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {sortedAccessories.map((item) => (
-                  <Card key={item._id} className="relative">
-                    <div>
-                      <div className="relative w-full h-48 overflow-hidden">
-                        <Link href={`/Accessories/${item._id}`} passHref>
-                          <a>
-                            {item.imageId && (
-                              <ImageFetcher imageId={item.imageId} productName={item.productName} />
-                            )}
-                            <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-opacity duration-300"></div>
-                          </a>
-                        </Link>
-                      </div>
-                      <CardContent>
-                        <Link href={`/Accessories/${item._id}`} passHref>
-                          <a>
-                            <CardTitle className="transition-colors duration-300 group-hover:text-blue-600">
-                              {item.productName}
-                            </CardTitle>
-                          </a>
-                        </Link>
-                        <p className="text-2xl font-bold text-gray-900">¥{item.price.toFixed(2)}</p>
-                      </CardContent>
+              {sortedAccessories.map((item) => (
+                <Card key={item._id} className="relative">
+                  <div>
+                    {/* Image and Overlay */}
+                    <div className="relative w-full h-48 overflow-hidden">
+                      <Link href={`/Accessories/${item._id}`}>
+                        <div className="relative">
+                          {item.imageId && (
+                            <ImageFetcher
+                              imageId={item.imageId}
+                              productName={item.productName}
+                            />
+                          )}
+                          <div
+                            className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-opacity duration-300"
+                          ></div>
+                        </div>
+                      </Link>
                     </div>
-                    <CardFooter>
-                      <Button
-                        className="w-full transition-colors duration-300 hover:bg-blue-700"
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent the click from bubbling up
-                          handleAddToCart(item);
-                        }}
-                      >
-                        <ShoppingCart className="w-4 h-4 mr-2" />
-                        Add to Cart
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
+
+                    {/* Product Info */}
+                    <CardContent>
+                      <Link href={`/Accessories/${item._id}`}>
+                        <CardTitle className="transition-colors duration-300 group-hover:text-blue-600">
+                          {item.productName}
+                        </CardTitle>
+                      </Link>
+                      <p className="text-2xl font-bold text-gray-900">
+                        ¥{item.price.toFixed(2)}
+                      </p>
+                    </CardContent>
+                  </div>
+
+                  {/* Add to Cart Button */}
+                  <CardFooter>
+                    <Button
+                      className="w-full transition-colors duration-300 hover:bg-blue-700"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent the click from bubbling up
+                        handleAddToCart(item);
+                      }}
+                    >
+                      <ShoppingCart className="w-4 h-4 mr-2" />
+                      Add to Cart
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
             </div>
           </div>
         </div>
+      </div>
   
         {/* Cart Sidebar */}
         <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>

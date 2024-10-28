@@ -73,13 +73,13 @@ export default function ProductDetail({ productId, brand }: { productId: string;
       quantity,
     };
   
-    // Include size only if the product is a shoe
-    if (productData.categoryName === "Shoes") {
-      addToCart({ ...cartItem, size: selectedSize });
-    } else {
-      addToCart(cartItem);
-    }
-    
+    // Include size and imageId for all products
+    const updatedCartItem = {
+      ...cartItem,
+      imageId: productData.images?.[0]?.storageID ?? "",
+      size: productData.categoryName === "Shoes" ? selectedSize : undefined
+    };
+    addToCart(updatedCartItem);
     setIsCartOpen(true);
   };
 
@@ -170,7 +170,7 @@ export default function ProductDetail({ productId, brand }: { productId: string;
             </div>
           )}
 
-          <p className="text-3xl font-semibold">¥{price}</p>
+          <p className="text-3xl font-semibold">${price}</p>
 
           
 
