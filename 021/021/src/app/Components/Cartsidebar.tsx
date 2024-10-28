@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const CartSidebar = ({ onClose }: { onClose: () => void }) => {
   const { cartItems, removeFromCart, clearCart, updateQuantity, getTotalPrice } = useCart();
@@ -41,6 +42,18 @@ const CartSidebar = ({ onClose }: { onClose: () => void }) => {
     } catch (error) {
       console.error("Error placing order:", error);
       alert("Failed to place order. Please try again.");
+    }
+  };
+
+  // Add to your component where the checkout button is
+  const handleCheckout = async () => {
+    try {
+      await placeOrder({ cartItems });
+      // Show success message
+      toast.success('Order placed successfully!');
+    } catch (error) {
+      // Show error message
+      toast.error('Failed to place order. Please try again.');
     }
   };
 

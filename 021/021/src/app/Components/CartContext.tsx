@@ -1,6 +1,9 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useMutation } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+import { Id } from "../../../convex/_generated/dataModel";
 
 export type CartItem = {
   productId: string;
@@ -19,6 +22,7 @@ type CartContextType = {
   updateQuantity: (productId: string, quantity: number) => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
+  placeOrder: () => Promise<void>;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -85,6 +89,31 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const updateStock = useMutation(api.Product.updateProductStock);
+  
+  const placeOrder = async () => {
+    try {
+      // Process each cart item
+      for (const item of cartItems) {
+        await updateStock({
+          productId: item.productId as Id<"products">,
+          quantity: item.quantity,
+          size: item.size || 'default'
+        });
+      }
+      
+      // Clear the cart after successful order
+      clearCart();
+      
+      // Here you might want to create an order record in your database
+      // and handle payment processing
+      
+    } catch (error) {
+      console.error('Error placing order:', error);
+      throw error;
+    }
+  };
+
   return (
     <CartContext.Provider 
       value={{ 
@@ -94,7 +123,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         removeFromCart,
         updateQuantity,
         getTotalPrice,
-        getTotalItems
+        getTotalItems,
+        placeOrder
       }}
     >
       {children}
@@ -109,8 +139,3 @@ export function useCart() {
   }
   return context;
 }
-
-// TODO: Implement cart persistence using localStorage
-// TODO: Add quantity adjustment functionality in cart
-// TODO: Add size validation for shoes
-// TODO: Add total price calculation

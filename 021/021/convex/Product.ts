@@ -292,3 +292,69 @@ export const getProductWithSizesById = query({
   },
 });
 
+
+// Modify the updateProductStock mutation to handle both cases
+export const updateProductStock = mutation({
+  args: {
+    productId: v.id("products"),
+    quantity: v.number(),
+    size: v.optional(v.string()) // Make size optional
+  },
+  handler: async (ctx, { productId, quantity, size }) => {
+    const product = await ctx.db.get(productId);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    // Get the product category
+    const category = await ctx.db.get(product.productCategoryID);
+    
+    // Handle shoes differently (with sizes)
+    if (category?.categoryName.toLowerCase() === "shoes") {
+      if (!size) {
+        throw new Error("Size is required for shoes");
+      }
+      
+      // Update stock in size table
+      const sizeRecord = await ctx.db
+        .query("size")
+        .withIndex("by_product", q => q.eq("productID", productId))
+        .filter(q => q.eq(q.field("SizeValue"), size))
+        .first();
+
+      if (!sizeRecord) {
+        throw new Error(`Size ${size} not found for this product`);
+      }
+
+      const currentSizeStock = Number(sizeRecord.SizeValue);
+      if (currentSizeStock < quantity) {
+        throw new Error(`Insufficient stock for size ${size}`);
+      }
+
+      await ctx.db.patch(sizeRecord._id, {
+        SizeValue: (currentSizeStock - quantity).toString()
+      });
+    } else {
+      // Handle non-shoe products (using stock table)
+      const stockRecord = await ctx.db
+        .query("stock")
+        .filter(q => q.eq(q.field("productID"), productId))
+        .first();
+
+      if (!stockRecord) {
+        throw new Error("Stock record not found");
+      }
+
+      if (stockRecord.stockQuantity < quantity) {
+        throw new Error("Insufficient stock");
+      }
+
+      // Update stock quantity
+      await ctx.db.patch(stockRecord._id, {
+        stockQuantity: stockRecord.stockQuantity - quantity
+      });
+    }
+
+    return true;
+  }
+});
