@@ -240,9 +240,6 @@ export default function TopNavBar() {
       {/* Cart Sidebar */}
       <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
         <SheetContent side="right">
-          <SheetHeader>
-            <SheetTitle>Your Cart</SheetTitle>
-          </SheetHeader>
           <CartSidebar onClose={() => setIsCartOpen(false)} />
         </SheetContent>
       </Sheet>

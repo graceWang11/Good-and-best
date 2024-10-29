@@ -20,6 +20,11 @@ import PageNotFound from "../PageNotFound";
 import { useCart } from "../CartContext";
 import CartSidebar from "../Cartsidebar"; 
 import LoadingSkeleton from "../LoadingSkeleton";
+import { toast } from "react-toastify";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const useProductCategories = () => {
   return useQuery(api.ProductCategory.getAllCategories);
@@ -28,12 +33,23 @@ const useProductCategories = () => {
 const BrandProductsList = ({ brand }: { brand: string }) => {
   const [selectedCategory, setSelectedCategory] = useState("All Products");
   const [searchQuery, setSearchQuery] = useState("");
-  const [isCartOpen, setIsCartOpen] = useState(false); // State to control cart sidebar
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isSizeSelectorOpen, setIsSizeSelectorOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [selectedSize, setSelectedSize] = useState<string>("");
 
   const data = useQuery(api.Product.getBrandProducts, { brandName: brand });
   const categories = useProductCategories();
+  const shoesCategory = categories?.find((category) => {
+    return category === "Shoes"; 
+  });
 
-  const { addToCart } = useCart(); // Access the cart context
+  const { addToCart } = useCart();
+
+  const sizes = useQuery(
+    api.Product.getProductWithSizesById,
+    selectedProduct ? { productId: selectedProduct.product } : "skip"
+  );
 
   if (!data || !categories) {
     return <LoadingSkeleton />; // Create this component
@@ -53,8 +69,19 @@ const BrandProductsList = ({ brand }: { brand: string }) => {
     return <PageNotFound />;
   }
 
-  // Handle adding a product to the cart
-  const handleAddToCart = (product: { product: string; productName: string; price: number }) => {
+  const handleAddToCart = (product: { 
+    product: string; 
+    productName: string; 
+    price: number;
+    categoryName: string; // Make sure this is included in your product type
+  }) => {
+    // Check if the product is a shoe
+    if (product.categoryName === "Shoes") {
+      setSelectedProduct(product);
+      setIsSizeSelectorOpen(true);
+      return;
+    }
+
     // Find the image ID
     const imageRecord = brandProductsWithImages.find(
       (image) => image.productId === product.product
@@ -65,11 +92,37 @@ const BrandProductsList = ({ brand }: { brand: string }) => {
       productId: product.product,
       productName: product.productName,
       price: product.price,
-      imageId: imageId || '', // Provide a fallback empty string if imageId is null
+      imageId: imageId || '',
       quantity: 1,
     });
 
-    setIsCartOpen(true); // Open the cart sidebar
+    setIsCartOpen(true);
+  };
+
+  const handleAddShoeWithSize = () => {
+    if (!selectedProduct || !selectedSize) {
+      toast.error("Please select a size");
+      return;
+    }
+
+    const imageRecord = brandProductsWithImages.find(
+      (image) => image.productId === selectedProduct.product
+    );
+    const imageId = imageRecord ? imageRecord.storageID : "";
+
+    addToCart({
+      productId: selectedProduct.product,
+      productName: selectedProduct.productName,
+      price: selectedProduct.price,
+      imageId: imageId || '',
+      quantity: 1,
+      size: selectedSize,
+    });
+
+    setSelectedSize("");
+    setSelectedProduct(null);
+    setIsSizeSelectorOpen(false);
+    setIsCartOpen(true);
   };
 
   return (
@@ -185,6 +238,7 @@ const BrandProductsList = ({ brand }: { brand: string }) => {
                   (image) => image.productId === product.product
                 );
                 const imageId = imageRecord ? imageRecord.storageID : null;
+                const isShoeProduct = product.categoryName === "Shoes";
 
                 return (
                   <div
@@ -234,7 +288,92 @@ const BrandProductsList = ({ brand }: { brand: string }) => {
         </div>
       </div>
 
-      {/* Cart Sidebar */}
+      {/* Size Selector Sidebar */}
+      <Sheet open={isSizeSelectorOpen} onOpenChange={setIsSizeSelectorOpen}>
+        <SheetContent side="right">
+          <SheetHeader>
+            <SheetTitle>Select Size</SheetTitle>
+            <SheetDescription>
+              Please select your size to continue
+            </SheetDescription>
+          </SheetHeader>
+
+          {selectedProduct && (
+            <div className="mt-6">
+              <div className="flex items-center gap-4 mb-6">
+                {/* Product Image and Details */}
+                <div className="w-20 h-20">
+                  {brandProductsWithImages.find(
+                    (image) => image.productId === selectedProduct.product
+                  )?.storageID && (
+                    <ImageFetcher
+                      imageId={
+                        brandProductsWithImages.find(
+                          (image) => image.productId === selectedProduct.product
+                        )?.storageID || ""
+                      }
+                      productName={selectedProduct.productName}
+                    />
+                  )}
+                </div>
+                <div>
+                  <h3 className="font-semibold">{selectedProduct.productName}</h3>
+                  <p className="text-sm text-gray-500">¥{selectedProduct.price}</p>
+                </div>
+              </div>
+
+              <Tabs defaultValue="cm" className="w-full">
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="cm">cm</TabsTrigger>
+                  <TabsTrigger value="us-men">US(Men)</TabsTrigger>
+                  <TabsTrigger value="us-women">US(Women)</TabsTrigger>
+                  <TabsTrigger value="uk">UK</TabsTrigger>
+                </TabsList>
+
+                {["cm", "us-men", "us-women", "uk"].map((region) => {
+                  const regionMap = {
+                    "cm": "cm",
+                    "us-men": "US(Men)",
+                    "us-women": "US(Women)",
+                    "uk": "UK"
+                  };
+                  
+                  return (
+                    <TabsContent key={region} value={region} className="mt-4">
+                      <div className="grid grid-cols-4 gap-2">
+                        {sizes?.sizes
+                          ?.filter(size => size.SizeRegion === regionMap[region as keyof typeof regionMap])
+                          .map((size) => (
+                            <Button
+                              key={size.SizeValue}
+                              variant={selectedSize === size.SizeValue ? "secondary" : "outline"}
+                              className="w-full"
+                              onClick={() => setSelectedSize(size.SizeValue)}
+                            >
+                              {size.SizeValue}
+                            </Button>
+                          ))}
+                      </div>
+                    </TabsContent>
+                  );
+                })}
+              </Tabs>
+
+              <div className="mt-6">
+                <Button
+                  className="w-full"
+                  onClick={handleAddShoeWithSize}
+                  disabled={!selectedSize}
+                >
+                  Add to Cart
+                </Button>
+              </div>
+            </div>
+          )}
+        </SheetContent>
+      </Sheet>
+
+      {/* Existing Cart Sidebar */}
       <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
         <SheetContent side="right">
           <CartSidebar onClose={() => setIsCartOpen(false)} />

@@ -61,7 +61,7 @@ const CartSidebar = ({ onClose }: { onClose: () => void }) => {
     <div className="flex flex-col h-full">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Shopping Cart</h2>
-        <Button variant="ghost" onClick={onClose}>✕</Button>
+        
       </div>
 
       <div className="flex-grow overflow-y-auto">
@@ -105,7 +105,7 @@ const CartItem = ({
 }: { 
   item: CartItem; 
   onUpdateQuantity: (id: string, quantity: number) => void;
-  onRemove: (id: string) => void;
+  onRemove: (id: string, size?: string) => void;
 }) => {
   const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId: item.imageId });
 
@@ -137,7 +137,7 @@ const CartItem = ({
           <Button 
             variant="destructive" 
             size="sm"
-            onClick={() => onRemove(item.productId)}
+            onClick={() => onRemove(item.productId, item.size)}
           >
             Remove
           </Button>

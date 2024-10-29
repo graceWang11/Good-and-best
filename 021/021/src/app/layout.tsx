@@ -2,8 +2,10 @@ import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ConvexClientProvider } from "../../Providers/convex-client-provider";
+import ConvexClientProvider from "../../Providers/convex-client-provider";
 import { CartProvider } from "./Components/CartContext";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,25 +16,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={inter.className}>
-        <CartProvider>
         <ConvexClientProvider>
-          <nav>
-            <a href="/"></a>
-            <a href="/Brands"></a>
-            <a href="/ContactUs"></a>
-            <a href="/AboutUs"></a>
-            <a href="/Accessories"></a>
-            <a href="/AccessoriesDetail"></a>
-          </nav>
-          {children}
+          <CartProvider>
+            {children}
+            <ToastContainer />
+          </CartProvider>
         </ConvexClientProvider>
-        </CartProvider>
       </body>
     </html>
   );

@@ -18,7 +18,7 @@ type CartContextType = {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
   clearCart: () => void;
-  removeFromCart: (productId: string) => void;
+  removeFromCart: (productId: string, size?: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
@@ -72,8 +72,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
-  const removeFromCart = (productId: string) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
+  const removeFromCart = (productId: string, size?: string) => {
+    setCartItems((prevItems) => 
+      prevItems.filter((item) => {
+        // For shoes (items with size), match both productId and size
+        if (item.size) {
+          return !(item.productId === productId && item.size === size);
+        }
+        // For non-shoe products, just match productId
+        return item.productId !== productId;
+      })
+    );
   };
 
   const clearCart = () => {
@@ -98,15 +107,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
         await updateStock({
           productId: item.productId as Id<"products">,
           quantity: item.quantity,
-          size: item.size || 'default'
+          size: item.size // This will be undefined for non-shoe products
         });
       }
       
       // Clear the cart after successful order
       clearCart();
-      
-      // Here you might want to create an order record in your database
-      // and handle payment processing
       
     } catch (error) {
       console.error('Error placing order:', error);
