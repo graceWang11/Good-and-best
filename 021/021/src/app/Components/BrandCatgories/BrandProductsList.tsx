@@ -26,6 +26,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+
 const useProductCategories = () => {
   return useQuery(api.ProductCategory.getAllCategories);
 };
@@ -40,9 +41,19 @@ const BrandProductsList = ({ brand }: { brand: string }) => {
 
   const data = useQuery(api.Product.getBrandProducts, { brandName: brand });
   const categories = useProductCategories();
+  const shoesCategory = categories?.find((category) => {
+    return category === "Shoes"; 
+  });
+
+  const { addToCart } = useCart();
+
+  const sizes = useQuery(
+    api.Product.getProductWithSizesById,
+    selectedProduct ? { productId: selectedProduct.product } : "skip"
+  );
 
   if (!data || !categories) {
-    return <LoadingSkeleton />;
+    return <LoadingSkeleton />; // Create this component
   }
 
   const { brandProductsWithCategory, brandProductsWithImages } = Array.isArray(data)

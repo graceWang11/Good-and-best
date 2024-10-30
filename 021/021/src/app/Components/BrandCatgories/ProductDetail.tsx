@@ -18,6 +18,7 @@ import { Id } from '../../../../convex/_generated/dataModel';
 import { useCart } from "../CartContext";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import CartSidebar from "../Cartsidebar";
+import LoadingSkeleton from '../LoadingSkeleton';
 
 export default function ProductDetail({ productId, brand }: { productId: string; brand: string }) {
   const [quantity, setQuantity] = useState(1);
@@ -37,7 +38,7 @@ export default function ProductDetail({ productId, brand }: { productId: string;
   });
 
   if (!productData || !productWithSizes) {
-    return <div className="container mx-auto px-4 py-8">Loading product details...</div>;
+    return <LoadingSkeleton />;
   }
 
   const productName = productData.productName;

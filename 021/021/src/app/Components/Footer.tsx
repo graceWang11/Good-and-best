@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
@@ -9,11 +9,57 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FaFacebook, FaTwitter, FaYoutube } from "react-icons/fa";
 import Link from "next/link";
+import emailjs from '@emailjs/browser';
+import { toast } from "react-toastify";
 
 export default function Footer() {
+    const [email, setEmail] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    
     const storeUser = useMutation(api.user.store);
     const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg20gd15hk3tv13mxn3edesmhh6z9kj8" });
     const currentYear = new Date().getFullYear();
+
+    const handleSubscribe = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+    
+        try {
+            // Initialize EmailJS
+            emailjs.init("fZgGzFg1f6E0UD74s");
+    
+            // Define template parameters
+            const templateParams = {
+                to_name: email.split('@')[0],
+                to_email: email, 
+                support_email: "goodandbest@gmail.com",
+                website_url: "https://good-and-best.vercel.app",
+                current_year: new Date().getFullYear().toString(),
+                reply_to: email,
+                email: email 
+            };
+    
+            console.log('Sending email with params:', templateParams);
+    
+            // Send the email using EmailJS
+            const response = await emailjs.send(
+                "service_gvbgqzq", // Your EmailJS service ID
+                "template_io3a76f", // Your EmailJS template ID
+                templateParams,
+                "fZgGzFg1f6E0UD74s" // Your EmailJS user ID
+            );
+    
+            if (response.status === 200) {
+                toast.success("Successfully subscribed! Please check your email (including spam folder).");
+                setEmail("");
+            }
+        } catch (error) {
+            console.error("Email sending error:", error);
+            toast.error("Failed to subscribe. Please try again later.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     return (
         <footer className="bg-[#F0F4F8] py-10 font-sans">
@@ -43,7 +89,7 @@ export default function Footer() {
                 <div className="space-y-4 text-center">
                     <h5 className="text-lg font-semibold">Contact Us</h5>
                     <p>
-                        <b>E:</b> <a href="mailto:info@example.com">goodandbest@gmail.com</a><br />
+                        <b>E:</b> <a href="mailto:goodandbest@gmail.com">goodandbest@gmail.com</a><br />
                         <b>P:</b> 03 1100 1100<br />
                         <b>A:</b> Mawson Lakes Blvd, Mawson Lakes SA 5095
                     </p>
@@ -52,15 +98,25 @@ export default function Footer() {
                 {/* Section 4: Newsletter Signup */}
                 <div className="space-y-4 text-center md:text-right">
                     <h5 className="text-lg font-semibold">Sign up for special offers</h5>
-                    <form className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-end space-y-4 md:space-y-0 md:space-x-4">
+                    <form 
+                        onSubmit={handleSubscribe}
+                        className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-end space-y-4 md:space-y-0 md:space-x-4"
+                    >
                         <Input 
                             type="email" 
                             placeholder="Email address" 
                             required 
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="w-full md:w-auto"
                         />
-                        <Button type="submit" variant="default" className="w-full md:w-auto">
-                            Subscribe
+                        <Button 
+                            type="submit" 
+                            variant="default" 
+                            className="w-full md:w-auto"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? "Subscribing..." : "Subscribe"}
                         </Button>
                     </form>
                 </div>
