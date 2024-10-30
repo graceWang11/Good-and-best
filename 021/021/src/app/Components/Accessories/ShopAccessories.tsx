@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/sheet";
 import { useCart } from "../CartContext"; // Import your cart context
 import CartSidebar from "../Cartsidebar";  // Import your cart sidebar component
+import LoadingSkeleton from "../LoadingSkeleton";
 // Helper Component to fetch and display image
 const ImageFetcher = ({ imageId, productName }: { imageId: string; productName: string }) => {
   const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId });
@@ -51,7 +52,7 @@ export default function ShopAccessories() {
   const accessories = useQuery(api.Product.getAccessories);
 
   if (!accessories) {
-    return <div>Loading accessories...</div>; // Handle loading state
+    return <LoadingSkeleton />;
   }
 
   // Fetch associated images for each accessory (similar to BrandProductsList)

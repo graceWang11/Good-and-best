@@ -14,6 +14,7 @@ import { useCart } from "../CartContext";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import CartSidebar from "../Cartsidebar";
 import { toast } from "react-toastify";
+import LoadingSkeleton from "../LoadingSkeleton";
 
 // Separate component for image handling
 const ProductImage = ({ storageId, productName }: { storageId: string, productName: string }) => {
@@ -57,7 +58,7 @@ export default function ShoesDetail({ productId }: { productId: string }) {
   const averageRating = totalReviews > 0 ? totalRating / totalReviews : null;
 
   if (!productData || !sizes) {
-    return <div className="container mx-auto px-4 py-8">Loading product details...</div>;
+    return <LoadingSkeleton />;
   }
 
   const { productName, price, brand, series, images } = productData;

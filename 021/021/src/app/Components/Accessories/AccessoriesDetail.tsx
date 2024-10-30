@@ -16,6 +16,7 @@ import { Id } from '../../../../convex/_generated/dataModel';
 import { useCart } from "../CartContext";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import CartSidebar from '../Cartsidebar';
+import LoadingSkeleton from "../LoadingSkeleton";
 
 export default function AccessoriesDetail({ productId }: { productId: string }) {
   const [quantity, setQuantity] = useState(1);
@@ -40,7 +41,7 @@ export default function AccessoriesDetail({ productId }: { productId: string }) 
   const averageRating = totalReviews > 0 ? (totalRating / totalReviews) : null;
 
   if (!productData) {
-    return <div className="container mx-auto px-4 py-8">Loading product details...</div>;
+    return <LoadingSkeleton />;
   }
 
   const { productName, price, categoryName, series } = productData;

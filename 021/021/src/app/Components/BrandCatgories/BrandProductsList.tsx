@@ -40,19 +40,9 @@ const BrandProductsList = ({ brand }: { brand: string }) => {
 
   const data = useQuery(api.Product.getBrandProducts, { brandName: brand });
   const categories = useProductCategories();
-  const shoesCategory = categories?.find((category) => {
-    return category === "Shoes"; 
-  });
-
-  const { addToCart } = useCart();
-
-  const sizes = useQuery(
-    api.Product.getProductWithSizesById,
-    selectedProduct ? { productId: selectedProduct.product } : "skip"
-  );
 
   if (!data || !categories) {
-    return <LoadingSkeleton />; // Create this component
+    return <LoadingSkeleton />;
   }
 
   const { brandProductsWithCategory, brandProductsWithImages } = Array.isArray(data)

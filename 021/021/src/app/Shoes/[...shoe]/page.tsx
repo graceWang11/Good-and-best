@@ -1,16 +1,18 @@
 "use client";
-import ShoeDetail from "@/app/Components/Shoes/ShoesDetail";
+
+import React from 'react';
+import ShoesDetail from "@/app/Components/Shoes/ShoesDetail";
+import TopNavBar from "@/app/Components/TopNavBar";
 import Footer from "@/app/Components/Footer";
 import PageNotFound from "@/app/Components/PageNotFound";
-import TopNavBar from "@/app/Components/TopNavBar";
 
-export default function Shoes({ params }: { params: { shoe: string[] } }) {
+export default function ShoePage({ params }: { params: { shoe: string[] } }) {
     if(params.shoe.length === 1){
         const shoeId = params.shoe[0];
         return (
             <>
                 <TopNavBar />
-                <ShoeDetail productId={shoeId} />
+                <ShoesDetail productId={shoeId} />
                 <Footer />
             </>
         );

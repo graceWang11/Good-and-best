@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from 'next/navigation'; 
 import BrandImage from "../Index/BrandImage";
 import Link from "next/link";
+import LoadingSkeleton from "../LoadingSkeleton";
 
 
 // Map brand names to their respective image IDs
@@ -56,7 +57,7 @@ export default function BannerWithCarousel() {
 
   // Error handling and loading
   if (!products || !backgroundImageUrl || !leftImageUrl || !productDetails) {
-    return <div>Loading...</div>;
+    return <LoadingSkeleton />;
   }
 
   return (
