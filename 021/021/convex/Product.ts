@@ -227,6 +227,54 @@ export const getRacketProducts = query(async ({ db }) => {
   return racketProductsWithImages;
 });
 
+//shop shoes
+export const getShoesProducts = query(async ({ db }) => {
+  const allProducts = await db.query("products").collect();
+  const productCategories = await db.query("ProductCategory").collect();
+  
+  // Find shoes products
+  const shoesProducts = allProducts.filter(product => 
+    product.productCategoryID === productCategories.find(category => category.categoryName === "Shoes")?._id
+  );
+
+  // Fetch associated images and sizes for each shoe
+  const shoesProductsWithImagesAndSizes = await Promise.all(
+    shoesProducts.map(async (shoes) => {
+      // Get images
+      const imageRecords = await db.query("imageStorage")
+        .filter(q => q.eq(q.field("productID"), shoes._id))
+        .collect();
+
+      // Get sizes
+      const sizeRecords = await db.query("size")
+        .withIndex("by_product", q => q.eq("productID", shoes._id))
+        .collect();
+
+      // Group sizes by region
+      const groupedSizes = sizeRecords.reduce((acc, size) => {
+        const region = size.SizeRegion;
+        if (!acc[region]) {
+          acc[region] = [];
+        }
+        acc[region].push(size.SizeValue);
+        return acc;
+      }, {} as Record<string, string[]>);
+
+      return {
+        ...shoes,
+        images: imageRecords,
+        sizes: {
+          cm: groupedSizes["cm"] || [],
+          "US(Men)": groupedSizes["US(Men)"] || [],
+          "US(Women)": groupedSizes["US(Women)"] || [],
+          "UK": groupedSizes["UK"] || []
+        }
+      };
+    })
+  );
+
+  return shoesProductsWithImagesAndSizes;
+});
 
 export const getProductById = query(async ({ db }, { productId }: { productId: string }) => {
   // Fetch all products
