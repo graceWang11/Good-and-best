@@ -204,6 +204,28 @@ export const getAccessories = query(async ({ db }) => {
   return accessoriesWithImages;
 });
 
+//Shop Racket 
+export const getRacketProducts = query(async ({ db }) => {
+  const allProducts = await db.query("products").collect();
+  const productCategories = await db.query("ProductCategory").collect();
+  //Find Racket Products
+  const racketProducts = allProducts.filter(product => 
+    product.productCategoryID === productCategories.find(category => category.categoryName === "Rackets")?._id
+  );
+
+  //Fetch associated images
+  const racketProductsWithImages = await Promise.all(
+    racketProducts.map(async (racket) => {
+      const imageRecords = await db.query("imageStorage").filter(q => q.eq(q.field("productID"), racket._id)).collect();
+      return {
+        ...racket,
+        images: imageRecords
+      };
+    })
+  );  
+
+  return racketProductsWithImages;
+});
 
 
 export const getProductById = query(async ({ db }, { productId }: { productId: string }) => {

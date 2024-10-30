@@ -25,6 +25,7 @@ import CartSidebar from "./Cartsidebar";
 import LoginButton from "./Login";
 import { useRouter } from "next/navigation";
 
+
 type Product = {
   _id: string;
   productName: string;
@@ -93,10 +94,10 @@ export default function TopNavBar() {
     <header className="flex items-center justify-between w-full px-4 py-2 bg-white shadow-md">
       {/* Left section: Navigation */}
       <nav className="hidden md:flex space-x-8 items-baseline">
-        <Link href="/category/Rackets" className="text-gray-600 hover:text-gray-900">
+        <Link href="/Rackets" className="text-gray-600 hover:text-gray-900">
           Shop Rackets
         </Link>
-        <Link href="/category/Shoes" className="text-gray-600 hover:text-gray-900">
+        <Link href="/Shoes" className="text-gray-600 hover:text-gray-900">
           Shop Shoes
         </Link>
         <Link href="/Accessories" className="text-gray-600 hover:text-gray-900">

@@ -2,9 +2,9 @@ import { clerkMiddleware } from '@clerk/nextjs/server';
 
 export default clerkMiddleware((auth, req) => {
   // Apply authentication protection to all routes except for '/clientComponent'
-  if (req.nextUrl.pathname !== '/clientComponent') {
-    auth().protect(); // Redirect to sign-in page if not authenticated
-  }
+  // if (req.nextUrl.pathname !== '/clientComponent') {
+  //   auth().protect(); // Redirect to sign-in page if not authenticated
+  // }
   // No authentication is enforced on /clientComponent, so no additional logic is needed
 });
 
