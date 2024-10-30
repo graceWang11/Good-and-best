@@ -9,16 +9,57 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import TopNavBar from '../TopNavBar'; 
-import Footer from '../Footer'; 
+import Footer from '../Footer';
+import emailjs from '@emailjs/browser';
+import { toast } from "react-toastify";
 
 export default function ContactUs() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', { name, email, message });
+    setIsSubmitting(true);
+
+    try {
+      // Initialize EmailJS
+      emailjs.init("fZgGzFg1f6E0UD74s");
+
+      const templateParams = {
+        from_name: name,
+        from_email: email,
+        message: message,
+        to_email: "goodandbestteam@gmail.com",
+        reply_to: email,
+      };
+
+      console.log('Sending message with params:', templateParams);
+
+      const response = await emailjs.send(
+        "service_gvbgqzq",
+        "template_pybaryu",
+        templateParams,
+        "fZgGzFg1f6E0UD74s",
+      );
+
+      console.log('EmailJS Response:', response);
+
+      if (response.status === 200) {
+        toast.success("Message sent successfully! We'll get back to you soon.");
+        // Clear form
+        setName('');
+        setEmail('');
+        setMessage('');
+      }
+
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      toast.error("Failed to send message. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -42,7 +83,7 @@ export default function ContactUs() {
                   <div className="bg-indigo-100 p-3 rounded-full">
                     <Mail className="w-6 h-6" />
                   </div>
-                  <span>goodandbest@gmail.com</span>
+                  <span>goodandbestteam@gmail.com</span>
                 </div>
                 
                 <div className="flex items-center space-x-4 text-indigo-700">
@@ -97,9 +138,13 @@ export default function ContactUs() {
                 />
               </div>
               
-              <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700">
+              <Button 
+                type="submit" 
+                className="w-full bg-indigo-600 hover:bg-indigo-700"
+                disabled={isSubmitting}
+              >
                 <Send className="w-4 h-4 mr-2" />
-                Send Message
+                {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
             </form>
           </div>
