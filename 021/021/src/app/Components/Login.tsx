@@ -13,23 +13,27 @@ import {
 import { useQuery } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 function LoginButton() {
     const clerk = useClerk();
     const { user, isSignedIn } = useUser();
     const router = useRouter();
+    
+    // Get user details from Convex
     const userDetails = useQuery(api.user.getUserByEmail, {
       email: user?.primaryEmailAddress?.emailAddress || ""
     });
 
-    const handleSignOut = async () => {
-        try {
-            await clerk.signOut();
-            router.push('/');
-        } catch (error) {
-            console.error('Error signing out:', error);
-        }
-    };
+    // Update Clerk profile if it differs from Convex
+    useEffect(() => {
+      if (isSignedIn && userDetails && userDetails.userName !== user.fullName) {
+        user.update({
+          firstName: userDetails.userName.split(' ')[0],
+          lastName: userDetails.userName.split(' ').slice(1).join(' '),
+        });
+      }
+    }, [isSignedIn, userDetails, user]);
 
     if (!isSignedIn) {
         return (
@@ -57,12 +61,17 @@ function LoginButton() {
         return null;
     }
 
+    const handleSignOut = async () => {
+        await clerk.signOut();
+        router.push('/');
+    };
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.imageUrl} alt={user.fullName || ""} />
+                        <AvatarImage src={user.imageUrl} alt={userDetails?.userName || user.fullName || ""} />
                         <AvatarFallback>
                             <FaUser className="text-gray-700" size={24} />
                         </AvatarFallback>
@@ -72,7 +81,9 @@ function LoginButton() {
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{user.fullName}</p>
+                        <p className="text-sm font-medium leading-none">
+                            {userDetails?.userName || user.fullName}
+                        </p>
                         <p className="text-xs leading-none text-muted-foreground">
                             {user.primaryEmailAddress?.emailAddress}
                         </p>

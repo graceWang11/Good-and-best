@@ -30,6 +30,7 @@
     "clsx": "^2.1.1",
     "convex": "^1.10.0",
     "dotenv": "^16.4.5",
+    "google-maps-js-api-loader": "^4.0.3",
     "lucide-react": "^0.427.0",
     "next": "^14.2.12",
     "react": "^18",
@@ -42,6 +43,7 @@
     "ui": "github:shadcn/ui"
   },
   "devDependencies": {
+    "@types/google.maps": "^3.58.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
