@@ -43,10 +43,10 @@ export default function Footer() {
     
             // Send the email using EmailJS
             const response = await emailjs.send(
-                "service_gvbgqzq", // Your EmailJS service ID
-                "template_io3a76f", // Your EmailJS template ID
+                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
+                process.env.NEXT_PUBLIC_EMAILJS_FOOTER_TEMPLATE_ID || '',
                 templateParams,
-                "fZgGzFg1f6E0UD74s" // Your EmailJS user ID
+                process.env.NEXT_PUBLIC_EMAILJS_API_KEY || ''
             );
     
             if (response.status === 200) {

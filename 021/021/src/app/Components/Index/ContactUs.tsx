@@ -36,12 +36,11 @@ export default function ContactUs() {
       };
 
       console.log('Sending message with params:', templateParams);
-
       const response = await emailjs.send(
-        "service_gvbgqzq",
-        "template_pybaryu",
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || '',
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || '',
         templateParams,
-        "fZgGzFg1f6E0UD74s",
+        process.env.NEXT_PUBLIC_EMAILJS_API_KEY || '',
       );
 
       console.log('EmailJS Response:', response);
