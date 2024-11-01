@@ -10,6 +10,7 @@ const isPublicRoute = createRouteMatcher([
   "/AboutUs",
   "/ContactUs",
   "/Brands(.*)",
+  "/profile",
 ]);
 
 const isAdminRoute = createRouteMatcher([

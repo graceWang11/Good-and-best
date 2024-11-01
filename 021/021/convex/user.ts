@@ -104,3 +104,64 @@ export const getUserByEmail = query({
     };
   },
 });
+
+// Add this new mutation for updating user profile
+export const updateProfile = mutation({
+  args: {
+    userName: v.string(),
+    email: v.string(),
+    phoneNumber: v.string(),
+    address: v.string(),
+  },
+  handler: async (ctx, { userName, email, phoneNumber, address }) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Find the existing user
+    const existingUser = await ctx.db
+      .query("users")
+      .filter(q => q.eq(q.field("email"), email))
+      .first();
+
+    if (!existingUser) {
+      throw new Error("User not found");
+    }
+
+    // Update the user profile
+    await ctx.db.patch(existingUser._id, {
+      userName,
+      phoneNumber,
+      address,
+    });
+
+    return {
+      success: true,
+      message: "Profile updated successfully"
+    };
+  },
+});
+
+// Add a query to get user profile
+export const getUserProfile = query({
+  args: { email: v.string() },
+  handler: async (ctx, { email }) => {
+    const user = await ctx.db
+      .query("users")
+      .filter(q => q.eq(q.field("email"), email))
+      .first();
+
+    if (!user) {
+      return null;
+    }
+
+    return {
+      userName: user.userName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      address: user.address,
+    };
+  },
+});
