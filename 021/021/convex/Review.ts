@@ -1,5 +1,3 @@
-
-
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server"; // Ensure the correct import path
 
@@ -52,6 +50,7 @@ export const addReview = mutation({
           `${identity.firstName ?? ""} ${identity.lastName ?? ""}`,
         address: "",
         phoneNumber: "",
+        createdAt: new Date().toISOString(),
       });
 
       // Retrieve the newly created user

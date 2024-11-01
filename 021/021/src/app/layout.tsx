@@ -6,6 +6,7 @@ import ConvexClientProvider from "../../Providers/convex-client-provider";
 import { CartProvider } from "./Components/CartContext";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { UserDataHandler } from './Components/UserDataHandler';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,17 +18,20 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ConvexClientProvider>
-          <CartProvider>
-            {children}
-            <ToastContainer />
-          </CartProvider>
-        </ConvexClientProvider>
+        <ClerkProvider>
+          <ConvexClientProvider>
+            <CartProvider>
+              <UserDataHandler />
+              {children}
+              <ToastContainer />
+            </CartProvider>
+          </ConvexClientProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

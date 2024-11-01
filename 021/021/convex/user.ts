@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 
 export const store = mutation({
@@ -7,67 +7,100 @@ export const store = mutation({
     userName: v.string(),
     address: v.string(),
     phoneNumber: v.string(),
-    email:v.string()
+    email: v.string()
   },
 
   handler: async (
     ctx,
-    { userName, address, phoneNumber,email}: { userName: string; address: string; phoneNumber: string ;email:string}
+    { userName, address, phoneNumber, email }
   ) => {
     const identity = await ctx.auth.getUserIdentity();
 
-    if (!identity || !identity.email) {
-      console.log("Email mismatch or user not authenticated");
-      return null; // Return null instead of throwing an error
+    if (!identity) {
+      return null;
     }
 
-    // Check if the user already exists
+    try {
+      // Check if user already exists
+      const existingUser = await ctx.db
+        .query("users")
+        .filter(q => q.eq(q.field("email"), email))
+        .first();
+
+      if (existingUser) {
+        return existingUser._id;
+      }
+
+      // Get user types
+      const userTypes = await ctx.db.query("userTypes").collect();
+      const userTypeMap = userTypes.reduce((map, type) => {
+        map[type.UserType] = type._id;
+        return map;
+      }, {} as Record<string, Id<"userTypes">>);
+
+      // Determine user type based on email
+      let userTypeId: Id<"userTypes">;
+      if (email === "goodandbestteam@gmail.com") {
+        userTypeId = userTypeMap["Admin"];
+        if (!userTypeId) throw new Error("Admin user type not found");
+      } else {
+        userTypeId = userTypeMap["Customer"];
+        if (!userTypeId) throw new Error("Customer user type not found");
+      }
+
+      // Create new user
+      const userId = await ctx.db.insert("users", {
+        tokenIdentifier: identity.tokenIdentifier,
+        email,
+        userName,
+        address,
+        phoneNumber,
+        userTypeID: userTypeId,
+        createdAt: new Date().toISOString(),
+      });
+
+      return userId;
+    } catch (error) {
+      console.error("Error storing user:", error);
+      return null;
+    }
+  },
+});
+
+// Add a query to get user type
+export const getUserType = query({
+  args: { email: v.string() },
+  handler: async (ctx, { email }) => {
     const user = await ctx.db
       .query("users")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
-      )
-      .unique();
+      .filter(q => q.eq(q.field("email"), email))
+      .first();
 
-    if (user !== null) {
-      return user._id;
-    }
- 
+    if (!user) return null;
 
-    // Retrieve user types
-    const userTypes = await ctx.db.query("userTypes").collect();
-    const userTypeMap = userTypes.reduce((map, userType) => {
-      map[userType.UserType] = userType._id;
-      return map;
-    }, {} as Record<string, Id<"userTypes">>);
+    const userType = await ctx.db.get(user.userTypeID);
+    return userType?.UserType;
+  },
+});
 
-    // Determine the UserTypeID before inserting the user
-    let userTypeID: Id<"userTypes">;
+// Get user by email
+export const getUserByEmail = query({
+  args: { email: v.string() },
+  handler: async (ctx, { email }) => {
+    if (!email) return null;
 
-    if (identity.email === "goodandbestteam@gmail.com") {
-      // Assign Admin role
-      userTypeID = userTypeMap["Admin"];
-      if (!userTypeID) {
-        throw new Error("Admin user type not found");
-      }
-    } else {
-      // Assign Customer role as the default
-      userTypeID = userTypeMap["Customer"];
-      if (!userTypeID) {
-        throw new Error("Customer user type not found");
-      }
-    }
+    const user = await ctx.db
+      .query("users")
+      .filter(q => q.eq(q.field("email"), email))
+      .first();
 
-    // Insert a new user record with userTypeID included
-    const userID = await ctx.db.insert("users", {
-      tokenIdentifier: identity.tokenIdentifier,
-      email,
-      userName,
-      address,
-      phoneNumber,
-      userTypeID, // Include userTypeID in the insert operation
-    });
+    if (!user) return null;
 
-    return userID;
+    // Get the user type
+    const userType = await ctx.db.get(user.userTypeID);
+    return {
+      ...user,
+      userType: userType?.UserType
+    };
   },
 });

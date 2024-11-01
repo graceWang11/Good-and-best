@@ -1,18 +1,49 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-export default clerkMiddleware((auth, req) => {
-  // Apply authentication protection to all routes except for '/clientComponent'
-  // if (req.nextUrl.pathname !== '/clientComponent') {
-  //   auth().protect(); // Redirect to sign-in page if not authenticated
-  // }
-  // No authentication is enforced on /clientComponent, so no additional logic is needed
+// Create route matchers for different types of routes
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/Rackets(.*)",
+  "/Shoes(.*)",
+  "/Accessories(.*)",
+  "/AboutUs",
+  "/ContactUs",
+  "/Brands(.*)",
+]);
+
+const isAdminRoute = createRouteMatcher([
+  "/admin(.*)"
+]);
+
+export default clerkMiddleware(async (auth, req) => {
+  // Allow public routes without authentication
+  if (isPublicRoute(req)) {
+    return NextResponse.next();
+  }
+
+  // Protect admin routes
+  if (isAdminRoute(req)) {
+    const session = auth().sessionId;
+    if (!session) {
+      return NextResponse.redirect(new URL('/sign-in', req.url));
+    }
+  }
+
+  return NextResponse.next();
 });
 
+// Fixed matcher configuration
 export const config = {
   matcher: [
-    // Apply middleware to all routes except internal Next.js paths, static files, and /clientComponent
-    '/((?!_next|clientComponent|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public files (public folder)
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:jpg|jpeg|gif|png|svg|ico|webp|js|css|mp4)$).*)",
+    "/api/(.*)",
   ],
 };

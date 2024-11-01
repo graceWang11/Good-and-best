@@ -9,13 +9,15 @@ export default defineSchema({
   
   //Define User Table 
   users: defineTable({
-      tokenIdentifier: v.string(),
-      email: v.string(),
-      userTypeID: v.id("userTypes"),
-      userName: v.string(),
-      address: v.string(),
-      phoneNumber: v.string(),
-  }).index("by_token", ["tokenIdentifier"]),
+    tokenIdentifier: v.string(),
+    email: v.string(),
+    userName: v.string(),
+    address: v.string(),
+    phoneNumber: v.string(),
+    userTypeID: v.id("userTypes"),
+    createdAt: v.string(),
+  }).index("by_email", ["email"])
+  .index("by_token", ["tokenIdentifier"]),
 
   //Define the size table
   size: defineTable({

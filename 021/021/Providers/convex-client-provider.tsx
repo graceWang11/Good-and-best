@@ -1,7 +1,7 @@
 "use client";
 
 import { Loading } from '@/app/auth.loading';
-import { ClerkProvider, useAuth } from '@clerk/nextjs';
+import { useAuth } from '@clerk/nextjs';
 import { 
   AuthLoading, 
   Authenticated, 
@@ -24,19 +24,17 @@ export default function ConvexClientProvider({
   unauthenticatedChildren
 }: ConvexClientProviderProps) {
   return (
-    <ClerkProvider>
-      <ConvexProviderWithClerk useAuth={useAuth} client={convex}>
-        <AuthLoading>
-          <Loading />
-        </AuthLoading>
-        <Authenticated>
-          {children}
-        </Authenticated>
-        <Unauthenticated>
-          {unauthenticatedChildren || children}
-        </Unauthenticated>
-      </ConvexProviderWithClerk>
-    </ClerkProvider>
+    <ConvexProviderWithClerk useAuth={useAuth} client={convex}>
+      <AuthLoading>
+        <Loading />
+      </AuthLoading>
+      <Authenticated>
+        {children}
+      </Authenticated>
+      <Unauthenticated>
+        {unauthenticatedChildren || children}
+      </Unauthenticated>
+    </ConvexProviderWithClerk>
   );
 }
 

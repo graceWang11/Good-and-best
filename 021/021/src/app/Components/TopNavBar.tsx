@@ -24,6 +24,8 @@ import { useCart } from "./CartContext";
 import CartSidebar from "./Cartsidebar";
 import LoginButton from "./Login";
 import { useRouter } from "next/navigation";
+import { useUser } from '@clerk/clerk-react';
+import LoadingSkeleton from "./LoadingSkeleton";
 
 
 type Product = {
@@ -41,6 +43,7 @@ export default function TopNavBar() {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const { user, isSignedIn } = useUser();
 
   const { cartItems } = useCart();
 
@@ -86,8 +89,14 @@ export default function TopNavBar() {
     0
   );
 
+  useEffect(() => {
+    if (isSignedIn && user?.primaryEmailAddress?.emailAddress === "goodandbestteam@gmail.com") {
+      router.push('/admin');
+    }
+  }, [isSignedIn, user, router]);
+
   if (!imageUrl) {
-    return <div>Loading...</div>;
+    return <LoadingSkeleton />
   }
 
   return (
