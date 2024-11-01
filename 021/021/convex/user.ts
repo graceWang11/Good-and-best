@@ -165,3 +165,27 @@ export const getUserProfile = query({
     };
   },
 });
+
+
+
+export const getAllCustomers = query({
+  handler: async (ctx) => {
+    // First get the Customer userType
+    const customerType = await ctx.db
+      .query("userTypes")
+      .filter(q => q.eq(q.field("UserType"), "Customer"))
+      .first();
+
+    if (!customerType) {
+      return [];
+    }
+
+    // Then get all users with that userTypeID
+    const customers = await ctx.db
+      .query("users")
+      .filter(q => q.eq(q.field("userTypeID"), customerType._id))
+      .collect();
+
+    return customers;
+  },
+});
