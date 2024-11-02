@@ -11,6 +11,7 @@ import ViewCustomerDetail from "@/app/Components/Admin/CustomerManagement/ViewCu
 import LoadingSkeleton from "@/app/Components/LoadingSkeleton"
 import ProductManagement from "@/app/Components/Admin/ProductManagement"
 import OrderManagement from "@/app/Components/Admin/Ordermanagement/OrderManagement"
+import OrderDetail from "@/app/Components/Admin/Ordermanagement/OrderDetail"
 
 export default function AdminSubPage({ params }: { params: { admin: string[] } }) {
   const { user } = useUser()
@@ -32,25 +33,30 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
 
   console.log("Admin route params:", params.admin); // Debug log
 
-  if (params.admin[0] === "customers") {
-    if (params.admin[1]) {
-      return <ViewCustomerDetail customerId={params.admin[1]} />
-    }
-    return <CustomerList />
-  }
+  // Handle different admin sections
+  switch (params.admin[0]) {
+    case "customers":
+      if (params.admin[1]) {
+        return <ViewCustomerDetail customerId={params.admin[1]} />
+      }
+      return <CustomerList />
 
-  if (params.admin[0] === "inventory") {
-    return <InventoryManagement />
-  }
+    case "inventory":
+      return <InventoryManagement />
 
-  if (params.admin[0] === "products") {
-    return <ProductManagement />
-  }
+    case "products":
+      return <ProductManagement />
 
-  if (params.admin[0] === "orders") {
-    return <OrderManagement />
-  }
+    case "orders":
+      // Check if we have an order ID
+      if (params.admin[1]) {
+        console.log("Rendering order detail for ID:", params.admin[1]); // Debug log
+        return <OrderDetail orderId={params.admin[1]} />
+      }
+      return <OrderManagement />
 
-  router.push("/Admin")
-  return null
+    default:
+      router.push("/Admin")
+      return null
+  }
 }

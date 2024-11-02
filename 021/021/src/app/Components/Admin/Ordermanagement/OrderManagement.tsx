@@ -7,8 +7,12 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useQuery } from "convex/react"
 import { api } from "../../../../../convex/_generated/api"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
+import { Id } from "../../../../../convex/_generated/dataModel"
 
 export default function OrderManagement() {
+  const router = useRouter()
   const [selectedQuarter, setSelectedQuarter] = useState("Q1")
   const orders = useQuery(api.order.getAll)
 
@@ -53,6 +57,12 @@ export default function OrderManagement() {
     })
   }
 
+  // Function to handle view detail click
+  const handleViewDetail = (orderId: Id<"orders">) => {
+    console.log("Viewing order:", orderId); // Debug log
+    router.push(`/Admin/orders/${orderId}`);
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -82,6 +92,7 @@ export default function OrderManagement() {
               <TableHead>Total</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Items</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -99,11 +110,20 @@ export default function OrderManagement() {
                   </Badge>
                 </TableCell>
                 <TableCell>{order.orderDetails?.length || 0} items</TableCell>
+                <TableCell>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleViewDetail(order._id as Id<"orders">)}
+                  >
+                    View Detail
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
             {(!filteredOrders || filteredOrders.length === 0) && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-4">
+                <TableCell colSpan={7} className="text-center py-4">
                   No orders found for this quarter
                 </TableCell>
               </TableRow>

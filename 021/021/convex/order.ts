@@ -73,117 +73,98 @@ interface CartItem {
     }
   );
 
-  export const getOrderDetails = query(
-    async ({ db, auth, storage }, { orderId }: { orderId: string }) => {
-      // Get the authenticated user's identity
-      const identity = await auth.getUserIdentity();
-      if (!identity) {
-        throw new Error("User is not authenticated");
-      }
-  
-      // Fetch the user from the 'users' table based on tokenIdentifier
-      const userRecord = await db
-        .query("users")
-        .filter((q) =>
-          q.eq(q.field("tokenIdentifier"), identity.tokenIdentifier)
-        )
-        .first();
-  
-      if (!userRecord) {
-        throw new Error("User not found");
-      }
-  
-      // Fetch the order using the provided orderId
-      const order = await db.query("orders").filter((q) => q.eq(q.field("userID"), userRecord._id)).first();
-  
+  export const getOrderDetails = query({
+    args: { orderId: v.string() },
+    handler: async (ctx, { orderId }) => {
+      const { db } = ctx;
+      
+      console.log("Looking for order with ID:", orderId);
+
+      // Convert string ID to Convex ID type
+      const order = await db.get(orderId as Id<"orders">);
+      
       if (!order) {
-        throw new Error("Order not found");
+        throw new Error(`Order not found for ID: ${orderId}`);
       }
-  
-      // Verify that the order belongs to the authenticated user
-      if (order.userID !== userRecord._id) {
-        throw new Error("Unauthorized access to order");
-      }
-  
-      // Fetch orderDetails associated with this order using 'orderID'
+
+      // Get customer details
+      const customer = await db.get(order.userID);
+
+      // Get order details from orderDetails table using the order ID
       const orderDetails = await db
         .query("orderDetails")
-        .filter((q) => q.eq(q.field("orderID"), order._id))
+        .filter(q => q.eq(q.field("orderID"), order._id))
         .collect();
-  
-     // Fetch orderDetails from 'orderDetails' table
-     const orderDetailsFromTable = await db
-     .query("orderDetails")
-     .filter((q) => q.eq(q.field("orderID"), order._id))
-     .collect();
 
-   // Prepare detailed order details
-   const detailedOrderDetails = [];
+      console.log(`Found ${orderDetails.length} items for order ${orderId}`);
 
-   for (const orderDetail of orderDetailsFromTable) {
-     // Fetch the product
-     const product = await db.get(orderDetail.productID);
+      // Get product details for each order item
+      const detailedOrderItems = await Promise.all(
+        orderDetails.map(async (detail) => {
+          const product = await db.get(detail.productID);
+          let sizeInfo = null;
+          
+          // If there's a sizeID, get the size information
+          if (detail.sizeID) {
+            sizeInfo = await db.get(detail.sizeID);
+          }
 
-     // Fetch image records
-     const imageRecords = await db
-       .query("imageStorage")
-       .filter((q) => q.eq(q.field("productID"), orderDetail.productID))
-       .collect();
+          return {
+            _id: detail._id,
+            productName: product?.productName || "Unknown Product",
+            quantity: detail.quantity,
+            price: detail.price,
+            sizeValue: sizeInfo?.SizeValue,
+            sizeRegion: sizeInfo?.SizeRegion,
+          };
+        })
+      );
 
-     // Get image URLs
-     const imageUrls = await Promise.all(
-       imageRecords.map(async (record) => {
-         return await storage.getUrl(record.storageID);
-       })
-     );
-
-     // Combine information
-     detailedOrderDetails.push({
-       ...orderDetail,
-       productName: product?.productName,
-       imageUrls,
-     });
-   }
-
-   return {
-     order,
-     orderDetails: detailedOrderDetails,
-   };
- }
-);
-
-export const getAllOrders = query({
-  handler: async (ctx) => {
-    const orders = await ctx.db.query("orders").collect();
-    return orders;
-  },
-});
-
-export const getOrdersByCustomerId = query({
-  args: { customerId: v.string() },
-  handler: async (ctx, { customerId }) => {
-    const orders = await ctx.db
-      .query("orders")
-      .filter(q => q.eq(q.field("userID"), customerId))
-      .collect();
-    return orders;
-  },
-});
-export const getAll = query(async ({ db }) => {
-  const orders = await db.query("orders")
-    .order("desc")
-    .collect();
-
-  // Fetch customer details for each order
-  const ordersWithDetails = await Promise.all(
-    orders.map(async (order) => {
-      const customer = await db.get(order.userID);
       return {
-        ...order,
-        customerName: customer ? `${customer.userName}` : 'Unknown',
+        order: {
+          _id: order._id,
+          orderDate: order.orderDate,
+          totalAmount: order.totalAmount,
+          status: order.status,
+          customerName: customer?.userName || "Unknown Customer",
+        },
+        orderDetails: detailedOrderItems,
       };
-    })
-  );
+    },
+  });
 
-  return ordersWithDetails;
-});
+  export const getAllOrders = query({
+    handler: async (ctx) => {
+      const orders = await ctx.db.query("orders").collect();
+      return orders;
+    },
+  });
+
+  export const getOrdersByCustomerId = query({
+    args: { customerId: v.string() },
+    handler: async (ctx, { customerId }) => {
+      const orders = await ctx.db
+        .query("orders")
+        .filter(q => q.eq(q.field("userID"), customerId))
+        .collect();
+      return orders;
+    },
+  });
+  export const getAll = query(async ({ db }) => {
+    const orders = await db.query("orders")
+      .order("desc")
+      .collect();
+
+    // Fetch customer details for each order
+    const ordersWithDetails = await Promise.all(
+      orders.map(async (order) => {
+        const customer = await db.get(order.userID);
+        return {
+          ...order,
+          customerName: customer ? `${customer.userName}` : 'Unknown',
+        };
+      })
+    );
+
+    return ordersWithDetails;
+  });
