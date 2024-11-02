@@ -1,6 +1,7 @@
 import { mutation ,query} from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 import { api } from "./_generated/api";
+import { v } from "convex/values";
 
 interface CartItem {
     productId: string;
@@ -154,6 +155,17 @@ interface CartItem {
 export const getAllOrders = query({
   handler: async (ctx) => {
     const orders = await ctx.db.query("orders").collect();
+    return orders;
+  },
+});
+
+export const getOrdersByCustomerId = query({
+  args: { customerId: v.string() },
+  handler: async (ctx, { customerId }) => {
+    const orders = await ctx.db
+      .query("orders")
+      .filter(q => q.eq(q.field("userID"), customerId))
+      .collect();
     return orders;
   },
 });

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { useQuery } from "convex/react"
 import { api } from "../../../convex/_generated/api"
+import LoadingSkeleton from "../Components/LoadingSkeleton"
 
 export default function AdminPage() {
   const { user } = useUser()
@@ -22,7 +23,7 @@ export default function AdminPage() {
   }, [userDetails, router])
 
   if (!userDetails || userDetails.userType !== "Admin") {
-    return <div>Loading...</div>
+    return <LoadingSkeleton />
   }
 
   return <AdminDashboard />

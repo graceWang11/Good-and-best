@@ -189,3 +189,11 @@ export const getAllCustomers = query({
     return customers;
   },
 });
+
+export const getUserById = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, { userId }) => {
+    const user = await ctx.db.get(userId);
+    return user;
+  },
+});

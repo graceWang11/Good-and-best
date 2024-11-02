@@ -3,19 +3,26 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
+import { Search, Eye } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { useQuery } from "convex/react"
-import { api } from "../../../../convex/_generated/api"
+import { api } from "../../../../../convex/_generated/api"
+import { useRouter } from "next/navigation"
 
 export default function CustomerList() {
   const [searchQuery, setSearchQuery] = useState("")
+  const router = useRouter()
   const customers = useQuery(api.user.getAllCustomers)
 
-  const filteredCustomers = customers?.filter(customer =>
+  const filteredCustomers = customers?.filter((customer: { userName: string; email: string; }) =>
     customer.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     customer.email.toLowerCase().includes(searchQuery.toLowerCase())
   ) || []
+
+  const handleViewDetails = (customerId: string) => {
+    router.push(`/Admin/customers/${customerId}`)
+  }
 
   return (
     <Card>
@@ -40,15 +47,26 @@ export default function CustomerList() {
               <TableHead>Email</TableHead>
               <TableHead>Phone</TableHead>
               <TableHead>Address</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredCustomers.map((customer) => (
+            {filteredCustomers.map((customer: { _id: string; userName: string; email: string; phoneNumber: string; address: string }) => (
               <TableRow key={customer._id}>
                 <TableCell>{customer.userName}</TableCell>
                 <TableCell>{customer.email}</TableCell>
                 <TableCell>{customer.phoneNumber}</TableCell>
                 <TableCell>{customer.address}</TableCell>
+                <TableCell>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleViewDetails(customer._id)}
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Details
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

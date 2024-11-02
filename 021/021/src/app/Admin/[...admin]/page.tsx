@@ -6,8 +6,9 @@ import { useEffect } from "react"
 import { useQuery } from "convex/react"
 import { api } from "../../../../convex/_generated/api"
 import InventoryManagement from "@/app/Components/Admin/InventoryManagement"
-import CustomerList from "@/app/Components/Admin/CustomerList"
-// import OrderManagement from "@/app/Components/Admin/OrderManagement"
+import CustomerList from "@/app/Components/Admin/CustomerManagement/CustomerList"
+import ViewCustomerDetail from "@/app/Components/Admin/CustomerManagement/ViewCustomerDetail"
+import LoadingSkeleton from "@/app/Components/LoadingSkeleton"
 
 export default function AdminSubPage({ params }: { params: { admin: string[] } }) {
   const { user } = useUser()
@@ -24,22 +25,22 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
   }, [userDetails, router])
 
   if (!userDetails || userDetails.userType !== "Admin") {
-    return <div>Loading...</div>
+    return <LoadingSkeleton />
   }
 
-  // Get the specific admin route
-  const adminRoute = params.admin[0]
+  console.log("Admin route params:", params.admin); // Debug log
 
-  // Return the appropriate component based on the route
-  switch (adminRoute) {
-    case "inventory":
-      return <InventoryManagement />
-    case "customers":
-      return <CustomerList />
-    // case "orders":
-    //   return <OrderManagement />
-    default:
-      router.push("/Admin")
-      return null
+  if (params.admin[0] === "customers") {
+    if (params.admin[1]) {
+      return <ViewCustomerDetail customerId={params.admin[1]} />
+    }
+    return <CustomerList />
   }
+
+  if (params.admin[0] === "inventory") {
+    return <InventoryManagement />
+  }
+
+  router.push("/Admin")
+  return null
 }

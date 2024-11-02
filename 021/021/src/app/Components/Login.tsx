@@ -57,7 +57,7 @@ function LoginButton() {
 
     // If user is admin, redirect to admin console
     if (userDetails?.userType === "Admin") {
-        router.push('/admin');
+        router.push('/Admin');
         return null;
     }
 
