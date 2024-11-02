@@ -10,7 +10,11 @@ import { useQuery } from "convex/react"
 import { api } from "../../../../../convex/_generated/api"
 import { useRouter } from "next/navigation"
 
-export default function CustomerList() {
+interface CustomerListProps {
+  onViewCustomer?: (customerId: string) => void;
+}
+
+export default function CustomerList({ onViewCustomer }: CustomerListProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const router = useRouter()
   const customers = useQuery(api.user.getAllCustomers)

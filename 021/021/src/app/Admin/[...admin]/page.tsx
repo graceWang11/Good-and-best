@@ -31,13 +31,22 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
     return <LoadingSkeleton />
   }
 
-  console.log("Admin route params:", params.admin); // Debug log
+  const handleBackToCustomers = () => {
+    router.push("/Admin")
+  }
+
+  const handleBackToOrders = () => {
+    router.push("/Admin")
+  }
 
   // Handle different admin sections
   switch (params.admin[0]) {
     case "customers":
       if (params.admin[1]) {
-        return <ViewCustomerDetail customerId={params.admin[1]} />
+        return <ViewCustomerDetail 
+          customerId={params.admin[1]} 
+          onBack={handleBackToCustomers}
+        />
       }
       return <CustomerList />
 
@@ -50,8 +59,10 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
     case "orders":
       // Check if we have an order ID
       if (params.admin[1]) {
-        console.log("Rendering order detail for ID:", params.admin[1]); // Debug log
-        return <OrderDetail orderId={params.admin[1]} />
+        return <OrderDetail 
+          orderId={params.admin[1]} 
+          onBack={handleBackToOrders}
+        />
       }
       return <OrderManagement />
 

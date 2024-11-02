@@ -12,7 +12,12 @@ import { api } from "../../../../../convex/_generated/api"
 import { useRouter } from "next/navigation"
 import LoadingSkeleton from "../../LoadingSkeleton"
 
-export default function CustomerDetail({ customerId }: { customerId: string }) {
+interface ViewCustomerDetailProps {
+  customerId: string;
+  onBack?: () => void;
+}
+
+export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerDetailProps) {
   const router = useRouter()
   const customerDetails = useQuery(api.user.getUserById, { userId: customerId as any }) // Type assertion to fix type error
   const customerOrders = useQuery(api.order.getOrdersByCustomerId, { customerId })
@@ -36,7 +41,7 @@ export default function CustomerDetail({ customerId }: { customerId: string }) {
 
   return (
     <div className="container mx-auto p-4">
-      <Button variant="outline" className="mb-4" onClick={() => router.push('/Admin/customers')}>
+      <Button variant="outline" className="mb-4" onClick={onBack}>
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Customer List
       </Button>
 

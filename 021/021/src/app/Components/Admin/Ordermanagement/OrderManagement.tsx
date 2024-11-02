@@ -11,7 +11,11 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { Id } from "../../../../../convex/_generated/dataModel"
 
-export default function OrderManagement() {
+interface OrderManagementProps {
+  onViewOrder?: (orderId: string) => void;  // Make onViewOrder optional
+}
+
+export default function OrderManagement({ onViewOrder }: OrderManagementProps) {
   const router = useRouter()
   // Initialize with localStorage value if exists, otherwise use "Q1"
   const [selectedQuarter, setSelectedQuarter] = useState(() => {

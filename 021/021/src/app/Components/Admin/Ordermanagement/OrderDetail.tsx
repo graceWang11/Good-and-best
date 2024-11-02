@@ -29,7 +29,12 @@ interface OrderDetailsResponse {
   orderDetails: OrderDetail[];
 }
 
-export default function OrderDetail({ orderId }: { orderId: string }) {
+interface OrderDetailProps {
+  orderId: string;
+  onBack?: () => void;
+}
+
+export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
   const router = useRouter()
   
   console.log("Received order ID in component:", orderId);
@@ -69,7 +74,7 @@ export default function OrderDetail({ orderId }: { orderId: string }) {
             <CardTitle>Order Details</CardTitle>
             <CardDescription>Order ID: {orderId}</CardDescription>
           </div>
-          <Button variant="outline" onClick={() => router.back()}>
+          <Button variant="outline" onClick={onBack}>
             Back to Orders
           </Button>
         </div>
