@@ -91,7 +91,7 @@ export default function TopNavBar() {
 
   useEffect(() => {
     if (isSignedIn && user?.primaryEmailAddress?.emailAddress === "goodandbestteam@gmail.com") {
-      router.push('/admin');
+      router.push('/Admin');
     }
   }, [isSignedIn, user, router]);
 
