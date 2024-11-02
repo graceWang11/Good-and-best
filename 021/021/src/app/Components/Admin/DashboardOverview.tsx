@@ -2,12 +2,17 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { ShoppingBag, Users, Package } from "lucide-react"
+import { ShoppingBag, Users, Package, LogOut } from "lucide-react"
 import { useQuery } from "convex/react"
 import { api } from "../../../../convex/_generated/api"
 import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { useClerk } from "@clerk/nextjs"
+import { useRouter } from "next/navigation"
 
 export default function DashboardOverview() {
+  const { signOut } = useClerk()
+  const router = useRouter()
   const [monthlyStats, setMonthlyStats] = useState({
     currentRevenue: 0,
     revenueGrowth: 0,
@@ -94,11 +99,28 @@ export default function DashboardOverview() {
     }
   }, [orders, customers]);
 
+  const handleSignOut = async () => {
+    await signOut()
+    router.push("/")
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Dashboard Overview</CardTitle>
-        <CardDescription>Key metrics and statistics</CardDescription>
+        <div className="flex justify-between items-center">
+          <div>
+            <CardTitle>Dashboard Overview</CardTitle>
+            <CardDescription>Key metrics and statistics</CardDescription>
+          </div>
+          <Button 
+            variant="destructive" 
+            onClick={handleSignOut}
+            className="flex items-center gap-2 hover:bg-red-600 transition-colors"
+          >
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

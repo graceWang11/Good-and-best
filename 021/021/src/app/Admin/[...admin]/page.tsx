@@ -48,17 +48,13 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
   }
 
   const handleBackToCustomers = () => {
-    router.push("/Admin")
     localStorage.setItem('adminActiveSection', 'customers')
-    // Force a reload to ensure the tab state is updated
-    window.location.reload()
+    router.push("/Admin")
   }
 
   const handleBackToOrders = () => {
-    router.push("/Admin")
     localStorage.setItem('adminActiveSection', 'orders')
-    // Force a reload to ensure the tab state is updated
-    window.location.reload()
+    router.push("/Admin")
   }
 
   // Handle different admin sections
