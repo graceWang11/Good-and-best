@@ -32,9 +32,10 @@ interface OrderDetailsResponse {
 interface OrderDetailProps {
   orderId: string;
   onBack?: () => void;
+  backButtonText?: string;
 }
 
-export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
+export default function OrderDetail({ orderId, onBack, backButtonText = "Back to Orders" }: OrderDetailProps) {
   const router = useRouter()
   
   console.log("Received order ID in component:", orderId);
@@ -75,7 +76,7 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
             <CardDescription>Order ID: {orderId}</CardDescription>
           </div>
           <Button variant="outline" onClick={onBack}>
-            Back to Orders
+            {backButtonText}
           </Button>
         </div>
       </CardHeader>

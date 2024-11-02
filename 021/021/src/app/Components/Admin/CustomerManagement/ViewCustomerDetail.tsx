@@ -11,6 +11,7 @@ import { useQuery } from "convex/react"
 import { api } from "../../../../../convex/_generated/api"
 import { useRouter } from "next/navigation"
 import LoadingSkeleton from "../../LoadingSkeleton"
+import router from "next/router"
 
 interface ViewCustomerDetailProps {
   customerId: string;
@@ -19,11 +20,16 @@ interface ViewCustomerDetailProps {
 
 export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerDetailProps) {
   const router = useRouter()
-  const customerDetails = useQuery(api.user.getUserById, { userId: customerId as any }) // Type assertion to fix type error
+  const customerDetails = useQuery(api.user.getUserById, { userId: customerId as any })
   const customerOrders = useQuery(api.order.getOrdersByCustomerId, { customerId })
 
   if (!customerDetails || !customerOrders) {
     return <LoadingSkeleton />
+  }
+
+  // Function to handle order view
+  const handleOrderView = (orderId: string) => {
+    router.push(`/Admin/customers/${customerId}/orders/${orderId}`)
   }
 
   // Calculate total spent and prepare monthly spending data
@@ -136,7 +142,13 @@ export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerD
                   <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
                   <TableCell>{order.status}</TableCell>
                   <TableCell>
-                    <Button variant="outline" size="sm">View Order</Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleOrderView(order._id)}
+                    >
+                      View Order
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
