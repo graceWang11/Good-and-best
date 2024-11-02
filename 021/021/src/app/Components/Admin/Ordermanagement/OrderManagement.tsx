@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -13,8 +13,21 @@ import { Id } from "../../../../../convex/_generated/dataModel"
 
 export default function OrderManagement() {
   const router = useRouter()
-  const [selectedQuarter, setSelectedQuarter] = useState("Q1")
+  // Initialize with localStorage value if exists, otherwise use "Q1"
+  const [selectedQuarter, setSelectedQuarter] = useState(() => {
+    // Check if we're in the browser environment
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('selectedQuarter') || "Q1"
+    }
+    return "Q1"
+  })
+  
   const orders = useQuery(api.order.getAll)
+
+  // Update localStorage when quarter changes
+  useEffect(() => {
+    localStorage.setItem('selectedQuarter', selectedQuarter)
+  }, [selectedQuarter])
 
   // Function to filter orders by quarter
   const filterOrdersByQuarter = (orders: any[]) => {
@@ -59,7 +72,7 @@ export default function OrderManagement() {
 
   // Function to handle view detail click
   const handleViewDetail = (orderId: Id<"orders">) => {
-    console.log("Viewing order:", orderId); // Debug log
+    console.log("Viewing order:", orderId);
     router.push(`/Admin/orders/${orderId}`);
   }
 
