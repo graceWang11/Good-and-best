@@ -2,7 +2,7 @@
 
 import { useUser } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useQuery } from "convex/react"
 import { api } from "../../../../convex/_generated/api"
 import InventoryManagement from "@/app/Components/Admin/InventoryManagement"
@@ -16,16 +16,32 @@ import OrderDetail from "@/app/Components/Admin/Ordermanagement/OrderDetail"
 export default function AdminSubPage({ params }: { params: { admin: string[] } }) {
   const { user } = useUser()
   const router = useRouter()
+  const [activeSection, setActiveSection] = useState(() => {
+    // Initialize with localStorage value if exists
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('adminActiveSection') || "home"
+    }
+    return "home"
+  })
+
   const userDetails = useQuery(api.user.getUserByEmail, {
     email: user?.primaryEmailAddress?.emailAddress || ""
   })
 
   useEffect(() => {
-    // Redirect non-admin users
     if (userDetails && userDetails.userType !== "Admin") {
       router.push("/")
     }
   }, [userDetails, router])
+
+  // Update localStorage when section changes
+  useEffect(() => {
+    if (params.admin[0]) {
+      const section = params.admin[0]
+      setActiveSection(section)
+      localStorage.setItem('adminActiveSection', section)
+    }
+  }, [params.admin])
 
   if (!userDetails || userDetails.userType !== "Admin") {
     return <LoadingSkeleton />
@@ -33,10 +49,16 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
 
   const handleBackToCustomers = () => {
     router.push("/Admin")
+    localStorage.setItem('adminActiveSection', 'customers')
+    // Force a reload to ensure the tab state is updated
+    window.location.reload()
   }
 
   const handleBackToOrders = () => {
     router.push("/Admin")
+    localStorage.setItem('adminActiveSection', 'orders')
+    // Force a reload to ensure the tab state is updated
+    window.location.reload()
   }
 
   // Handle different admin sections
@@ -57,7 +79,6 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
       return <ProductManagement />
 
     case "orders":
-      // Check if we have an order ID
       if (params.admin[1]) {
         return <OrderDetail 
           orderId={params.admin[1]} 
@@ -67,7 +88,6 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
       return <OrderManagement />
 
     default:
-      router.push("/Admin")
       return null
   }
 }

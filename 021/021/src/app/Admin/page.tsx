@@ -20,7 +20,12 @@ export default function AdminDashboard() {
   const router = useRouter()
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState("home")
+  const [activeTab, setActiveTab] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('adminActiveSection') || "home"
+    }
+    return "home"
+  })
   
   const userDetails = useQuery(api.user.getUserByEmail, {
     email: user?.primaryEmailAddress?.emailAddress || ""
@@ -32,6 +37,11 @@ export default function AdminDashboard() {
       router.push("/")
     }
   }, [userDetails, router])
+
+  useEffect(() => {
+    // Keep localStorage in sync with active tab
+    localStorage.setItem('adminActiveSection', activeTab)
+  }, [activeTab])
 
   if (!userDetails || userDetails.userType !== "Admin") {
     return <LoadingSkeleton />
