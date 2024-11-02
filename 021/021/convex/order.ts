@@ -169,3 +169,21 @@ export const getOrdersByCustomerId = query({
     return orders;
   },
 });
+export const getAll = query(async ({ db }) => {
+  const orders = await db.query("orders")
+    .order("desc")
+    .collect();
+
+  // Fetch customer details for each order
+  const ordersWithDetails = await Promise.all(
+    orders.map(async (order) => {
+      const customer = await db.get(order.userID);
+      return {
+        ...order,
+        customerName: customer ? `${customer.userName}` : 'Unknown',
+      };
+    })
+  );
+
+  return ordersWithDetails;
+});
