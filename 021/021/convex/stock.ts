@@ -12,7 +12,7 @@ export const setStock = mutation({
     price: v.number(),
   },
 
-  handler: async (ctx, { productName, brand, categoryname, stockQuantity,series, price }) => {
+  handler: async (ctx, { productName, brand, categoryname, stockQuantity, series, price }) => {
     // Retrieve product categories
     const productCategories = await ctx.db.query("ProductCategory").collect();
     const categoryMap = productCategories.reduce((map, category) => {
@@ -22,41 +22,32 @@ export const setStock = mutation({
 
     const productCategoryID = categoryMap[categoryname];
     if (!productCategoryID) {
-      console.log(`Category "${categoryname}" not found. Skipping product "${productName}".`);
-      return;
+      throw new Error(`Category "${categoryname}" not found.`);
     }
-    // Check if the product exists in the database based on productName, brand, and productCategoryID
-    let product = await ctx.db.query("products")
+
+    // Get the most recently added product with matching name and brand
+    const product = await ctx.db.query("products")
       .filter(q => 
         q.eq(q.field("productName"), productName) &&
-        q.eq(q.field("brand"), brand) &&
-        q.eq(q.field("productCategoryID"), productCategoryID)
+        q.eq(q.field("brand"), brand)
       )
+      .order("desc")
       .first();
 
-    if (product) {
-      console.log("This product is already in the database.");
-    } else {
-      // Insert a new product into the database
-      const newProductId = await ctx.db.insert("products", {
-        productCategoryID,
-        brand: brand,
-        productName: productName,
-        Series: series || "", 
-        price: price || 0,    
-      });
-      ;
-
-      // Insert a new stock entry for the new product
-      await ctx.db.insert("stock", {
-        productID: newProductId,
-        stockQuantity: stockQuantity,
-      });
-
-      console.log(`Inserted new stock for product "${productName}" with quantity: ${stockQuantity}`);
+    if (!product) {
+      throw new Error("Product not found. Please try adding the product again.");
     }
+
+    // Insert a new stock entry for the product
+    await ctx.db.insert("stock", {
+      productID: product._id,
+      stockQuantity: stockQuantity,
+    });
+
+    console.log(`Inserted new stock for product "${productName}" with quantity: ${stockQuantity}`);
   },
 });
+
 // Function to initialize stock for all existing products to 100
 export const initializeStock = mutation(async (ctx) => {
   // Fetch all products in the database

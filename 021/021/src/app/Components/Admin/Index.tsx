@@ -18,6 +18,9 @@ export default function AdminDashboard() {
       case "orders":
         router.push("/Admin/orders")
         break
+      case "products":
+        router.push("/Admin/products")
+        break
       default:
         router.push("/Admin")
     }

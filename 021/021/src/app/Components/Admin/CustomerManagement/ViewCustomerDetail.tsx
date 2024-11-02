@@ -10,6 +10,7 @@ import { User, Mail, Phone, MapPin, Calendar, DollarSign, ShoppingBag, ArrowLeft
 import { useQuery } from "convex/react"
 import { api } from "../../../../../convex/_generated/api"
 import { useRouter } from "next/navigation"
+import LoadingSkeleton from "../../LoadingSkeleton"
 
 export default function CustomerDetail({ customerId }: { customerId: string }) {
   const router = useRouter()
@@ -17,7 +18,7 @@ export default function CustomerDetail({ customerId }: { customerId: string }) {
   const customerOrders = useQuery(api.order.getOrdersByCustomerId, { customerId })
 
   if (!customerDetails || !customerOrders) {
-    return <div>Loading...</div>
+    return <LoadingSkeleton />
   }
 
   // Calculate total spent and prepare monthly spending data

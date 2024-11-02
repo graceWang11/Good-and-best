@@ -9,7 +9,7 @@ import InventoryManagement from "@/app/Components/Admin/InventoryManagement"
 import CustomerList from "@/app/Components/Admin/CustomerManagement/CustomerList"
 import ViewCustomerDetail from "@/app/Components/Admin/CustomerManagement/ViewCustomerDetail"
 import LoadingSkeleton from "@/app/Components/LoadingSkeleton"
-
+import ProductManagement from "@/app/Components/Admin/ProductManagement"
 export default function AdminSubPage({ params }: { params: { admin: string[] } }) {
   const { user } = useUser()
   const router = useRouter()
@@ -39,6 +39,10 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
 
   if (params.admin[0] === "inventory") {
     return <InventoryManagement />
+  }
+
+  if (params.admin[0] === "products") {
+    return <ProductManagement />
   }
 
   router.push("/Admin")
