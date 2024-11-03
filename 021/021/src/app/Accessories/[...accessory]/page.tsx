@@ -4,31 +4,35 @@ import Footer from "@/app/Components/Footer";
 import PageNotFound from "@/app/Components/PageNotFound";
 import TopNavBar from "@/app/Components/TopNavBar";
 
-// Define the interface for the component props
 interface AccessoriesProps {
-  params: {
-    accessory: string[];
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
-}
+    params: Promise<{
+      accessory: string[];
+    }>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  }
+  
+
 
 // Define the Accessories component
-export default function Accessories({
-  params,
-  searchParams,
-}: AccessoriesProps) {
-  // Check if the accessory parameter has exactly one item
-  if (params.accessory.length === 1) {
-    const accessoryId = params.accessory[0];
-    return (
-      <>
-        <TopNavBar />
-        <AccessoriesDetail productId={accessoryId} />
-        <Footer />
-      </>
-    );
-  } else {
-    // Render the PageNotFound component if the condition is not met
-    return <PageNotFound />;
+export default async function Accessories({
+    params,
+    searchParams,
+  }: AccessoriesProps) {
+    // Await the resolved values of params and searchParams
+    const { accessory } = await params;
+    const query = await searchParams;
+  
+    // Safely access and trim the first element
+    if (accessory.length === 1) {
+      const accessoryId = accessory[0];
+      return (
+        <>
+          <TopNavBar />
+          <AccessoriesDetail productId={accessoryId} />
+          <Footer />
+        </>
+      );
+    } else {
+      return <PageNotFound />;
+    }
   }
-}
