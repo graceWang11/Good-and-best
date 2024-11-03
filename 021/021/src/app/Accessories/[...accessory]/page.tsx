@@ -1,6 +1,4 @@
-"use client";
-
-import React from 'react';
+// Remove "use client"
 import AccessoriesDetail from "@/app/Components/Accessories/AccessoriesDetail";
 import Footer from "@/app/Components/Footer";
 import PageNotFound from "@/app/Components/PageNotFound";
@@ -11,12 +9,9 @@ export default function Accessories({
 }: { 
   params: { accessory: string[] } 
 }) {
-  // Unwrap params using React.use()
-  const unwrappedParams = React.use(Promise.resolve(params));
-
   // Safely access and trim the first element
-  if (unwrappedParams.accessory.length === 1) {
-    const accessoryId = unwrappedParams.accessory[0];
+  if (params.accessory.length === 1) {
+    const accessoryId = params.accessory[0];
     return (
       <>
         <TopNavBar />

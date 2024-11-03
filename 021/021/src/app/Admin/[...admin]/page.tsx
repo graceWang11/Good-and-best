@@ -1,9 +1,3 @@
-"use client";
-
-import React from 'react';
-import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import InventoryManagement from "@/app/Components/Admin/InventoryManagement";
@@ -19,41 +13,22 @@ export default function AdminSubPage({
 }: { 
   params: { admin: string[] } 
 }) {
-  // Unwrap params using React.use()
-  const unwrappedParams = React.use(Promise.resolve(params));
-  const [section, id, subSection, subId] = unwrappedParams.admin;
-
-  const { user } = useUser();
-  const router = useRouter();
-
-  const userDetails = useQuery(api.user.getUserByEmail, {
-    email: user?.primaryEmailAddress?.emailAddress || ""
-  });
-
-  useEffect(() => {
-    if (userDetails && userDetails.userType !== "Admin") {
-      router.push("/");
-    }
-  }, [userDetails, router]);
-
-  if (!userDetails || userDetails.userType !== "Admin") {
-    return <LoadingSkeleton />;
-  }
+  const [section, id, subSection, subId] = params.admin;
 
   // Handle nested routes
   if (section === "customers") {
     if (id) {
       if (subSection === "orders" && subId) {
-        return <OrderDetail orderId={subId} onBack={() => router.push(`/Admin/customers/${id}`)} />;
+        return <OrderDetail orderId={subId} onBack={() => `/Admin/customers/${id}`} />;
       }
-      return <ViewCustomerDetail customerId={id} onBack={() => router.push("/Admin/customers")} />;
+      return <ViewCustomerDetail customerId={id} onBack={() => "/Admin/customers"} />;
     }
     return <CustomerList />;
   }
 
   if (section === "orders") {
     if (id) {
-      return <OrderDetail orderId={id} onBack={() => router.push("/Admin/orders")} />;
+      return <OrderDetail orderId={id} onBack={() => "/Admin/orders"} />;
     }
     return <OrderManagement />;
   }
@@ -66,6 +41,5 @@ export default function AdminSubPage({
     return <ProductManagement />;
   }
 
-  router.push("/Admin");
   return <LoadingSkeleton />;
 }
