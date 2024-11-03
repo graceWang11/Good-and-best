@@ -6,7 +6,6 @@ import ConvexClientProvider from "../../Providers/convex-client-provider";
 import { CartProvider } from "./Components/CartContext";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { UserDataHandler } from './Components/UserDataHandler';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -29,17 +28,7 @@ export default function RootLayout({
             <CartProvider>
               <UserDataHandler />
               {children}
-              <ToastContainer 
-                position="top-right"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-              />
+              <ToastContainer />
             </CartProvider>
           </ConvexClientProvider>
         </ClerkProvider>
