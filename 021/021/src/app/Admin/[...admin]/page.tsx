@@ -1,8 +1,9 @@
 "use client"
 
+import React from 'react';
 import { useUser } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useQuery } from "convex/react"
 import { api } from "../../../../convex/_generated/api"
 import InventoryManagement from "@/app/Components/Admin/InventoryManagement"
@@ -13,16 +14,13 @@ import ProductManagement from "@/app/Components/Admin/ProductManagement"
 import OrderManagement from "@/app/Components/Admin/Ordermanagement/OrderManagement"
 import OrderDetail from "@/app/Components/Admin/Ordermanagement/OrderDetail"
 
-export default function AdminSubPage({ params }: { params: { admin: string[] } }) {
+export default function AdminSubPage({
+  params,
+}: {
+  params: { admin: string[] };
+}) {
   const { user } = useUser()
   const router = useRouter()
-  const [activeSection, setActiveSection] = useState(() => {
-    // Initialize with localStorage value if exists
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('adminActiveSection') || "home"
-    }
-    return "home"
-  })
 
   const userDetails = useQuery(api.user.getUserByEmail, {
     email: user?.primaryEmailAddress?.emailAddress || ""
@@ -33,15 +31,6 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
       router.push("/")
     }
   }, [userDetails, router])
-
-  // Update localStorage when section changes
-  useEffect(() => {
-    if (params.admin[0]) {
-      const section = params.admin[0]
-      setActiveSection(section)
-      localStorage.setItem('adminActiveSection', section)
-    }
-  }, [params.admin])
 
   if (!userDetails || userDetails.userType !== "Admin") {
     return <LoadingSkeleton />
@@ -57,33 +46,38 @@ export default function AdminSubPage({ params }: { params: { admin: string[] } }
     router.push("/Admin")
   }
 
-  // Handle different admin sections
-  switch (params.admin[0]) {
-    case "customers":
-      if (params.admin[1]) {
-        return <ViewCustomerDetail 
-          customerId={params.admin[1]} 
-          onBack={handleBackToCustomers}
-        />
+  // Get the path segments directly from params
+  const [section, id, subSection, subId] = params.admin;
+
+  // Handle nested routes
+  if (section === "customers") {
+    if (id) {
+      if (subSection === "orders" && subId) {
+        // Handle customer's specific order view
+        return <OrderDetail orderId={subId} onBack={() => router.push(`/Admin/customers/${id}`)} />;
       }
-      return <CustomerList />
-
-    case "inventory":
-      return <InventoryManagement />
-
-    case "products":
-      return <ProductManagement />
-
-    case "orders":
-      if (params.admin[1]) {
-        return <OrderDetail 
-          orderId={params.admin[1]} 
-          onBack={handleBackToOrders}
-        />
-      }
-      return <OrderManagement />
-
-    default:
-      return null
+      // Handle customer detail view
+      return <ViewCustomerDetail customerId={id} onBack={handleBackToCustomers} />;
+    }
+    return <CustomerList />;
   }
+
+  if (section === "orders") {
+    if (id) {
+      return <OrderDetail orderId={id} onBack={handleBackToOrders} />;
+    }
+    return <OrderManagement />;
+  }
+
+  if (section === "inventory") {
+    return <InventoryManagement />;
+  }
+
+  if (section === "products") {
+    return <ProductManagement />;
+  }
+
+  // Default case
+  router.push("/Admin");
+  return <LoadingSkeleton />;
 }
