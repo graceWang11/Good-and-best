@@ -8,11 +8,17 @@ import ProductManagement from "@/app/Components/Admin/ProductManagement";
 import OrderManagement from "@/app/Components/Admin/Ordermanagement/OrderManagement";
 import OrderDetail from "@/app/Components/Admin/Ordermanagement/OrderDetail";
 
-export default function AdminSubPage({ 
-  params 
-}: { 
-  params: { admin: string[] } 
-}) {
+interface AdminPageProps {
+  params: {
+    admin: string[];
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+export default async function AdminSubPage({ 
+  params,
+  searchParams,
+}: AdminPageProps) {
   const [section, id, subSection, subId] = params.admin;
 
   // Handle nested routes

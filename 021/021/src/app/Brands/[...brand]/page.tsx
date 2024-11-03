@@ -1,23 +1,23 @@
-"use client";
-
-import React from 'react';
 import BrandProductsList from "@/app/Components/BrandCatgories/BrandProductsList";
 import ProductDetail from "@/app/Components/BrandCatgories/ProductDetail";
 import Footer from "@/app/Components/Footer";
 import PageNotFound from "@/app/Components/PageNotFound";
 import TopNavBar from "@/app/Components/TopNavBar";
 
-export default function BrandPage({ 
-  params 
-}: { 
-  params: { brand: string[] } 
-}) {
-  // Unwrap params using React.use()
-  const unwrappedParams = React.use(Promise.resolve(params));
-  const brandName = unwrappedParams.brand[0]; // Extract the brand name from the array
+interface BrandPageProps {
+  params: {
+    brand: string[];
+  };
+  searchParams: { [key: string]: string | string[] | undefined };
+}
 
-  // Check if the slug has 1 or 2 parts
-  if (unwrappedParams.brand.length === 1) {
+export default async function BrandPage({ 
+  params,
+  searchParams,
+}: BrandPageProps) {
+  const brandName = params.brand[0];
+
+  if (params.brand.length === 1) {
     return (
       <>
         <TopNavBar />
@@ -25,8 +25,8 @@ export default function BrandPage({
         <Footer />
       </>
     );
-  } else if (unwrappedParams.brand.length === 2) {
-    const productId = unwrappedParams.brand[1]; // Extract product ID from the URL
+  } else if (params.brand.length === 2) {
+    const productId = params.brand[1];
     return (
       <>
         <TopNavBar />
