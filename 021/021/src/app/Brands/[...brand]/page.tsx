@@ -5,19 +5,23 @@ import PageNotFound from "@/app/Components/PageNotFound";
 import TopNavBar from "@/app/Components/TopNavBar";
 
 interface BrandPageProps {
-  params: {
+  params: Promise<{
     brand: string[];
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+  }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function BrandPage({ 
+
+export default async function BrandPage({
   params,
   searchParams,
 }: BrandPageProps) {
-  const brandName = params.brand[0];
+  // Await the resolved values of params and searchParams
+  const { brand } = await params;
+  const query = await searchParams;
 
-  if (params.brand.length === 1) {
+  if (brand.length === 1) {
+    const brandName = brand[0];
     return (
       <>
         <TopNavBar />
@@ -25,8 +29,8 @@ export default async function BrandPage({
         <Footer />
       </>
     );
-  } else if (params.brand.length === 2) {
-    const productId = params.brand[1];
+  } else if (brand.length === 2) {
+    const [brandName, productId] = brand;
     return (
       <>
         <TopNavBar />

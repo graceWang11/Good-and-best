@@ -9,17 +9,21 @@ import OrderManagement from "@/app/Components/Admin/Ordermanagement/OrderManagem
 import OrderDetail from "@/app/Components/Admin/Ordermanagement/OrderDetail";
 
 interface AdminPageProps {
-  params: {
+  params: Promise<{
     admin: string[];
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+  }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function AdminSubPage({ 
+export default async function AdminSubPage({
   params,
   searchParams,
 }: AdminPageProps) {
-  const [section, id, subSection, subId] = params.admin;
+  // Await the resolved values of params and searchParams
+  const { admin } = await params;
+  const query = await searchParams;
+
+  const [section, id, subSection, subId] = admin;
 
   // Handle nested routes
   if (section === "customers") {
