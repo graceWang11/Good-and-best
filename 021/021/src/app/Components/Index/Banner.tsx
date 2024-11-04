@@ -17,10 +17,10 @@ import LoadingSkeleton from "../LoadingSkeleton";
 
 // Map brand names to their respective image IDs
 const brandImages: { [key: string]: string } = {
-  Victor: "kg2f8ejqxpqbw7q2q86yxr8btd70rk4e",
-  Yonex: "kg296tr2mg8j2vwvnyhb638a7d70tcfw",
-  "Li-Ning": "kg29b486jhyebew0r40jbkr7kh70sbz8",
-  Kawasaki: "kg24jtgpb1h03bytra51y14zw570sxhw",
+  Victor: "kg29rr30y1p64wy6fsb6zfgres73y3zx",
+  Yonex: "kg27w2dxv5fwvq4k9x6nayspqn73yh76",
+  "Li-Ning": "kg2afjmh9t0z0wrczspa1tby2n73zwzf",
+  Kawasaki: "kg27mmgt0xa80344jdefpcewx973yqzs",
 };
 
 export default function BannerWithCarousel() {
@@ -44,15 +44,15 @@ export default function BannerWithCarousel() {
 
   // Banner logic
   const backgroundImageUrl = useQuery(api.imageStorage.getImageUrl, {
-    imageId: "kg27npv7b87jbd25jx8tj1c4x570tg8q",
+    imageId: "kg209f5q7js97r80kbvnfd7j0x73z6yr",
   });
 
   const leftImageUrl = useQuery(api.imageStorage.getImageUrl, {
-    imageId: "kg25c1fqe9kmpzdfqn35vpvm29702mhk",
+    imageId: "kg2ear7kg4mpspvb00qycgqnjx73z92f",
   });
 
   const productDetails = useQuery(api.Product.getProductDetailsByImageId, {
-    imageId: "kg25c1fqe9kmpzdfqn35vpvm29702mhk",
+    imageId: "kg2ear7kg4mpspvb00qycgqnjx73z92f",
   });
 
   // Error handling and loading

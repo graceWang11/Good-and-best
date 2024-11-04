@@ -24,50 +24,54 @@ export const insertImageWithDescription = mutation(async (ctx) => {
 
   // Manually add the images with descriptions (product names)
   const images = [
-    { storageID: "kg2fryph00007f8qseszddhxq1702b1a", description: "Halbertec 7000" },
-    { storageID: "kg267jy3390t80s3fys2kwfa4x702rfs", description: "AxForce 100 Kilin" },
-    { storageID: "kg2bhqtxtxp66fbcnzx3zfvsn9703z2f", description: "Bladex 800" },
-    { storageID: "kg23vvctcj0hxpdwyt3ba4rev5702xhj", description: "TK-RYUGA II PRO B" },
-    { storageID: "kg27tgd7a8srj70ywerbbfxtxx702k67", description: "Thruster K Falcon" },
-    { storageID: "kg239xhhfnsgt44qq75rgcjwx5702w8p", description: "BRAVE SWORD 12N" },
-    { storageID: "kg2d99npj5qv0ams75jssrfv7h703s15", description: "AuraSpeed 90F" },
-    { storageID: "kg29abq460e2sgt5zgwp13axyd70325z", description: "NANOFLARE 1000 PLAY" },
-    { storageID: "kg29cw5mfsnj0k7tx8ef1g73t5702rn0", description: "ASTROX 100ZZ" },
-    { storageID: "kg26axh74bz155fs16r5n8p49h702xm2", description: "ASTROX 88 S PRO" },
-    { storageID: "kg209vdnfvkcdv42r1g4dmemfd703cvp", description: "ASTROX 88 D TOUR" },
-    { storageID: "kg2bhqtxtxp66fbcnzx3zfvsn9703z2f", description: "ASTROX 77 PRO" },
+    //racket
+    //Li-ning
+    { storageID: "kg2fkfaewxcys0w0qqcymkh3dx73zg2s", description: "Halbertec 7000" },
+    { storageID: "kg2355cdy9np2btq0m0yge1fkx73zeap", description: "AxForce 100 Kilin" },
+    { storageID: "kg2072pedm64ccw6s3wv5yrczn73yxxs", description: "Bladex 800" },
+    //Victor
+    { storageID: "kg23jza237tncw818edqc2ya0x73yar9", description: "TK-RYUGA II PRO B" },
+    { storageID: "kg2ar43kh39ph8ph3kafcybsqh73y9q7", description: "Thruster K Falcon" },
+    { storageID: "kg27m06hth0pd93nnxntdkgfe173y6dq", description: "BRAVE SWORD 12N" },
+    { storageID: "kg2ah5hj9ebwfmd58q461tnv5n73zyv9", description: "AuraSpeed 90F" },
+    //Yonex
+    { storageID: "kg20n53r127a0qynx5vgrqydes73zetr", description: "NANOFLARE 1000 PLAY" },
+    { storageID: "kg2f9hjjnj8dvek2j27d6hmr5d73yt5h", description: "ASTROX 100ZZ" },
+    { storageID: "kg2cv0j16qc41vw8sd51kb80vd73ydx8", description: "ASTROX 88 S PRO" },
+    { storageID: "kg25611th55cqkb0v4b4smacq573z6ph", description: "ASTROX 88 D TOUR" },
+    { storageID: "kg2f6fmr08gtg88x6t980fmdh973z70w", description: "ASTROX 77 PRO" },
     // Shoes
     // Kawasaki
-    { storageID: "kg2ahtxxhe6cc01jwn9hv2j8sn702gnb", description: "Anti-Slippery K-530" },
+    { storageID: "kg27157xch3r7ebn9w2bzw6rcd73zht0", description: "Anti-Slippery K-530" },
     // Li-Ning
-    { storageID: "kg244t91tjq1eh1d9etdvg1wdx702343", description: "AYTS034-6" },
-    { storageID: "kg2edpzse263b4mbs2hk9b5sh17030wf", description: "Ultra 2" },
+    { storageID: "kg2410z4by5q13744qeaesnb8x73z7km", description: "AYTS034-6" },
+    { storageID: "kg23pm2cppzx6bgkj6yjw44krn73yw7y", description: "Ultra 2" },
     // Victor
-    { storageID: "kg25c1fqe9kmpzdfqn35vpvm29702mhk", description: "X Crayon ShinChan A39CS" },
-    { storageID: "kg28d7m07m7p5qt0xdf10k3qwx702ryb", description: "A970 Nitro Lite" },
+    { storageID: "kg2ear7kg4mpspvb00qycgqnjx73z92f", description: "X Crayon ShinChan A39CS" },
+    { storageID: "kg2bgkckr01ey2jsptq4kv02wh73yp1y", description: "A970 Nitro Lite" },
     // Yonex
-    { storageID: "kg26aecac6qaesqddvfhkmdbpd703dcr", description: "Power Cushion 65X 3" },
-    { storageID: "kg20ac03q309fe8mexyzznent5702wfk", description: "Power Cushion SHB65XLEX" },
-    { storageID: "kg2cyj96qcy3rd58q9ws844r4s703mdg", description: "Power Cushion 65Z 3" },
-    { storageID: "kg28zc1816s1vcwrcqqygrkkc1703tn2", description: "Power Cushion 88 DIAL 3" },
-    { storageID: "kg2bngkdbtqajmpw81ka3c0f2n703nk9", description: "Power Cushion Comfort Z 3" },
+    { storageID: "kg287xkxkp53x92f73n7sarce173yg5p", description: "Power Cushion 65X 3" },
+    { storageID: "kg278wrhxbmgwwe3w3t4a6h10n73z4re", description: "Power Cushion SHB65XLEX" },
+    { storageID: "kg2bpb2v00ty10hc9a5jky5jvx73zeb1", description: "Power Cushion 65Z 3" },
+    { storageID: "kg27fcm4qkz36gwmmggc28zbh173ze8x", description: "Power Cushion 88 DIAL 3" },
+    { storageID: "kg25jmwsbayebks6ty07kaw2as73zdfp", description: "Power Cushion Comfort Z 3" },
     // Shuttlecock
     // Victor
-    { storageID: "kg2dg5n0kwafm3h5jze68x5cns7020gf", description: "Master 1 Shuttlecock" },
-    { storageID: "kg2ez26t02wwzzw6rq6mgk0pm1702a8h", description: "AS-AIRSHUTTLE II" },
-    { storageID: "kg288eq1tjpddcpy14rc1cqc9n702p5y", description: "Master 3 Shuttlecock" },
+    { storageID: "kg28yqynv4nx541bsrytd9912n73y3bb", description: "Master 1 Shuttlecock" },
+    { storageID: "kg28dt2nrwvs8cvnk1h08ypht973yhbx", description: "AS-AIRSHUTTLE II" },
+    { storageID: "kg20btwzvezq2se5gptxqbmnm973ztw8", description: "Master 3 Shuttlecock" },
     // Yonex
-    { storageID: "kg2fgztac54v1gwpa8srpt3vzs702n68", description: "AEROSENSA 10" },
-    { storageID: "kg27zadkxw0vsp8x59vsav319d703epc", description: "AEROSENSA 20" },
-    { storageID: "kg26ykke416be7ssvtyzybykq1703t8q", description: "MAVIS 2000" },
+    { storageID: "kg289xc3cmbeqfe7tr2tsd91ex73zsyc", description: "AEROSENSA 10" },
+    { storageID: "kg21g72mhkxmq5t29q3d54t42s73ycgk", description: "AEROSENSA 20" },
+    { storageID: "kg27gcb0tacym496nt0pd0xawn73ytev", description: "MAVIS 2000" },
     // Accessory
     // Victor
-    { storageID: "kg28e3we9qq1zbv55yn2x5w74n703jv7", description: "GR233-3" },
-    { storageID: "kg28g5xjknvs9mnhhx2gmjy6h1703rm2", description: "GR262-3" },
+    { storageID: "kg2bhzs3f5vgpmcv7btp9t8c6173z9k9", description: "GR233-3" },
+    { storageID: "kg26jf321svjaqkdt0tcaq1dv973znc1", description: "GR262-3" },
     // Yonex
-    { storageID: "kg2dgja4p3ezxb4hskw2bzgncs702zq1", description: "EXBOLT 65" },
-    { storageID: "kg241vamf7kkasszpy3mc89pe1703xnb", description: "EXBOLT 68" },
-    { storageID: "kg2ex00d58rgdrb5gasg0fpzx9702kav", description: "NANOGY 95" },
+    { storageID: "kg200pr46qsmy9hft8q0r8tbxx73zg83", description: "EXBOLT 65" },
+    { storageID: "kg21pr1aybp9adq6s7ggfd52wn73ykft", description: "EXBOLT 68" },
+    { storageID: "kg26bg86c40nyepeepqjgs18fn73yxr6", description: "NANOGY 95" },
   ];
   
 

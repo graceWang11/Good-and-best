@@ -11,7 +11,7 @@ import LoadingSkeleton from "@/app/Components/LoadingSkeleton";
 const ShopBadmintonAccessories = () => {
   // Fetch the background image from API
   const bgUrl = useQuery(api.imageStorage.getImageUrl, {
-    imageId: "kg260m14ak58c8j68zx513dnn970wpaq",
+    imageId: "kg291k5jjwn6p1w8pvj5fgjazs73zwfk",
   });
 
   // Return loading state if image isn't available yet
