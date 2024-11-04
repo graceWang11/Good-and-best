@@ -49,7 +49,7 @@ export default function TopNavBar() {
 
   // Fetch the logo image URL
   const imageUrl = useQuery(api.imageStorage.getImageUrl, {
-    imageId: "kg20gd15hk3tv13mxn3edesmhh6z9kj8",
+    imageId: "kg24rhn3h8nnkc7vtzt04jd16d6z9e8m",
   });
 
   // Fetch all products (you might want to optimize this for larger datasets)

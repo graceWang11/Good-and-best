@@ -6,6 +6,7 @@ import { api } from "../../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
+import LoadingSkeleton from "@/app/Components/LoadingSkeleton";
 const AboutUs = () => {
   const router = useRouter();
   // Fetch the image from API
@@ -15,7 +16,7 @@ const AboutUs = () => {
 
   // Return loading state if image isn't available yet
   if (!bgUrl) {
-    return <div>Loading...</div>;
+    return <LoadingSkeleton />;
   }
 
   return (
