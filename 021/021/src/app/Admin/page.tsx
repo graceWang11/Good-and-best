@@ -14,6 +14,7 @@ import { api } from "../../../convex/_generated/api"
 import LoadingSkeleton from "@/app/Components/LoadingSkeleton"
 import OrderDetail from "@/app/Components/Admin/Ordermanagement/OrderDetail"
 import ViewCustomerDetail from "@/app/Components/Admin/CustomerManagement/ViewCustomerDetail"
+import { Id } from "../../../convex/_generated/dataModel"
 
 export default function AdminDashboard() {
   const { user } = useUser()
@@ -59,18 +60,6 @@ export default function AdminDashboard() {
     setSelectedCustomerId(customerId)
   }
 
-  const handleBackToOrders = () => {
-    setSelectedOrderId(null)
-    router.push("/Admin")
-    setActiveTab("orders")
-  }
-
-  const handleBackToCustomers = () => {
-    setSelectedCustomerId(null)
-    router.push("/Admin")
-    setActiveTab("customers")
-  }
-
   const handleTabChange = (value: string) => {
     setActiveTab(value)
     setSelectedOrderId(null)
@@ -105,8 +94,7 @@ export default function AdminDashboard() {
         <TabsContent value="customers">
           {selectedCustomerId ? (
             <ViewCustomerDetail 
-              customerId={selectedCustomerId} 
-              onBack={handleBackToCustomers}
+              customerId={selectedCustomerId as Id<"users">} 
             />
           ) : (
             <CustomerList onViewCustomer={handleCustomerView} />
@@ -117,7 +105,6 @@ export default function AdminDashboard() {
           {selectedOrderId ? (
             <OrderDetail 
               orderId={selectedOrderId} 
-              onBack={handleBackToOrders}
             />
           ) : (
             <OrderManagement onViewOrder={handleOrderView} />

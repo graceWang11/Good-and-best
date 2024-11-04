@@ -1,4 +1,3 @@
-// Add "use client" at the top
 "use client";
 
 import { useState, useEffect } from "react";
@@ -12,16 +11,25 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { useRouter } from "next/navigation";
 import LoadingSkeleton from "../../LoadingSkeleton";
+import { Id } from "../../../../../convex/_generated/dataModel";
 
 interface ViewCustomerDetailProps {
-  customerId: string;
-  onBack?: () => void;
+  customerId: Id<"users">;
 }
 
-export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerDetailProps) {
+export default function ViewCustomerDetail({ customerId }: ViewCustomerDetailProps) {
   const router = useRouter();
-  const customerDetails = useQuery(api.user.getUserById, { userId: customerId as any });
-  const customerOrders = useQuery(api.order.getOrdersByCustomerId, { customerId });
+  
+  const customerDetails = useQuery(api.user.getUserById, { 
+    userId: customerId
+  });
+  
+  const customerOrders = useQuery(api.order.getOrdersByCustomerId, { 
+    customerId: customerId as Id<"users">
+  });
+
+  console.log("Customer Details:", customerDetails);
+  console.log("Customer Orders:", customerOrders);
 
   if (!customerDetails || !customerOrders) {
     return <LoadingSkeleton />;
@@ -29,6 +37,11 @@ export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerD
 
   const handleOrderView = (orderId: string) => {
     router.push(`/Admin/customers/${customerId}/orders/${orderId}`);
+  };
+
+  // Handle back navigation
+  const handleBack = () => {
+    router.push("/Admin/customers");
   };
 
   const totalSpent = customerOrders.reduce((sum, order) => sum + order.totalAmount, 0);
@@ -45,10 +58,11 @@ export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerD
 
   return (
     <div className="container mx-auto p-4">
-      <Button variant="outline" className="mb-4" onClick={onBack}>
+      <Button variant="outline" className="mb-4" onClick={handleBack}>
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Customer List
       </Button>
 
+      {/* Rest of your component JSX */}
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
@@ -56,6 +70,7 @@ export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerD
             <CardDescription>Detailed profile of {customerDetails.userName}</CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Customer information content */}
             <div className="flex items-center space-x-4 mb-4">
               <Avatar className="h-20 w-20">
                 <AvatarFallback>
@@ -68,6 +83,7 @@ export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerD
               </div>
             </div>
             <div className="space-y-2">
+              {/* Customer details */}
               <div className="flex items-center">
                 <Mail className="mr-2 h-4 w-4" />
                 <span>{customerDetails.email}</span>
@@ -96,6 +112,7 @@ export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerD
           </CardContent>
         </Card>
 
+        {/* Analytics Card */}
         <Card>
           <CardHeader>
             <CardTitle>Customer Analytics</CardTitle>
@@ -116,6 +133,7 @@ export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerD
         </Card>
       </div>
 
+      {/* Order History */}
       <Card className="mt-4">
         <CardHeader>
           <CardTitle>Order History</CardTitle>

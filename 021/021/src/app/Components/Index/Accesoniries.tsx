@@ -14,10 +14,7 @@ const ShopBadmintonAccessories = () => {
     imageId: "kg291k5jjwn6p1w8pvj5fgjazs73zwfk",
   });
 
-  // Return loading state if image isn't available yet
-  if (!bgUrl) {
-    return <LoadingSkeleton />;
-  }
+
 
   return (
     <section
@@ -51,7 +48,7 @@ const ShopBadmintonAccessories = () => {
       {/* badminton Accessory Image */}
       <div className="relative z-10 max-w-lg mx-auto mt-8">
         <Image
-          src={bgUrl}
+          src={bgUrl || ''}
           alt="badminton Accessory"
           width={634}
           height={634}

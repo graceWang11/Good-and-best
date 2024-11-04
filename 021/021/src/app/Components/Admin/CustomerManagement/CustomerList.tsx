@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { useRouter } from "next/navigation";
+import { Id } from "../../../../../convex/_generated/dataModel";
 
 interface CustomerListProps {
   onViewCustomer?: (customerId: string) => void;
@@ -24,7 +25,8 @@ export default function CustomerList({ onViewCustomer }: CustomerListProps) {
     customer.email.toLowerCase().includes(searchQuery.toLowerCase())
   ) || [];
 
-  const handleViewDetails = (customerId: string) => {
+  const handleViewDetails = (customerId: Id<"users">) => {
+    console.log("Customer ID being passed:", customerId);
     router.push(`/Admin/customers/${customerId}`);
   };
 
@@ -65,7 +67,7 @@ export default function CustomerList({ onViewCustomer }: CustomerListProps) {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => handleViewDetails(customer._id)}
+                    onClick={() => handleViewDetails(customer._id as Id<"users">)}
                   >
                     <Eye className="h-4 w-4 mr-2" />
                     View Details

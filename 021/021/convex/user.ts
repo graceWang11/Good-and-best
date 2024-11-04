@@ -191,9 +191,14 @@ export const getAllCustomers = query({
 });
 
 export const getUserById = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, { userId }) => {
-    const user = await ctx.db.get(userId);
+  args: { 
+    userId: v.id("users") // Specifically validate for users table ID
+  },
+  handler: async (ctx, args) => {
+    const user = await ctx.db.get(args.userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
     return user;
   },
 });
