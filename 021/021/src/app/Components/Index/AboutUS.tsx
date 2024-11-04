@@ -11,7 +11,7 @@ const AboutUs = () => {
   const router = useRouter();
   // Fetch the image from API
   const bgUrl = useQuery(api.imageStorage.getImageUrl, {
-    imageId: "kg235f0rbve62bnbxfdpyvht39702r58",
+    imageId: "kg2e8xhrnk5c306z15kmw85gwd73zhmx",
   });
 
   // Return loading state if image isn't available yet

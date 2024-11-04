@@ -56,7 +56,19 @@ export default function BannerWithCarousel() {
   });
 
   // Error handling and loading
-  if (!products || !backgroundImageUrl || !leftImageUrl || !productDetails) {
+  if (!products) {
+    return <LoadingSkeleton />;
+  }
+
+  if (!backgroundImageUrl) {
+    return <LoadingSkeleton />;
+  }
+
+  if (!leftImageUrl) {
+    return <LoadingSkeleton />;
+  }
+
+  if (!productDetails) {
     return <LoadingSkeleton />;
   }
 
