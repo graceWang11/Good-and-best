@@ -14,44 +14,47 @@ const ShopBadmintonAccessories = () => {
     imageId: "kg291k5jjwn6p1w8pvj5fgjazs73zwfk",
   });
 
-
+  if (!bgUrl) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <section
-      className="relative bg-cover bg-center bg-no-repeat py-12 px-4 text-white"
+      className="relative bg-cover bg-center bg-no-repeat py-12 px-4 text-white min-h-[500px]"
       style={{
-        backgroundImage: `url(${bgUrl})`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${bgUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-
       {/* Content */}
       <div className="relative z-10 max-w-4xl mx-auto text-center">
         <h2 className="text-4xl font-bold mb-4">Shop Badminton Accessories</h2>
         <p className="text-lg mb-6">
-        At Good and Best, choose freely any accessory you desire
+          At Good and Best, choose freely any accessory you desire
         </p>
 
         <div className="flex justify-center mt-6">
-           <Link href="/Accessories">
+          <Link href="/Accessories">
             <Button variant="default" className="bg-blue-500 text-white hover:scale-105 hover:shadow-lg transition-transform">
               Shop Accessories
             </Button>
           </Link>
-        </div>`
+        </div>
       </div>
 
-      {/* badminton Accessory Image */}
+      {/* Accessory Image */}
       <div className="relative z-10 max-w-lg mx-auto mt-8">
-        <Image
-          src={bgUrl || ''}
-          width={634}
-          height={634}
-          className="mx-auto" alt={""}        />
+        <div className="relative w-[634px] h-[634px]">
+          <Image
+            src={bgUrl}
+            alt="Badminton Accessories"
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
       </div>
     </section>
   );
