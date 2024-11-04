@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useClerk, useUser } from '@clerk/clerk-react';
+import { useClerk, useUser } from "@clerk/nextjs";
 import { FaUser } from 'react-icons/fa';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -92,9 +92,6 @@ function LoginButton() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => router.push('/profile')}>
                     Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push('/orders')}>
-                    Orders
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>

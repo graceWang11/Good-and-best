@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/nextjs";
 import { useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -13,13 +13,13 @@ export function UserDataHandler() {
     if (isLoaded && isSignedIn && user) {
       // Store user data in Convex
       storeUser({
-        userName: user.fullName || "",
         email: user.primaryEmailAddress?.emailAddress || "",
-        address: "", // Can be updated later in profile
-        phoneNumber: user.phoneNumbers?.[0]?.phoneNumber || "",
+        userName: user.fullName || "",
+        address: "",
+        phoneNumber: "",
       });
     }
   }, [isLoaded, isSignedIn, user, storeUser]);
 
-  return null; // This component doesn't render anything
+  return null;
 } 

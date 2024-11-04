@@ -24,7 +24,7 @@ import { useCart } from "./CartContext";
 import CartSidebar from "./Cartsidebar";
 import LoginButton from "./Login";
 import { useRouter } from "next/navigation";
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from "@clerk/nextjs";
 import LoadingSkeleton from "./LoadingSkeleton";
 
 
