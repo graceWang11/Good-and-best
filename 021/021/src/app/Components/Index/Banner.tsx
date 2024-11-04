@@ -55,22 +55,22 @@ export default function BannerWithCarousel() {
     imageId: "kg2ear7kg4mpspvb00qycgqnjx73z92f",
   });
 
-  // // Error handling and loading
-  // if (!products) {
-  //   return <LoadingSkeleton />;
-  // }
+  // Error handling and loading
+  if (!products) {
+    return <LoadingSkeleton />;
+  }
 
-  // if (!backgroundImageUrl) {
-  //   return <LoadingSkeleton />;
-  // }
+  if (!backgroundImageUrl) {
+    return <LoadingSkeleton />;
+  }
 
-  // if (!leftImageUrl) {
-  //   return <LoadingSkeleton />;
-  // }
+  if (!leftImageUrl) {
+    return <LoadingSkeleton />;
+  }
 
-  // if (!productDetails) {
-  //   return <LoadingSkeleton />;
-  // }
+  if (!productDetails) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <div className="relative min-h-screen bg-gray-100">
@@ -85,15 +85,13 @@ export default function BannerWithCarousel() {
         <div className="absolute inset-y-0 left-0 flex flex-col justify-center items-start text-white p-8 ">
           {/* Product Image */}
           <div className="mb-4">
-            {leftImageUrl && (
-              <Image
-                src={leftImageUrl as string}
-                alt={productDetails?.productName || "Product Image"}
-                width={200}
-                height={200}
-                className="rounded-lg shadow-lg"
-              />
-            )}
+            <Image
+              src={leftImageUrl}
+              alt={productDetails?.productName || "Product Image"}
+              width={200}
+              height={200}
+              className="rounded-lg shadow-lg"
+            />
           </div>
           {/* Product Details */}
           <div>
@@ -108,13 +106,11 @@ export default function BannerWithCarousel() {
                 ? `$${productDetails.price}`
                 : "Price Unavailable"}
             </p>
-            {productDetails && (
-              <Link href={`/Brands/${productDetails.brand}/${productDetails._id}`}>
-                <button className="mt-4 bg-blue-500 px-4 py-2 text-white rounded-lg hover:scale-105 transition-transform">
-                  Shop now
-                </button>
-              </Link>
-            )}
+            <Link href={`/Brands/${productDetails.brand}/${productDetails._id}`}>
+            <button className="mt-4 bg-blue-500 px-4 py-2 text-white rounded-lg hover:scale-105 transition-transform">
+              Shop now
+            </button>
+            </Link>
           </div>
         </div>
       </div>
