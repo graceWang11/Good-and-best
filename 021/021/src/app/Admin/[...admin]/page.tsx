@@ -1,3 +1,8 @@
+"use client";
+
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import InventoryManagement from "@/app/Components/Admin/InventoryManagement";
@@ -9,36 +14,47 @@ import OrderManagement from "@/app/Components/Admin/Ordermanagement/OrderManagem
 import OrderDetail from "@/app/Components/Admin/Ordermanagement/OrderDetail";
 
 interface AdminPageProps {
-  params: Promise<{
+  params: {
     admin: string[];
-  }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  };
 }
 
-export default async function AdminSubPage({
+export default function AdminSubPage({
   params,
-  searchParams,
 }: AdminPageProps) {
-  // Await the resolved values of params and searchParams
-  const { admin } = await params;
-  const query = await searchParams;
+  const { user } = useUser();
+  const router = useRouter();
+  
+  const userDetails = useQuery(api.user.getUserByEmail, {
+    email: user?.primaryEmailAddress?.emailAddress || ""
+  });
 
-  const [section, id, subSection, subId] = admin;
+  useEffect(() => {
+    if (userDetails && userDetails.userType !== "Admin") {
+      router.push("/");
+    }
+  }, [userDetails, router]);
+
+  if (!userDetails || userDetails.userType !== "Admin") {
+    return <LoadingSkeleton />;
+  }
+
+  const [section, id, subSection, subId] = params.admin;
 
   // Handle nested routes
   if (section === "customers") {
     if (id) {
       if (subSection === "orders" && subId) {
-        return <OrderDetail orderId={subId} onBack={() => `/Admin/customers/${id}`} />;
+        return <OrderDetail orderId={subId} onBack={() => router.push(`/Admin/customers/${id}`)} />;
       }
-      return <ViewCustomerDetail customerId={id} onBack={() => "/Admin/customers"} />;
+      return <ViewCustomerDetail customerId={id} onBack={() => router.push("/Admin/customers")} />;
     }
     return <CustomerList />;
   }
 
   if (section === "orders") {
     if (id) {
-      return <OrderDetail orderId={id} onBack={() => "/Admin/orders"} />;
+      return <OrderDetail orderId={id} onBack={() => router.push("/Admin/orders")} />;
     }
     return <OrderManagement />;
   }
