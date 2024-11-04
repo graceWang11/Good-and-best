@@ -11,7 +11,7 @@ import { api } from "../../../../convex/_generated/api";
 
 export default function AboutUs() {
   // Fetch image URL
-  const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg20gd15hk3tv13mxn3edesmhh6z9kj8" });
+  const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg24rhn3h8nnkc7vtzt04jd16d6z9e8m" });
 
   if (!imageUrl) {
     return <div>Loading...</div>;
