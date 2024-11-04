@@ -47,10 +47,10 @@ export default function TopNavBar() {
 
   const { cartItems } = useCart();
 
-  // Fetch the logo image URL
-  const imageUrl = useQuery(api.imageStorage.getImageUrl, {
-    imageId: "kg24rhn3h8nnkc7vtzt04jd16d6z9e8m",
-  });
+  // // Fetch the logo image URL
+  // const imageUrl = useQuery(api.imageStorage.getImageUrl, {
+  //   imageId: "kg24rhn3h8nnkc7vtzt04jd16d6z9e8m",
+  // });
 
   // Fetch all products (you might want to optimize this for larger datasets)
   const allProducts = useQuery(api.Product.getAllWithImages) || [];
@@ -95,9 +95,9 @@ export default function TopNavBar() {
     }
   }, [isSignedIn, user, router]);
 
-  if (!imageUrl) {
-    return <LoadingSkeleton />
-  }
+  // if (!imageUrl) {
+  //   return <LoadingSkeleton />
+  // }
 
   return (
     <header className="flex items-center justify-between w-full px-4 py-2 bg-white shadow-md">
@@ -121,14 +121,14 @@ export default function TopNavBar() {
       </nav>
 
       {/* Center section: Logo */}
-      <Link href="/" className="flex items-center justify-center flex-col">
+      {/* <Link href="/" className="flex items-center justify-center flex-col">
         <img
           src={imageUrl}
           alt="Logo"
           className="h-16 w-auto m-4"
         />
         <p className="text-center text-sm font-semibold">Good and Best</p>
-      </Link>
+      </Link> */}
 
       {/* Right section: Search, Cart, and User/Login */}
       <div className="flex items-center space-x-4">
@@ -220,12 +220,7 @@ export default function TopNavBar() {
           >
             Shop All
           </Link>
-          <Link
-            href="/category/shopShoes"
-            className="block text-gray-700 hover:bg-gray-200 py-2 px-4 rounded-md"
-          >
-            Electric Scooters
-          </Link>
+
           <Link
             href="/Accessories"
             className="block text-gray-700 hover:bg-gray-200 py-2 px-4 rounded-md"

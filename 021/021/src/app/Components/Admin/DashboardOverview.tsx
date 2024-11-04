@@ -9,6 +9,7 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { useClerk } from "@clerk/nextjs"
 import { useRouter } from "next/navigation"
+import { LineChart, Line } from 'recharts';
 
 export default function DashboardOverview() {
   const { signOut } = useClerk()
@@ -104,6 +105,41 @@ export default function DashboardOverview() {
     router.push("/")
   }
 
+  // Process orders data for the chart
+  const processOrderData = () => {
+    if (!orders) return [];
+
+    // Create a map to store orders by month
+    const monthlyData = new Map();
+
+    orders.forEach(order => {
+      const date = new Date(order._creationTime);
+      const monthYear = `${date.getMonth() + 1}/${date.getFullYear()}`;
+      
+      if (!monthlyData.has(monthYear)) {
+        monthlyData.set(monthYear, {
+          month: monthYear,
+          orders: 0,
+          revenue: 0
+        });
+      }
+      
+      const data = monthlyData.get(monthYear);
+      data.orders += 1;
+      data.revenue += order.totalAmount;
+    });
+
+    // Convert map to array and sort by date
+    return Array.from(monthlyData.values())
+      .sort((a, b) => {
+        const [monthA, yearA] = a.month.split('/');
+        const [monthB, yearB] = b.month.split('/');
+        return new Date(yearA, monthA - 1).getTime() - new Date(yearB, monthB - 1).getTime();
+      });
+  };
+
+  const chartData = processOrderData();
+
   return (
     <Card>
       <CardHeader>
@@ -173,14 +209,35 @@ export default function DashboardOverview() {
           </CardHeader>
           <CardContent className="pt-2">
             <ResponsiveContainer width="100%" height={350}>
-              <BarChart data={orderData}>
+              <LineChart
+                data={chartData}
+                margin={{
+                  top: 5,
+                  right: 30,
+                  left: 20,
+                  bottom: 5,
+                }}
+              >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
-                <YAxis />
+                <YAxis yAxisId="left" />
+                <YAxis yAxisId="right" orientation="right" />
                 <Tooltip />
-                <Legend />
-                <Bar dataKey="orders" fill="#8884d8" />
-              </BarChart>
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="orders"
+                  stroke="#8884d8"
+                  name="Orders"
+                />
+                <Line
+                  yAxisId="right"
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#82ca9d"
+                  name="Revenue"
+                />
+              </LineChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>

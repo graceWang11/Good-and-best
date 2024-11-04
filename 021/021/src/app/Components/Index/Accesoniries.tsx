@@ -48,11 +48,11 @@ const ShopBadmintonAccessories = () => {
         </div>`
       </div>
 
-      {/* Scooter Accessory Image */}
+      {/* badminton Accessory Image */}
       <div className="relative z-10 max-w-lg mx-auto mt-8">
         <Image
           src={bgUrl}
-          alt="Scooter Accessory"
+          alt="badminton Accessory"
           width={634}
           height={634}
           className="mx-auto"

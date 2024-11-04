@@ -1,5 +1,4 @@
-
-
+"use client"
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import InventoryManagement from "@/app/Components/Admin/InventoryManagement";
@@ -17,41 +16,44 @@ interface AdminPageProps {
 }
 
 
-export default async function AdminSubPage({
+export default function AdminSubPage({
   params,
   searchParams,
 }: AdminPageProps) {
   // Await the resolved values of params and searchParams
-  const { admin } = await params;
-  const query = await searchParams;
+  params.then(resolvedParams => {
+    const { admin } = resolvedParams;
+    searchParams.then(resolvedSearchParams => {
+      const query = resolvedSearchParams;
 
-  const [section, id, subSection, subId] = admin;
-
-  // Handle nested routes
-  if (section === "customers") {
-    if (id) {
-      if (subSection === "orders" && subId) {
-        return <OrderDetail orderId={subId} onBack={() => `/Admin/customers/${id}`} />;
+      const [section, id, subSection, subId] = admin;
+      // Handle nested routes
+      if (section === "customers") {
+        if (id) {
+          if (subSection === "orders" && subId) {
+            return <OrderDetail orderId={subId} onBack={() => `/Admin/customers/${id}`} />;
+          }
+          return <ViewCustomerDetail customerId={id} onBack={() => "/Admin/customers"} />;
+        }
+        return <CustomerList />;
       }
-      return <ViewCustomerDetail customerId={id} onBack={() => "/Admin/customers"} />;
-    }
-    return <CustomerList />;
-  }
 
-  if (section === "orders") {
-    if (id) {
-      return <OrderDetail orderId={id} onBack={() => "/Admin/orders"} />;
-    }
-    return <OrderManagement />;
-  }
+      if (section === "orders") {
+        if (id) {
+          return <OrderDetail orderId={id} onBack={() => "/Admin/orders"} />;
+        }
+        return <OrderManagement />;
+      }
 
-  if (section === "inventory") {
-    return <InventoryManagement />;
-  }
+      if (section === "inventory") {
+        return <InventoryManagement />;
+      }
 
-  if (section === "products") {
-    return <ProductManagement />;
-  }
+      if (section === "products") {
+        return <ProductManagement />;
+      }
 
-  return <LoadingSkeleton />;
+      return <LoadingSkeleton />;
+    });
+  });
 }

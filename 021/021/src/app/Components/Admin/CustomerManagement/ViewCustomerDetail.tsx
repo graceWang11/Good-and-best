@@ -1,17 +1,17 @@
-'use client'
+// Add "use client" at the top
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { User, Mail, Phone, MapPin, Calendar, DollarSign, ShoppingBag, ArrowLeft } from "lucide-react"
-import { useQuery } from "convex/react"
-import { api } from "../../../../../convex/_generated/api"
-import { useRouter } from "next/navigation"
-import LoadingSkeleton from "../../LoadingSkeleton"
-import router from "next/router"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { User, Mail, Phone, MapPin, Calendar, DollarSign, ShoppingBag, ArrowLeft } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "../../../../../convex/_generated/api";
+import { useRouter } from "next/navigation";
+import LoadingSkeleton from "../../LoadingSkeleton";
 
 interface ViewCustomerDetailProps {
   customerId: string;
@@ -19,31 +19,29 @@ interface ViewCustomerDetailProps {
 }
 
 export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerDetailProps) {
-  const router = useRouter()
-  const customerDetails = useQuery(api.user.getUserById, { userId: customerId as any })
-  const customerOrders = useQuery(api.order.getOrdersByCustomerId, { customerId })
+  const router = useRouter();
+  const customerDetails = useQuery(api.user.getUserById, { userId: customerId as any });
+  const customerOrders = useQuery(api.order.getOrdersByCustomerId, { customerId });
 
   if (!customerDetails || !customerOrders) {
-    return <LoadingSkeleton />
+    return <LoadingSkeleton />;
   }
 
-  // Function to handle order view
   const handleOrderView = (orderId: string) => {
-    router.push(`/Admin/customers/${customerId}/orders/${orderId}`)
-  }
+    router.push(`/Admin/customers/${customerId}/orders/${orderId}`);
+  };
 
-  // Calculate total spent and prepare monthly spending data
-  const totalSpent = customerOrders.reduce((sum, order) => sum + order.totalAmount, 0)
+  const totalSpent = customerOrders.reduce((sum, order) => sum + order.totalAmount, 0);
   const monthlySpending = Array(12).fill(0).map((_, index) => {
     const monthOrders = customerOrders.filter(order => {
-      const orderDate = new Date(order.orderDate)
-      return orderDate.getMonth() === index
-    })
+      const orderDate = new Date(order.orderDate);
+      return orderDate.getMonth() === index;
+    });
     return {
       month: new Date(2024, index).toLocaleString('default', { month: 'short' }),
       amount: monthOrders.reduce((sum, order) => sum + order.totalAmount, 0)
-    }
-  })
+    };
+  });
 
   return (
     <div className="container mx-auto p-4">
@@ -157,5 +155,5 @@ export default function ViewCustomerDetail({ customerId, onBack }: ViewCustomerD
         </CardContent>
       </Card>
     </div>
-  )
-} 
+  );
+}
