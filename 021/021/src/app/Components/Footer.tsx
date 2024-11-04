@@ -17,7 +17,7 @@ export default function Footer() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     
     const storeUser = useMutation(api.user.store);
-    const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg20gd15hk3tv13mxn3edesmhh6z9kj8" });
+    const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId: "kg24rhn3h8nnkc7vtzt04jd16d6z9e8m" });
     const currentYear = new Date().getFullYear();
 
     const handleSubscribe = async (e: React.FormEvent) => {
@@ -67,7 +67,7 @@ export default function Footer() {
                 {/* Section 1: Logo and description */}
                 <div className="space-y-4 text-center md:text-left">
                     <img 
-                        src={imageUrl || "/fallback-logo.png"} 
+                        src={imageUrl || ''} 
                         alt="Logo" 
                         className="h-20 w-auto mx-auto md:mx-0" 
                     />

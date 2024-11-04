@@ -6,6 +6,7 @@ import { api } from "../../../../convex/_generated/api";
 import { Button } from "@/components/ui/button"; 
 import Image from "next/image"; 
 import Link from "next/link";
+import LoadingSkeleton from "@/app/Components/LoadingSkeleton";
 
 const ShopBadmintonAccessories = () => {
   // Fetch the background image from API
@@ -15,7 +16,7 @@ const ShopBadmintonAccessories = () => {
 
   // Return loading state if image isn't available yet
   if (!bgUrl) {
-    return <div>Loading...</div>;
+    return <LoadingSkeleton />;
   }
 
   return (
