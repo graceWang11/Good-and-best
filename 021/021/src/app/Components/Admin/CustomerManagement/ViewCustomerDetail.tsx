@@ -20,6 +20,7 @@ interface ViewCustomerDetailProps {
 export default function ViewCustomerDetail({ customerId }: ViewCustomerDetailProps) {
   const router = useRouter();
   
+  // Convert string ID to Convex ID type
   const customerDetails = useQuery(api.user.getUserById, { 
     userId: customerId
   });
@@ -36,12 +37,14 @@ export default function ViewCustomerDetail({ customerId }: ViewCustomerDetailPro
   }
 
   const handleOrderView = (orderId: string) => {
+    console.log("Viewing order:", orderId, "for customer:", customerId);
     router.push(`/Admin/customers/${customerId}/orders/${orderId}`);
   };
 
   // Handle back navigation
   const handleBack = () => {
-    router.push("/Admin/customers");
+    console.log("Going back to customer list");
+    router.push("/Admin");
   };
 
   const totalSpent = customerOrders.reduce((sum, order) => sum + order.totalAmount, 0);
@@ -58,7 +61,12 @@ export default function ViewCustomerDetail({ customerId }: ViewCustomerDetailPro
 
   return (
     <div className="container mx-auto p-4">
-      <Button variant="outline" className="mb-4" onClick={handleBack}>
+      <Button 
+        variant="outline" 
+        className="mb-4" 
+        onClick={handleBack}
+        type="button"
+      >
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Customer List
       </Button>
 
@@ -162,6 +170,7 @@ export default function ViewCustomerDetail({ customerId }: ViewCustomerDetailPro
                       variant="outline" 
                       size="sm" 
                       onClick={() => handleOrderView(order._id)}
+                      type="button"
                     >
                       View Order
                     </Button>

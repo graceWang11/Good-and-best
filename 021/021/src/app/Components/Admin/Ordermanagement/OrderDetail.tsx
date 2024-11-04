@@ -31,11 +31,10 @@ interface OrderDetailsResponse {
 
 interface OrderDetailProps {
   orderId: string;
-  onBack?: () => void;
-  backButtonText?: string;
+  customerId?: Id<"users">;
 }
 
-export default function OrderDetail({ orderId, onBack, backButtonText = "Back to Orders" }: OrderDetailProps) {
+export default function OrderDetail({ orderId, customerId }: OrderDetailProps) {
   const router = useRouter()
   
   console.log("Received order ID in component:", orderId);
@@ -67,6 +66,14 @@ export default function OrderDetail({ orderId, onBack, backButtonText = "Back to
     return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800'
   }
 
+  const handleBack = () => {
+    if (customerId) {
+      router.push(`/Admin/customers/${customerId}`);
+    } else {
+      router.push('/Admin');
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -75,8 +82,8 @@ export default function OrderDetail({ orderId, onBack, backButtonText = "Back to
             <CardTitle>Order Details</CardTitle>
             <CardDescription>Order ID: {orderId}</CardDescription>
           </div>
-          <Button variant="outline" onClick={onBack}>
-            {backButtonText}
+          <Button variant="outline" onClick={handleBack}>
+            Back to Orders
           </Button>
         </div>
       </CardHeader>

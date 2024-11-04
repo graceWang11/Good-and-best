@@ -26,11 +26,16 @@ export default async function AdminSubPage({
   const { admin } = await params;
   const [section, id, subSection, subId] = admin;
 
+  console.log("Admin route params:", { section, id, subSection, subId }); // Debug log
+
   // Handle nested routes
   if (section === "customers") {
     if (id) {
       if (subSection === "orders" && subId) {
-        return <OrderDetail orderId={subId} />;
+        return <OrderDetail 
+          orderId={subId} 
+          customerId={id as Id<"users">}
+        />;
       }
       return <ViewCustomerDetail customerId={id as Id<"users">} />;
     }
