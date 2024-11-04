@@ -49,7 +49,7 @@ const ShopBadmintonAccessories = () => {
       <div className="relative z-10 max-w-lg mx-auto mt-8">
         <Image
           src={bgUrl || ''}
-          alt=""
+          alt={""} 
           width={634}
           height={634}
           className="mx-auto"
