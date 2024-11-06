@@ -44,17 +44,6 @@ const ShopBadmintonAccessories = () => {
           </Link>
         </div>`
       </div>
-
-      {/* badminton Accessory Image */}
-      <div className="relative z-10 max-w-lg mx-auto mt-8">
-        <Image
-          src={bgUrl || ''}
-          alt={""} 
-          width={634}
-          height={634}
-          className="mx-auto"
-        />
-      </div>
     </section>
   );
 };
