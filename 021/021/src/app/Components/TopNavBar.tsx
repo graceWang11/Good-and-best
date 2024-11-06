@@ -127,13 +127,21 @@ export default function TopNavBar() {
 
       {/* Center section: Logo */}
       <Link href="/" className="flex items-center justify-center flex-col">
-        <Image
-          src={imageUrl}
-          alt="Logo"
-          width={120}
-          height={40}
-          className="cursor-pointer"
-        />
+        <div className="relative w-[120px] h-[40px]">
+          {imageUrl && (
+            <Image
+              src={imageUrl}
+              alt="Logo"
+              fill
+              className="object-contain cursor-pointer"
+              sizes="120px"
+              priority
+              onError={(e) => {
+                console.error('Error loading logo:', e);
+              }}
+            />
+          )}
+        </div>
         <p className="text-center text-sm font-semibold">Good and Best</p>
       </Link>
 
