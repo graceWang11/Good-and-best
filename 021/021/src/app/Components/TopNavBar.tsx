@@ -26,6 +26,7 @@ import LoginButton from "./Login";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import LoadingSkeleton from "./LoadingSkeleton";
+import Image from 'next/image';
 
 
 type Product = {
@@ -95,6 +96,10 @@ export default function TopNavBar() {
     }
   }, [isSignedIn, user, router]);
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   if (!imageUrl) {
     return <LoadingSkeleton />
   }
@@ -122,10 +127,12 @@ export default function TopNavBar() {
 
       {/* Center section: Logo */}
       <Link href="/" className="flex items-center justify-center flex-col">
-        <img
+        <Image
           src={imageUrl}
           alt="Logo"
-          className="h-16 w-auto m-4"
+          width={120}
+          height={40}
+          className="cursor-pointer"
         />
         <p className="text-center text-sm font-semibold">Good and Best</p>
       </Link>
@@ -183,7 +190,7 @@ export default function TopNavBar() {
         {/* Mobile Menu Button */}
         <Button
           className="md:hidden text-gray-600 hover:text-gray-900"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          onClick={toggleMenu}
         >
           <svg
             className="w-6 h-6"
@@ -204,7 +211,7 @@ export default function TopNavBar() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M4 6h16M4 12h16m-7 6h7"
+                d="M4 6h16M4 12h16M4 18h16"
               />
             )}
           </svg>
@@ -213,34 +220,34 @@ export default function TopNavBar() {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <nav className="md:hidden bg-gray-100 p-4 space-y-2">
+        <nav className="md:hidden fixed top-[64px] left-0 right-0 bg-white shadow-lg p-4 space-y-2 z-40">
           <Link
-            href="/shop"
-            className="block text-gray-700 hover:bg-gray-200 py-2 px-4 rounded-md"
+            href="/Rackets"
+            className="block text-gray-700 hover:bg-gray-100 py-2 px-4 rounded-md transition-colors"
           >
-            Shop All
+            Shop Rackets
           </Link>
           <Link
-            href="/category/shopShoes"
-            className="block text-gray-700 hover:bg-gray-200 py-2 px-4 rounded-md"
+            href="/Shoes"
+            className="block text-gray-700 hover:bg-gray-100 py-2 px-4 rounded-md transition-colors"
           >
-            Electric Scooters
+            Shop Shoes
           </Link>
           <Link
             href="/Accessories"
-            className="block text-gray-700 hover:bg-gray-200 py-2 px-4 rounded-md"
+            className="block text-gray-700 hover:bg-gray-100 py-2 px-4 rounded-md transition-colors"
           >
             Accessories
           </Link>
           <Link
             href="/AboutUs"
-            className="block text-gray-700 hover:bg-gray-200 py-2 px-4 rounded-md"
+            className="block text-gray-700 hover:bg-gray-100 py-2 px-4 rounded-md transition-colors"
           >
             About
           </Link>
           <Link
-            href="/contactUs"
-            className="block text-gray-700 hover:bg-gray-200 py-2 px-4 rounded-md"
+            href="/ContactUs"
+            className="block text-gray-700 hover:bg-gray-100 py-2 px-4 rounded-md transition-colors"
           >
             Contact
           </Link>
