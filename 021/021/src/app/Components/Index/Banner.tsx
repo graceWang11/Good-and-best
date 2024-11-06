@@ -1,19 +1,19 @@
-"use client";  // Ensure this is a client-side component
+"use client";
 
 import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
+import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import "swiper/css/autoplay";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 import BrandImage from "../Index/BrandImage";
 import Link from "next/link";
 import LoadingSkeleton from "../LoadingSkeleton";
-
 
 // Map brand names to their respective image IDs
 const brandImages: { [key: string]: string } = {
@@ -26,7 +26,7 @@ const brandImages: { [key: string]: string } = {
 export default function BannerWithCarousel() {
   const [brands, setBrands] = useState<string[]>([]);
   const products = useQuery(api.Product.getAll);
-  const router = useRouter() ;
+  const router = useRouter();
 
   useEffect(() => {
     if (products) {
@@ -76,14 +76,13 @@ export default function BannerWithCarousel() {
     <div className="relative min-h-screen bg-gray-100">
       {/* Banner Section */}
       <div
-        className="relative w-full min-h-screen bg-fixed bg-cover bg-center bg-no-repeat"
+        className="relative w-full min-h-[60vh] md:min-h-screen bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url(${backgroundImageUrl})`,
         }}
       >
-        {/* Product Details Overlay moved to the left */}
-        <div className="absolute inset-y-0 left-0 flex flex-col justify-center items-start text-white p-8 ">
-          {/* Product Image */}
+        {/* Desktop Product Details Overlay (hidden on mobile) */}
+        <div className="hidden md:flex absolute inset-y-0 left-0 flex-col justify-center items-start text-white p-8">
           <div className="mb-4">
             <Image
               src={leftImageUrl}
@@ -102,59 +101,145 @@ export default function BannerWithCarousel() {
               {productDetails?.brand || "Unknown Brand"}
             </p>
             <p className="mt-2 text-lg">
-              {productDetails?.price
-                ? `$${productDetails.price}`
-                : "Price Unavailable"}
+              ¥{productDetails?.price?.toLocaleString() || "Price Unavailable"}
             </p>
             <Link href={`/Brands/${productDetails.brand}/${productDetails._id}`}>
-            <button className="mt-4 bg-blue-500 px-4 py-2 text-white rounded-lg hover:scale-105 transition-transform">
-              Shop now
-            </button>
+              <button className="mt-4 bg-blue-500 px-4 py-2 text-white rounded-lg hover:scale-105 transition-transform">
+                Shop now
+              </button>
             </Link>
+          </div>
+        </div>
+
+        {/* Mobile Product Details Overlay */}
+        <div className="md:hidden absolute inset-0 bg-black/40 flex flex-col justify-center items-center p-4">
+          <div className="w-full max-w-xs flex flex-col items-center space-y-4">
+            <div className="w-48 h-48 relative">
+              <Image
+                src={leftImageUrl}
+                alt={productDetails?.productName || "Product Image"}
+                fill
+                className="rounded-lg shadow-lg object-cover"
+              />
+            </div>
+            <div className="text-center text-white">
+              <h2 className="text-2xl font-bold">
+                {productDetails?.productName || "Unknown Product"}
+              </h2>
+              <p className="mt-2 text-lg">
+                {productDetails?.brand || "Unknown Brand"}
+              </p>
+              <p className="mt-2">
+                ¥{productDetails?.price?.toLocaleString() || "Price Unavailable"}
+              </p>
+              <Link href={`/Brands/${productDetails.brand}/${productDetails._id}`}>
+                <button className="mt-4 bg-blue-500 px-6 py-2 text-white rounded-lg hover:bg-blue-600 active:scale-95 transition-all w-full">
+                  Shop now
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* BrandCarousel Section */}
-      <div className="container mx-auto py-8">
-        <h2 className="text-2xl font-bold text-center mb-8">Our Brands</h2>
+      {/* Brands Section */}
+      <div className="container mx-auto py-8 px-4">
+        <h2 className="text-xl md:text-2xl font-bold text-center mb-8">Our Brands</h2>
 
-        <Swiper
-          modules={[Pagination]}
-          pagination={{ clickable: true }}
-          spaceBetween={20}
-          slidesPerView={3}
-          loop={true}
-          className="elementor-image-carousel-wrapper"
-        >
-          {brands.map((brand) => {
-            const imageId = brandImages[brand];
+        {/* Desktop Brands Display (hidden on mobile) */}
+        <div className="hidden md:block">
+          <Swiper
+            modules={[Pagination]}
+            pagination={{ clickable: true }}
+            spaceBetween={20}
+            slidesPerView={3}
+            loop={true}
+            className="brand-carousel"
+          >
+            {brands.map((brand) => {
+              const imageId = brandImages[brand];
 
-            // Only render a SwiperSlide if the brand has an associated imageId
-            return imageId ? (
-              <SwiperSlide key={brand}>
-                {/* Make each card clickable */}
-                <div
-                  onClick={() => handleCardClick(brand)}  // Handle the click to navigate
-                  className="block w-full h-full cursor-pointer"
-                >
-                  {/* Set consistent card size and hover effect */}
-                  <Card className="w-64 h-64 flex justify-center items-center hover:scale-105 hover:shadow-lg transition-transform">
-                    <CardContent className="flex justify-center items-center">
-                      {/* Wrap the BrandImage in a div that accepts className */}
-                      <div className="flex justify-center items-center w-full h-full">
-                        <BrandImage brand={brand} imageId={imageId} />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </SwiperSlide>
-            ) : null; // If no imageId, skip rendering the slide
-          })}
-        </Swiper>
+              // Only render a SwiperSlide if the brand has an associated imageId
+              return imageId ? (
+                <SwiperSlide key={brand}>
+                  {/* Make each card clickable */}
+                  <div
+                    onClick={() => handleCardClick(brand)}  // Handle the click to navigate
+                    className="block w-full h-full cursor-pointer"
+                  >
+                    {/* Set consistent card size and hover effect */}
+                    <Card className="w-64 h-64 flex justify-center items-center hover:scale-105 hover:shadow-lg transition-transform">
+                      <CardContent className="flex justify-center items-center">
+                        {/* Wrap the BrandImage in a div that accepts className */}
+                        <div className="flex justify-center items-center w-full h-full">
+                          <BrandImage brand={brand} imageId={imageId} />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </SwiperSlide>
+              ) : null; // If no imageId, skip rendering the slide
+            })}
+          </Swiper>
+        </div>
 
-        <div className="swiper-pagination"></div>
+        {/* Mobile Brands Display */}
+        <div className="md:hidden">
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            pagination={{ clickable: true }}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            spaceBetween={16}
+            slidesPerView={1.2}
+            centeredSlides={true}
+            loop={true}
+            className="brand-carousel-mobile"
+          >
+            {brands.map((brand) => {
+              const imageId = brandImages[brand];
+              return imageId ? (
+                <SwiperSlide key={brand}>
+                  <div
+                    onClick={() => handleCardClick(brand)}
+                    className="block cursor-pointer px-2"
+                  >
+                    <Card className="aspect-square flex justify-center items-center hover:shadow-lg transition-all">
+                      <CardContent className="flex justify-center items-center p-4">
+                        <div className="w-full h-full flex justify-center items-center">
+                          <BrandImage brand={brand} imageId={imageId} />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </SwiperSlide>
+              ) : null;
+            })}
+          </Swiper>
+        </div>
       </div>
+
+      {/* Swiper Styles */}
+      <style jsx global>{`
+        .brand-carousel .swiper-pagination-bullet,
+        .brand-carousel-mobile .swiper-pagination-bullet {
+          background: #666;
+          opacity: 0.5;
+        }
+        .brand-carousel .swiper-pagination-bullet-active,
+        .brand-carousel-mobile .swiper-pagination-bullet-active {
+          background: #000;
+          opacity: 1;
+        }
+        .brand-carousel-mobile .swiper-slide {
+          transition: transform 0.3s;
+        }
+        .brand-carousel-mobile .swiper-slide-active {
+          transform: scale(1.05);
+        }
+      `}</style>
     </div>
   );
 }
