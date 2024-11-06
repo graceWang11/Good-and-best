@@ -1,24 +1,36 @@
 import { useQuery } from "convex/react";
-import Image from "next/image";
 import { api } from "../../../../convex/_generated/api";
+import Image from "next/image";
 
-// BrandImage component fetches the URL and renders the image for each brand
-function BrandImage({ brand, imageId }: { brand: string; imageId: string }) {
-    const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId });
+interface BrandImageProps {
+  brand: string;
+  imageId: string;
+}
+
+export default function BrandImage({ brand, imageId }: BrandImageProps) {
+  const imageUrl = useQuery(api.imageStorage.getImageUrl, { imageId });
+
+  console.log(`Loading image for ${brand}:`, { imageId, imageUrl });
 
   if (!imageUrl) {
-    return <div>Loading image...</div>;
+    return (
+      <div className="w-full aspect-square bg-gray-200 animate-pulse rounded-lg"></div>
+    );
   }
 
   return (
-    <Image
-      src={imageUrl} 
-      alt={brand}
-      width={150}
-      height={100}
-      className="swiper-slide-image"
-    />
+    <div className="relative w-full aspect-square">
+      <Image
+        src={imageUrl}
+        alt={`${brand} logo`}
+        fill
+        className="object-contain p-4"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        priority
+        onError={(e) => {
+          console.error(`Error loading image for ${brand}:`);
+        }}
+      />
+    </div>
   );
 }
-
-export default BrandImage;
