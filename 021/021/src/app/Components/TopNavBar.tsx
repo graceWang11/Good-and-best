@@ -26,7 +26,6 @@ import LoginButton from "./Login";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import LoadingSkeleton from "./LoadingSkeleton";
-import Image from 'next/image';
 
 
 type Product = {
@@ -128,19 +127,17 @@ export default function TopNavBar() {
       {/* Center section: Logo */}
       <Link href="/" className="flex items-center justify-center flex-col">
         <div className="relative w-[120px] h-[40px]">
-          {imageUrl && (
-            <Image
+          <img
               src={imageUrl}
               alt="Logo"
               fill
               className="object-contain cursor-pointer"
               sizes="120px"
               priority
-              onError={(e) => {
+              onError={(e: Event) => {
                 console.error('Error loading logo:', e);
               }}
             />
-          )}
         </div>
         <p className="text-center text-sm font-semibold">Good and Best</p>
       </Link>
