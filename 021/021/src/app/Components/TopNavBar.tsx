@@ -26,6 +26,7 @@ import LoginButton from "./Login";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import LoadingSkeleton from "./LoadingSkeleton";
+import logoImage from '../../assets/images/good and best .png';
 
 
 type Product = {
@@ -47,10 +48,6 @@ export default function TopNavBar() {
 
   const { cartItems } = useCart();
 
-  // Fetch the logo image URL
-  const imageUrl = useQuery(api.imageStorage.getImageUrl, {
-    imageId: "kg24rhn3h8nnkc7vtzt04jd16d6z9e8m",
-  });
 
   // Fetch all products (you might want to optimize this for larger datasets)
   const allProducts = useQuery(api.Product.getAllWithImages) || [];
@@ -99,9 +96,9 @@ export default function TopNavBar() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  if (!imageUrl) {
-    return <LoadingSkeleton />
-  }
+  // if (!imageUrl) {
+  //   return <LoadingSkeleton />
+  // }
 
   return (
     <header className="flex items-center justify-between w-full px-4 py-2 bg-white shadow-md">
@@ -128,11 +125,10 @@ export default function TopNavBar() {
       <Link href="/" className="flex items-center justify-center flex-col">
         <div className="relative w-[120px] h-[40px]">
           <img
-              src={"/goodandbest.png"}
-              alt="Logo"
-              className="object-contain cursor-pointer"
-              sizes="120px"
-            />
+            src={logoImage.src}
+            alt="Logo"
+            className="w-full h-full object-contain cursor-pointer"
+          />
         </div>
         <p className="text-center text-sm font-semibold">Good and Best</p>
       </Link>

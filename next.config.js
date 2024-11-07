@@ -10,6 +10,9 @@ const nextConfig = {
     ];
     return config;
   },
+  images: {
+    domains: ['cheerful-osprey-14.convex.cloud'], // Add your Convex storage domain
+  },
 }
 
 module.exports = nextConfig 

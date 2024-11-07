@@ -14,13 +14,18 @@ import { useRouter } from 'next/navigation';
 import BrandImage from "../Index/BrandImage";
 import Link from "next/link";
 import LoadingSkeleton from "../LoadingSkeleton";
+import leftImageUrl from '../../../assets/BannerImages/X Crayon ShinChan A39CS.png';
+import Li_Ning from '../../../assets/BannerImages/Li-Ning-logo.png';
+import kawasaki from '../../../assets/BannerImages/kawasaki.png';
+import Yonex from '../../../assets/BannerImages/Yonex.png';
+import victor from '../../../assets/BannerImages/VICTOR_logo.png'
 
-// Map brand names to their respective image IDs
-const brandImages: { [key: string]: string } = {
-  Victor: "kg29rr30y1p64wy6fsb6zfgres73y3zx",
-  Yonex: "kg27w2dxv5fwvq4k9x6nayspqn73yh76",
-  "Li-Ning": "kg2afjmh9t0z0wrczspa1tby2n73zwzf",
-  Kawasaki: "kg27mmgt0xa80344jdefpcewx973yqzs",
+// Define brand images mapping
+const brandImagesMap: { [key: string]: any } = {
+  Victor: victor,
+  Yonex: Yonex,
+  "Li-Ning": Li_Ning,
+  Kawasaki: kawasaki,
 };
 
 export default function BannerWithCarousel() {
@@ -47,9 +52,7 @@ export default function BannerWithCarousel() {
     imageId: "kg209f5q7js97r80kbvnfd7j0x73z6yr",
   });
 
-  const leftImageUrl = useQuery(api.imageStorage.getImageUrl, {
-    imageId: "kg2ear7kg4mpspvb00qycgqnjx73z92f",
-  });
+
 
   const productDetails = useQuery(api.Product.getProductDetailsByImageId, {
     imageId: "kg2ear7kg4mpspvb00qycgqnjx73z92f",
@@ -64,9 +67,7 @@ export default function BannerWithCarousel() {
     return <LoadingSkeleton />;
   }
 
-  if (!leftImageUrl) {
-    return <LoadingSkeleton />;
-  }
+
 
   if (!productDetails) {
     return <LoadingSkeleton />;
@@ -87,9 +88,7 @@ export default function BannerWithCarousel() {
             <Image
               src={leftImageUrl}
               alt={productDetails?.productName || "Product Image"}
-              width={200}
-              height={200}
-              className="rounded-lg shadow-lg"
+              className="w-[200px] h-[200px] rounded-lg shadow-lg object-cover"
             />
           </div>
           {/* Product Details */}
@@ -157,22 +156,24 @@ export default function BannerWithCarousel() {
             className="brand-carousel"
           >
             {brands.map((brand) => {
-              const imageId = brandImages[brand];
-
-              // Only render a SwiperSlide if the brand has an associated imageId
-              return imageId ? (
+              const brandImage = brandImagesMap[brand];
+              return brandImage ? (
                 <SwiperSlide key={brand}>
-                  {/* Make each card clickable */}
                   <div
-                    onClick={() => handleCardClick(brand)}  // Handle the click to navigate
+                    onClick={() => handleCardClick(brand)}
                     className="block w-full h-full cursor-pointer"
                   >
-                    {/* Set consistent card size and hover effect */}
-                    <Card className="w-64 h-64 flex justify-center items-center hover:scale-105 hover:shadow-lg transition-transform">
-                      <CardContent className="flex justify-center items-center">
-                        {/* Wrap the BrandImage in a div that accepts className */}
-                        <div className="flex justify-center items-center w-full h-full">
-                          <BrandImage brand={brand} imageId={imageId} />
+                    <Card className="aspect-square w-full max-w-[300px] mx-auto flex justify-center items-center hover:scale-105 hover:shadow-lg transition-transform">
+                      <CardContent className="p-4 w-full h-full">
+                        <div className="w-full h-full relative">
+                          <Image
+                            src={brandImage}
+                            alt={`${brand} logo`}
+                            fill
+                            className="object-contain p-4"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            priority
+                          />
                         </div>
                       </CardContent>
                     </Card>
@@ -199,8 +200,8 @@ export default function BannerWithCarousel() {
             className="brand-carousel-mobile"
           >
             {brands.map((brand) => {
-              const imageId = brandImages[brand];
-              return imageId ? (
+              const brandImage = brandImagesMap[brand];
+              return brandImage ? (
                 <SwiperSlide key={brand}>
                   <div
                     onClick={() => handleCardClick(brand)}
@@ -208,8 +209,15 @@ export default function BannerWithCarousel() {
                   >
                     <Card className="aspect-square flex justify-center items-center hover:shadow-lg transition-all">
                       <CardContent className="flex justify-center items-center p-4">
-                        <div className="w-full h-full flex justify-center items-center">
-                          <BrandImage brand={brand} imageId={imageId} />
+                        <div className="w-full h-full relative">
+                          <Image
+                            src={brandImage}
+                            alt={`${brand} logo`}
+                            fill
+                            className="object-contain p-4"
+                            sizes="(max-width: 768px) 100vw"
+                            priority
+                          />
                         </div>
                       </CardContent>
                     </Card>
