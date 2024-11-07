@@ -194,7 +194,7 @@ export default function BannerWithCarousel() {
               disableOnInteraction: false,
             }}
             spaceBetween={16}
-            slidesPerView={1.2}
+            slidesPerView={1.5}
             centeredSlides={true}
             loop={true}
             className="brand-carousel-mobile"
@@ -207,17 +207,20 @@ export default function BannerWithCarousel() {
                     onClick={() => handleCardClick(brand)}
                     className="block cursor-pointer px-2"
                   >
-                    <Card className="aspect-square flex justify-center items-center hover:shadow-lg transition-all">
-                      <CardContent className="flex justify-center items-center p-4">
-                        <div className="w-full h-full relative">
+                    <Card className="aspect-square flex justify-center items-center hover:shadow-lg transition-all bg-white">
+                      <CardContent className="p-6 w-full h-full">
+                        <div className="w-full h-full relative flex items-center justify-center">
                           <Image
                             src={brandImage}
                             alt={`${brand} logo`}
-                            fill
-                            className="object-contain p-4"
-                            sizes="(max-width: 768px) 100vw"
+                            width={150}
+                            height={150}
+                            className="object-contain"
                             priority
                           />
+                        </div>
+                        <div className="text-center mt-4">
+                          <h3 className="text-lg font-semibold text-gray-800">{brand}</h3>
                         </div>
                       </CardContent>
                     </Card>
@@ -243,9 +246,22 @@ export default function BannerWithCarousel() {
         }
         .brand-carousel-mobile .swiper-slide {
           transition: transform 0.3s;
+          opacity: 0.7;
         }
         .brand-carousel-mobile .swiper-slide-active {
           transform: scale(1.05);
+          opacity: 1;
+        }
+        .brand-carousel-mobile {
+          padding: 20px 0;
+        }
+        @media (max-width: 640px) {
+          .brand-carousel-mobile .swiper-slide {
+            opacity: 0.5;
+          }
+          .brand-carousel-mobile .swiper-slide-active {
+            opacity: 1;
+          }
         }
       `}</style>
     </div>
