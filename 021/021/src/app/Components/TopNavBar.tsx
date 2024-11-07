@@ -130,13 +130,8 @@ export default function TopNavBar() {
           <img
               src={imageUrl}
               alt="Logo"
-              fill
               className="object-contain cursor-pointer"
               sizes="120px"
-              priority
-              onError={(e: Event) => {
-                console.error('Error loading logo:', e);
-              }}
             />
         </div>
         <p className="text-center text-sm font-semibold">Good and Best</p>
