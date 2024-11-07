@@ -128,7 +128,7 @@ export default function TopNavBar() {
       <Link href="/" className="flex items-center justify-center flex-col">
         <div className="relative w-[120px] h-[40px]">
           <img
-              src={imageUrl}
+              src={"/goodandbest.png"}
               alt="Logo"
               className="object-contain cursor-pointer"
               sizes="120px"
