@@ -71,23 +71,41 @@ Good and Best is a modern e-commerce platform specializing in badminton equipmen
 
 1. Clone the repository:
 ```bash
-git clone [repository-url]
+git clone https://github.com/graceWang11/Good-and-best.git
 cd good-and-best
+cd 021
+cd 021
 ```
 
 2. Install dependencies:
 ```bash
-npm install convex dotenv
+npm install convex 
 npm install @clerk/nextjs
 ```
+3. Convex Setup:
+- Login to Convex
+- Create a new project 
+- Configure your local project with Convex
 
-3. Configure Environment:
-Create a `.env.local` file in the root directory with:
-```env
-NEXT_PUBLIC_CONVEX_URL=your_convex_url
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key
-CLERK_SECRET_KEY=your_secret_key
-```
+4. Clerk Setup:
+- Login to Clerk dashboard
+- Set up authentication(Middleware.ts)
+- create a new JWT template named Convex
+- Configure JWT template
+
+5. Configure Environment:
+- For convex
+  ```bash
+  npx conex dev
+  ```
+  This will prompt you to log in with GitHub, create a project, and save your production and deployment URLs and also create a convex/ folder for you to write your backend API functions
+- For Clerk
+   Create a `.env.local` file in the root directory with:
+   ```env
+   NEXT_PUBLIC_CONVEX_URL=your_convex_url
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key
+   CLERK_SECRET_KEY=your_secret_key
+   ```
 
 ### Running the Application
 
@@ -103,17 +121,6 @@ npx convex dev
 
 **Important**: Keep both terminals running while developing.
 
-### Development Setup
-
-1. Convex Setup:
-- Login to Convex
-- Create a new project named "021"
-- Configure your local project with Convex
-
-2. Clerk Setup:
-- Login to Clerk dashboard
-- Set up authentication
-- Configure JWT template
 
 ## Development Workflow
 
@@ -194,41 +201,34 @@ Common issues and solutions:
 For support:
 1. Check documentation
 2. Review troubleshooting guide
-3. Contact development team
+3. Contact goodandbestteam@gmail.com
 
-## Contributing
 
-1. Fork the repository
-2. Create feature branch
-3. Submit pull request
+## Database Structure UML Diagram 
+The following diagram represents the database architecture for the Good and Best e-commerce platform, focusing on badminton equipment. It defines key entities, their attributes, and the relationships that structure the system.
 
-## License
+- Product: Central to the platform, the Product entity encapsulates essential details such as ProductID, Brand, Series, and Price. Each product is associated with a specific ProductCategory and is connected to the Stock, Size, and ImageStorage entities, ensuring detailed product representation and inventory management.
 
-MIT License - see LICENSE file
+- ProductCategory: This entity categorizes products, allowing streamlined organization based on categories, facilitating efficient browsing and inventory segmentation.
 
-## Acknowledgments
+- Size and Stock: The Size entity manages product sizing details (e.g., region-specific sizing), while the Stock entity monitors product availability through StockQuantity, enhancing inventory control.
 
-- Next.js team
-- Convex team
-- Clerk team
-- Project contributors
-```
+- Order and OrderDetails: Orders are managed through the Order entity, which tracks details such as OrderDate, TotalAmount, and Status. The OrderDetails entity breaks down each order into individual product components, recording Quantity and Price, essential for accurate order processing and reporting.
 
-This README now includes:
-1. Complete setup instructions
-2. Detailed feature lists
-3. Troubleshooting guide
-4. Development guidelines
-5. Support information
-6. Clear structure
-7. All necessary commands
-8. Environment setup details
-9. More detailed system architecture
-10. Database structure overview
-11. Comprehensive admin features breakdown
-12. Detailed project structure
-13. Authentication flow explanation
-14. Development workflow details
-```
+- OrderHistory: This entity maintains a historical record of each order, tracking order-related events and changes.
+
+- User and UserType: User information is captured in the User entity, with attributes for identification and contact details. UserType further refines roles and access permissions, supporting role-based functionalities (e.g., admin vs. customer).
+
+- Reviews: The Reviews entity enables users to provide feedback on products through ratings and descriptions, enriching the user experience and supporting customer decision-making.
+
+- ImageStorage: This entity links products to their respective images, enabling a visual representation in the platform.
+![image](https://github.com/user-attachments/assets/c1a31cf1-2bed-42ee-93c3-93d641294c42)
+
+## Prototyping
+
+The following prototype illustrates the user interface and flow of the Good and Best platform. It showcases key user interactions and design elements for product browsing, cart management, checkout, and admin dashboards.
+
+For a fully interactive prototype, please visit https://miro.com/app/board/uXjVKpKz9Ws=/
+
 
     
