@@ -26,7 +26,7 @@ import LoginButton from "./Login";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import LoadingSkeleton from "./LoadingSkeleton";
-import logoImage from '../../assets/images/good and best .png';
+import logoImage from '../../assets/TopNavBarImages/good and best .png';
 
 
 type Product = {
